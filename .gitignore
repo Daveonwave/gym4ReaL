@@ -177,3 +177,4 @@ cython_debug/
 
 # Our custom stuff to ignore
 logs/
+.github/workflows/ci-cd.yml
