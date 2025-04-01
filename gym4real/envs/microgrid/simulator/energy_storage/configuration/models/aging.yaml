@@ -1,0 +1,73 @@
+# ############################################################################
+# Configuration yaml file of the Thevenin Equivalent Circuit used to model the
+# behaviour of the battery dynamic.
+# ----------------------------------------------------------------------------
+# How is it made up of?
+#   -
+#   - R0 Resistor
+#   - RC Parallel
+# ############################################################################
+
+type: aging
+class_name: BolunDropflowModel
+
+# ----------------------------------------------------------------------------
+# Components can be instantiated in 3 different ways:
+#   1. Constant: the component is conceived as a scalar float value
+#   2. Function: the component is conceived as a parametric function
+#   3. Lookup: the component is derived from a lookup table with an
+#              interpolation between the table variables
+# ----------------------------------------------------------------------------
+components:
+  SEI:
+    alpha_sei: 0.0575
+    beta_sei: 121
+
+  stress_factors:
+    calendar:
+      - time
+      - soc
+      - temperature
+    cyclic:
+      - soc
+      - temperature
+      - dod_bolun
+      #- dod_quadratic
+      #- dod_exponential
+
+  # Choose between rainflow or streamflow
+  cycle_counting_mode: rainflow
+  #compute_every: 1314390
+
+stress_models:
+  time:
+    #k_t: 4.1759e-8
+    k_t: 4.14e-10
+    #k_t: 2.835e-10 # [1/s]
+
+  soc:
+    #k_soc: 0.6224
+    k_soc: 1.04
+    #k_soc: 0.6835
+    soc_ref: 0.5
+
+  temperature:
+    #k_temp: 0.0596 # [1/K]
+
+    k_temp: 0.0693 # [1/K]
+    #k_temp: 5.9965e-2 # [1/K]
+    temp_ref: 298.15 # [K] = 25 [degC]
+
+  dod_bolun:
+    #k_delta1: 1.2761e-5
+    #k_delta2: 2.1108e-5
+    #k_delta3: 1.1138e-5
+    k_delta1: 1.4e+5
+    k_delta2: -5.01e-1
+    k_delta3: -1.23e+5
+    #k_delta1: 1.8716e-4
+    #k_delta2: 4.0585
+    #k_delta3: 8.6848e-6
+
+  dod_quadratic: 0
+  dod_exponential: 0

@@ -1,0 +1,63 @@
+# ----------------------------
+# NMC battery pack parameters
+# ----------------------------
+
+# Battery options
+# ------------------------------------------------------------------------------- #
+# params:
+#   - 'var' has to be a variable among of the parameter.
+#   - 'value' is the float value of the parameter.
+#   - 'unit' specifies the unit of the parameter that will be transformed to
+#      Digital Twin internal default units.
+# bounds:
+#   - ranges within which sample during reset phase
+# init:
+#   - initial values if 'random_init_data' in world.yaml is set to False
+# ------------------------------------------------------------------------------- #
+battery:
+  # sign_convention:
+  # - active: (power sources) p<0 and current exiting => i>0 during discharge (default for Thevenin)
+  # - passive: (loads) with p>0 and current entering => i<0 during discharge
+  sign_convention: "passive"
+
+  params:
+    nominal_voltage: 350.4 #[V]
+    nominal_capacity: 60.0 #[Ah]
+    nominal_dod: 0.8 #[-]
+    nominal_lifetime: 3000 #[cycles]
+    v_max: 398.4 #[V]
+    v_min: 288.0 #[V]
+    temp_ambient: 298.15 #[K]
+    nominal_cost: 3000.0 #[EUR]
+
+  bounds:
+    voltage:
+      low: 288.
+      high: 398.4
+    current:
+      low: -180.
+      high: 60.
+    power:
+      low: -71712.
+      high: 23904.
+    temperature:
+      low: 273.15
+      high: 323.15
+    temp_ambient:
+      low: 273.15
+      high: 323.15
+    soc:
+      low: 0.2
+      high: 1.
+    soh:
+      low: 0.6
+      high: 1.
+
+  init:
+    voltage: 310.8
+    current: 0.
+    power: 0.
+    temperature: 293.15
+    temp_ambient: 293.15
+    soc: .2
+    soh: 1.

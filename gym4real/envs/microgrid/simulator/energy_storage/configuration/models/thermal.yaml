@@ -1,0 +1,96 @@
+# ############################################################################
+# Configuration yaml file of the thermal model used to describe the
+# behaviour of the battery temperature.
+# ----------------------------------------------------------------------------
+# How is it made up of?
+#   - r_term Resistor
+#   - c_term Capacitor
+# ############################################################################
+
+type: thermal
+class_name: R2CThermal
+
+# ----------------------------------------------------------------------------
+# Components can be instantiated in 3 different ways:
+#   1. Constant: the component is conceived as a scalar float value
+#   2. Function: the component is conceived as a parametric function
+#   3. Lookup: the component is derived from a lookup table with an
+#              interpolation between the table variables
+# ----------------------------------------------------------------------------
+components:
+
+    c_term: # thermal capacity [J/K]
+        selected_type: scalar
+        scalar: 138240
+        #scalar: 49903
+
+    r_cond: # []
+        selected_type: scalar
+        scalar: 0.0061
+        #scalar: 49903
+
+
+    r_conv: # [K/W]
+        selected_type: scalar
+        scalar: 0.1994
+        #scalar: 10
+
+    dv_dT:
+        selected_type: lookup
+        scalar: 0.1
+        lookup:
+            inputs:
+                soc:
+                    - 1
+                    - 0.9
+                    - 0.8
+                    - 0.7
+                    - 0.6
+                    - 0.5
+                    - 0.4
+                    - 0.3
+                    - 0.2
+                    - 0.1
+                    - 0.
+            output:
+                - 0.00008
+                - 0.00006
+                - 0.00008
+                - 0.00005
+                - 0.0001
+                - 0.00018
+                - 0.00016
+                - 0.00008
+                - -0.00005
+                - -0.00016
+                - -0.0007
+
+#   We retrieved the variables above from these measures:
+#
+#    lambda: # thermal conductivity coefficient [W/m * K]
+#        type: scalar
+#        scalar: 0.37
+#
+#    l: # distance center-surface [m]
+#        type: scalar
+#        scalar: unknown
+#
+#    a_int: # transverse section [m^2]
+#        type: scalar
+#        scalar: unknown
+#
+#    a_surf: # external surface [m^2]
+#        type: scalar
+#        scalar: 0.0731
+#
+#    h: # coefficient of convective exchange [W/m^2 * K]
+#        type: scalar
+#        scalar: 5
+#
+#    m: # mass [kg]
+#        type: scalar
+#        scalar: 0.41
+#
+#    cp: # specific heat [J/kg * K]
+#        type: scalar
+#        scalar: 1000
