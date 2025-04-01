@@ -1,0 +1,99 @@
+# ############################################################################
+# Configuration yaml file of the Thevenin Equivalent Circuit used to model the
+# behaviour of the battery dynamic.
+# ----------------------------------------------------------------------------
+# How is it made up of?
+#   - OCV Generator
+#   - R0 Resistor
+#   - RC Parallel
+# ############################################################################
+
+type: electrical
+class_name: TheveninModel
+use_fading: False
+
+# ----------------------------------------------------------------------------
+# Components can be instantiated in 3 different ways:
+#   1. Constant: the component is conceived as a scalar float value
+#   2. Function: the component is conceived as a parametric function
+#   3. Lookup: the component is derived from a lookup table with an
+#              interpolation between the table variables
+# ----------------------------------------------------------------------------
+components:
+    r0:
+        selected_type: lookup
+
+        scalar: 10.
+        # function: To be implemented, maybe useless!
+        lookup:
+            table: 'r0_pack.csv'
+            inputs:
+                - var: 'temperature'
+                  label: 'temp'
+                  unit: 'degC'
+                - var: 'soc'
+                  label: 'soc'
+                  unit: null
+            output:
+                var: 'resistance'
+                label: 'r0'
+                unit: 'ohm'
+
+    r1:
+        selected_type: lookup
+
+        scalar: 10.
+        # function: To be implemented, maybe useless!
+        lookup:
+            table: 'r1_pack.csv'
+            inputs:
+                -   var: 'temperature'
+                    label: 'temp'
+                    unit: 'degC'
+                -   var: 'soc'
+                    label: 'soc'
+                    unit: null
+            output:
+                var: 'resistance'
+                label: 'r1'
+                unit: 'ohm'
+
+    c:
+        selected_type: lookup
+
+        scalar: 10.
+        # function: To be implemented, maybe useless!
+        lookup:
+            table: 'c_pack.csv'
+            inputs:
+                -   var: 'temperature'
+                    label: 'temp'
+                    unit: 'degC'
+                -   var: 'soc'
+                    label: 'soc'
+                    unit: null
+            output:
+                var: 'capacity'
+                label: 'c'
+                unit: 'F'
+
+
+    v_ocv:
+        selected_type: lookup
+
+        scalar: 10.
+        # function: To be implemented, maybe useless!
+        lookup:
+            table: 'voc_pack.csv'
+            inputs:
+                -   var: 'temperature'
+                    label: 'temp'
+                    unit: 'degC'
+                -   var: 'soc'
+                    label: 'soc'
+                    unit: null
+            output:
+                var: 'voltage'
+                label: 'voc'
+                unit: 'V'
+
