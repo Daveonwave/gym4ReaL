@@ -1,7 +1,6 @@
 from typing import Union
 
-from ernestogym.ernesto.energy_storage.battery_models.parameters.units import Unit
-from ernestogym.ernesto.energy_storage.battery_models.parameters import Scalar, LookupTableFunction
+from gym4real.envs.microgrid.simulator.energy_storage.battery_models.parameters import Scalar, LookupTableFunction
 from .generic_component import ECMComponent
 from copy import deepcopy
 
@@ -26,9 +25,6 @@ class Resistor(ECMComponent):
         super().__init__(name)
         self._resistance = resistance
         self._nominal_resistance = deepcopy(resistance)
-
-        # TODO: fix the unit through a yaml file
-        self._r0_unit = Unit.OHM
 
         # Collections
         self._r0_series = []

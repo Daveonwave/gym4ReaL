@@ -1,12 +1,11 @@
 from gym4real.envs.microgrid.env import MicroGridEnv
-from gym4real.envs.microgrid.utils import parameter_generator
 from tqdm import tqdm
 import numpy as np
 import os
 import json
 
 
-def run_baseline(env_params, args, test_profile, model_file=''):
+def run_baseline(env_params, args, test_profile):
     
     env = MicroGridEnv(settings=env_params)
     
@@ -19,12 +18,6 @@ def run_baseline(env_params, args, test_profile, model_file=''):
     elif args['algo'][0] == 'battery_first':
         deterministic_action_policy(env, action=1., algo_name=args['algo'][0], exp_name=args['exp_name'], test_profile=test_profile)
     
-    elif args['algo'][0] == '20-80':
-        deterministic_action_policy(env, action=0.2, algo_name=args['algo'][0], exp_name=args['exp_name'], test_profile=test_profile)
-    
-    elif args['algo'][0] == '80-20':
-        deterministic_action_policy(env, action=0.8, algo_name=args['algo'][0], exp_name=args['exp_name'], test_profile=test_profile)
-    
     elif args['algo'][0] == '50-50':
         deterministic_action_policy(env, action=0.5, algo_name=args['algo'][0], exp_name=args['exp_name'], test_profile=test_profile)
     
@@ -32,9 +25,7 @@ def run_baseline(env_params, args, test_profile, model_file=''):
         random_action_policy(env, args['exp_name'], test_profile)
         deterministic_action_policy(env, action=0., algo_name="only_market", exp_name=args['exp_name'], test_profile=test_profile)
         deterministic_action_policy(env, action=1., algo_name="battery_first", exp_name=args['exp_name'], test_profile=test_profile)
-        deterministic_action_policy(env, action=0.2, algo_name="20-80", exp_name=args['exp_name'], test_profile=test_profile)
         deterministic_action_policy(env, action=0.5, algo_name="50-50", exp_name=args['exp_name'], test_profile=test_profile)
-        deterministic_action_policy(env, action=0.8, algo_name="80-20", exp_name=args['exp_name'], test_profile=test_profile)
 
     else:
         print("Chosen baseline is not implemented or not existent!")
@@ -45,12 +36,13 @@ def random_action_policy(env, exp_name, test_profile):
     
     print("######## RANDOM policy is running... ########")
     
-    comparison_dict = {
+    exp_results = {
         'test': test_profile,
-        'pure_reward': {},
-        'norm_reward': {},
-        'weighted_reward': {},
-        'total_reward': 0
+        'pure_reward': {'r_trad': [], 'r_deg': [], 'r_clip': []},
+        'norm_reward': {'r_trad': [], 'r_deg': [], 'r_clip': []},
+        'weighted_reward': {'r_trad': [], 'r_deg': [], 'r_clip': []},
+        'total_reward': 0,
+        'actions': []
     }
     
     logdir = "./logs/{}/results/random/".format(exp_name)
@@ -65,20 +57,12 @@ def random_action_policy(env, exp_name, test_profile):
         obs, reward, terminated, truncated, info = env.step(act)  # Return observation and reward
         done = terminated or truncated
         pbar.update(1)
-
-    comparison_dict['total_reward'] = info['total_reward']
-    comparison_dict['pure_reward'] = info['pure_reward_list']
-    comparison_dict['norm_reward'] = info['norm_reward_list']
-    comparison_dict['weighted_reward'] = info['weighted_reward_list']
-    comparison_dict['actions'] = info['actions']
-    comparison_dict['states'] = info['states']
-    comparison_dict['traded_energy'] = info['traded_energy']
-    comparison_dict['soh'] = info['soh']
-
+        exp_results = _collect_results(store=True, info=info, exp_results=exp_results)
+    
+    pbar.close()
     output_file = logdir + 'test_{}.json'.format(test_profile)
-
     with open(output_file, 'w', encoding ='utf8') as f: 
-        json.dump(comparison_dict, f, allow_nan=False) 
+        json.dump(exp_results, f, allow_nan=False) 
 
 
 def deterministic_action_policy(env, action:float, algo_name: str, exp_name: str, test_profile):
@@ -86,12 +70,13 @@ def deterministic_action_policy(env, action:float, algo_name: str, exp_name: str
 
     print("######## {} policy is running... ########".format(algo_name.upper()))
     
-    comparison_dict = {
+    exp_results = {
         'test': test_profile,
-        'pure_reward': {},
-        'norm_reward': {},
-        'weighted_reward': {},
-        'total_reward': 0
+        'pure_reward': {'r_trad': [], 'r_deg': [], 'r_clip': []},
+        'norm_reward': {'r_trad': [], 'r_deg': [], 'r_clip': []},
+        'weighted_reward': {'r_trad': [], 'r_deg': [], 'r_clip': []},
+        'total_reward': 0,
+        'actions': []
     }
     
     logdir = "./logs/{}/results/{}/".format(exp_name, algo_name)
@@ -106,17 +91,29 @@ def deterministic_action_policy(env, action:float, algo_name: str, exp_name: str
         obs, reward, terminated, truncated, info = env.step(act)  # Return observation and reward
         done = terminated or truncated
         pbar.update(1)
+        exp_results = _collect_results(store=True, info=info, exp_results=exp_results)
 
-    comparison_dict['total_reward'] = info['total_reward']
-    comparison_dict['pure_reward'] = info['pure_reward_list']
-    comparison_dict['norm_reward'] = info['norm_reward_list']
-    comparison_dict['weighted_reward'] = info['weighted_reward_list']
-    comparison_dict['actions'] = info['actions']
-    comparison_dict['states'] = info['states']
-    comparison_dict['traded_energy'] = info['traded_energy']
-    comparison_dict['soh'] = info['soh']
-
+    pbar.close()
     output_file = logdir + 'test_{}.json'.format(test_profile)
-
     with open(output_file, 'w', encoding ='utf8') as f: 
-        json.dump(comparison_dict, f, allow_nan=False) 
+        json.dump(exp_results, f, allow_nan=False) 
+
+
+def _collect_results(store:bool, info:dict, exp_results:dict):
+    if store:
+        exp_results['total_reward'].append(info['total_reward'])
+        exp_results['pure_reward']['r_trad'].append(info['pure_reward_list'][0])
+        exp_results['pure_reward']['r_deg'].append(info['pure_reward_list'][1])
+        exp_results['pure_reward']['r_clip'].append(info['pure_reward_list'][2])
+        exp_results['norm_reward']['r_trad'].append(info['norm_reward_list'][0])
+        exp_results['norm_reward']['r_deg'].append(info['norm_reward_list'][1])
+        exp_results['norm_reward']['r_clip'].append(info['norm_reward_list'][2])
+        exp_results['weighted_reward']['r_trad'].append(info['weighted_reward_list'][0])
+        exp_results['weighted_reward']['r_deg'].append(info['weighted_reward_list'][1])
+        exp_results['weighted_reward']['r_clip'].append(info['weighted_reward_list'][2])
+        exp_results['actions'].append(info['actions'])
+    else:
+        return {}
+    
+    return exp_results
+    

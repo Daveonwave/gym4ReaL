@@ -1,7 +1,7 @@
 from .generic_models import ElectricalModel
-from .components import Resistor
-from .components import ResistorCapacitorParallel
-from .components import OCVGenerator
+from .ecm_components import Resistor
+from .ecm_components import ResistorCapacitorParallel
+from .ecm_components import OCVGenerator
 from .parameters import instantiate_variables
 
 
