@@ -1,4 +1,4 @@
-from .models import *
+from .battery_models import *
 
 
 class BatteryEnergyStorageSystem:
@@ -286,7 +286,7 @@ class BatteryEnergyStorageSystem:
         Collect the status of the battery and its components at the current time step.
         Used to update the queues of the writer.
         """
-        status_dict = {'time': self.t_series[-1], 'soc': self.soc_series[-1], 'soh': self.soh_series[-1], 'c_max': self.c_max_series[-1]}
+        status_dict = {'time': self.t_series[-1], 'soc': self.soc_series[-1], 'soh': self.soh_series[-1], 'c_max': self._c_max}
 
         for model in self.models:
             status_dict.update(model.get_results(**{'k': -1}))

@@ -1,63 +1,80 @@
-"""
-This module primarily implements the `parameter_generator()` function which
-generates the parameters dict for `EnergyStorageEnv`.
-"""
 import yaml
-from pint import UnitRegistry
-from ernestogym.ernesto.utils import read_csv
-from ernestogym.ernesto import read_yaml, validate_yaml_parameters
+import os
+import pandas as pd
 
-BATTERY_OPTIONS = "ernestogym/ernesto/data/battery/cell.yaml"
-INPUT_VAR = 'power'     # 'power'/'current'/'voltage'
-
-ECM = "ernestogym/ernesto/data/battery/models/electrical/thevenin_cell.yaml"
-R2C_THERMAL = "ernestogym/ernesto/data/battery/models/thermal/r2c_thermal_cell.yaml"
-BOLUN_MODEL = "ernestogym/ernesto/data/battery/models/aging/bolun_cell.yaml"
-WORLD = "ernestogym/envs/single_agent/world_fading.yaml"
-
-ureg = UnitRegistry(autoconvert_offset_to_baseunit=True)
+BATTERY = "gym4real/envs/microgrid/simulator/energy_storage/configuration/battery_pack.yaml"
+INPUT = 'power'
+ECM = "gym4real/envs/microgrid/simulator/energy_storage/configuration/models/electrical.yaml"
+THERMAL = "gym4real/envs/microgrid/simulator/energy_storage/configuration/models/thermal.yaml"
+AGING = "gym4real/envs/microgrid/simulator/energy_storage/configuration/models/aging.yaml"
+WORLD = "gym4real/envs/microgrid/world_train.yaml"
 
 
-def parameter_generator(battery_options: str = BATTERY_OPTIONS,
+def read_csv(csv_file: str) -> pd.DataFrame:
+    """
+    Read data from csv files
+    """
+    # Check file existence
+    if not os.path.isfile(csv_file):
+        raise FileNotFoundError("The specified file '{}' doesn't not exist.".format(csv_file))
+    df = None
+    try:
+        df = pd.read_csv(csv_file)
+    except Exception as err:
+        print("Error during the loading of '{}':".format(csv_file), type(err).__name__, "-", err)
+    return df
+
+
+def read_yaml(yaml_file: str):
+    """
+
+    Args:
+        yaml_file (str): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    with open(yaml_file, 'r') as fin:
+        params = yaml.safe_load(fin)
+    return params
+
+
+def parameter_generator(battery_options: str = BATTERY,
                         world_options: str = WORLD,
-                        input_var: str = INPUT_VAR,
+                        input_var: str = INPUT,
                         electrical_model: str = ECM,
-                        thermal_model: str = R2C_THERMAL,
-                        aging_model: str = BOLUN_MODEL,
-                        use_degradation: bool = None,
-                        use_fading: bool = None,
-                        step: int = None,
-                        random_battery_init: bool = None,
-                        random_data_init: bool = None,
-                        seed: int = None,
-                        max_iterations: int = None,
-                        min_soh: float = None,
+                        thermal_model: str = THERMAL,
+                        aging_model: str = AGING,
+                        step: int = 1,
+                        random_battery_init: bool = False,
+                        random_data_init: bool = False,
+                        seed: int = 42,
+                        max_iterations: int = 10000,
+                        min_soh: float = 0.6,
                         reward_coeff: dict[str, float] = None,
-                        use_reward_normalization: bool = None,
-                        bypass_yaml_schema: bool = False,
+                        use_reward_normalization: bool = True,
                         spread_factor: float = 1.0,
-                        replacement_cost: float = 3000.0
+                        replacement_cost: float = 3000.0,
+                        collect_complete_info: bool = False
                         ) -> dict:
     """
     Generates the parameters dict for `EnergyStorageEnv`.
     """
-    with open(world_options, "r") as fin:
-        world_settings = yaml.safe_load(fin)
+    world_settings = read_yaml(world_options)
 
     # Battery parameters retrieved with ErNESTO APIs.
-    battery_params = read_yaml(battery_options, yaml_type='battery_options', bypass_check=bypass_yaml_schema)
-    battery_params['battery']['params'] = validate_yaml_parameters(battery_params['battery']['params'])
+    battery_params = read_yaml(battery_options)
 
     # Battery submodel configuration retrieved with ErNESTO APIs.
-    models_config = [read_yaml(electrical_model, yaml_type='model', bypass_check=bypass_yaml_schema),
-                     read_yaml(thermal_model, yaml_type='model', bypass_check=bypass_yaml_schema)]
+    models_config = [read_yaml(electrical_model),
+                     read_yaml(thermal_model),
+                     read_yaml(aging_model)]
 
     params = {'battery': battery_params['battery'],
               'input_var': input_var,
               'models_config': models_config,
               'demand': {'data': read_csv(world_settings['demand']['path']),
                          'timestep': world_settings['demand']['timestep'],
-                         'test_profiles': world_settings['demand']['test_profiles'],
                          'data_usage': world_settings['demand']['data_usage']}}
     
     if replacement_cost is not None:
@@ -97,22 +114,6 @@ def parameter_generator(battery_options: str = BATTERY_OPTIONS,
     params['random_battery_init'] = random_battery_init if random_battery_init is not None else world_settings['random_battery_init']
     params['random_data_init'] = random_data_init if random_data_init is not None else world_settings['random_data_init']
 
-    # Aging settings
-    params['aging_options'] = {'degradation': use_degradation if use_degradation is not None else world_settings['aging_options']['degradation'],
-                               'fading': use_fading if use_fading is not None else world_settings['aging_options']['fading']}
-
-    assert not (params['aging_options']['degradation'] and params['aging_options']['fading']), \
-        ("Degradation model and fading model cannot be used together (at the moment) since they depend on different "
-         "variables.")
-
-    if params['aging_options']['fading']:
-        assert models_config[0]['use_fading'], ("The selected electrical model ({}) doesn't support parameter fading."
-                                                .format(models_config[0]['class_name']))
-    if params['aging_options']['degradation']:
-        assert not models_config[0]['use_fading'], ("The selected electrical model is not compatible with the aging "
-                                                    "model since it implements fading mechanisms.")
-        models_config.append(read_yaml(aging_model, yaml_type='model', bypass_check=bypass_yaml_schema))
-
     # Reward settings
     params['reward'] = reward_coeff if reward_coeff is not None else world_settings['reward']
     params['use_reward_normalization'] = use_reward_normalization if use_reward_normalization is not None else world_settings['use_reward_normalization']
@@ -120,5 +121,6 @@ def parameter_generator(battery_options: str = BATTERY_OPTIONS,
     # Termination settings
     params['termination'] = {'max_iterations': max_iterations if max_iterations is not None else world_settings['termination']['max_iterations'],
                              'min_soh': min_soh if min_soh is not None else world_settings['termination']['min_soh']}
-
+    params['collect_complete_info'] = collect_complete_info
+    
     return params

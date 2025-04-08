@@ -1,18 +1,12 @@
 from typing import Union
-
 import numpy as np
 from scipy.interpolate import interp1d, LinearNDInterpolator, NearestNDInterpolator
-from ernestogym.ernesto.energy_storage.preprocessing.utils import _validate_data_unit
 import pandas as pd
 
-params_csv_folder = 'ernestogym/ernesto/data/battery/params/'
+params_csv_folder = 'gym4real/envs/microgrid/simulator/energy_storage/configuration/params/'
 
 
 class GenericVariable:
-    """
-
-    """
-
     def __init__(self, name: str):
         self._name = name
 
@@ -28,10 +22,6 @@ class GenericVariable:
 
 
 class Scalar(GenericVariable):
-    """
-
-    """
-
     def __init__(self, name: str, value: Union[int, float]):
         super().__init__(name)
         self._value = value
@@ -43,52 +33,7 @@ class Scalar(GenericVariable):
         self._value = new_value
 
 
-class Function:
-    """
-
-    """
-    pass
-
-
-# TODO: understand how to handle Parametric Functions
-class FunctionTerm:
-    """
-
-    """
-
-    def __init__(self, variable, coefficient, operation, degree):
-        self._variable = variable
-        self._coefficient = coefficient
-        self._operation = operation
-        self._degree = degree
-
-
-class ParametricFunction(GenericVariable):
-    """
-
-    """
-
-    def __init__(self, name: str, function_terms: dict):
-        super().__init__(name)
-        self.function_terms = function_terms
-        self._check_function_terms_format()
-
-        self.input_vars = function_terms.keys()
-
-    def _check_function_terms_format(self):
-        pass
-
-    def get_value(self, **params):
-        result = 0
-        for j, var in enumerate(self.input_vars):
-            degrees = [deg for deg in range(len(self.coefficients[j]))]
-
-
 class LookupTableFunction(GenericVariable):
-    """
-
-    """
-
     def __init__(self, name: str, y_values: list, x_names: list, x_values: list):
         super().__init__(name)
         self.y_values = y_values
@@ -170,9 +115,6 @@ def instantiate_variables(var_dict: dict) -> dict:
         if var_dict[var]['selected_type'] == "scalar":
             instantiated_vars[var] = Scalar(name=var, value=var_dict[var]['scalar'])
 
-        elif var_dict[var]['selected_type'] == "function":
-            instantiated_vars[var] = Function()  # TODO: implement
-
         elif var_dict[var]['selected_type'] == "lookup":
             # Hardcoded lookup table
             if 'table' not in var_dict[var]['lookup'].keys():
@@ -188,18 +130,11 @@ def instantiate_variables(var_dict: dict) -> dict:
                 table = pd.read_csv(params_csv_folder + var_dict[var]['lookup']['table'])
                 instantiated_vars[var] = LookupTableFunction(
                     name=var_dict[var]['lookup']['output']['label'],
-                    y_values=_validate_data_unit(data_list=table[var_dict[var]['lookup']['output']['label']].tolist(),
-                                                 var_name=var_dict[var]['lookup']['output']['var'],
-                                                 unit=var_dict[var]['lookup']['output']['unit']),
+                    y_values=table[var_dict[var]['lookup']['output']['label']].tolist(),
                     x_names=[var['label'] for var in var_dict[var]['lookup']['inputs']],
-                    x_values=[_validate_data_unit(data_list=table[var['label']].tolist(),
-                                                  var_name=var['var'],
-                                                  unit=var['unit'])
-                              for var in var_dict[var]['lookup']['inputs']]
+                    x_values=[table[var['label']].tolist() for var in var_dict[var]['lookup']['inputs']]
                 )
-
         else:
             raise Exception("The chosen 'type' for the variable '{}' is wrong or nonexistent! Try to select another"
                             " option among this list: ['scalar', 'function', 'lookup'].".format(var))
-
     return instantiated_vars

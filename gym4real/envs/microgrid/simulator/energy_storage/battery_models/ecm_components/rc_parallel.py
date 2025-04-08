@@ -1,5 +1,5 @@
 from typing import Union
-from ernestogym.ernesto.energy_storage.battery_models.parameters import Scalar, LookupTableFunction
+from gym4real.envs.microgrid.simulator.energy_storage.battery_models.parameters import Scalar, LookupTableFunction
 from .generic_component import ECMComponent
 from copy import deepcopy
 
@@ -26,10 +26,7 @@ class ResistorCapacitorParallel(ECMComponent):
         self._capacity = capacity
         self._tau = 0
         self._nominal_resistance = deepcopy(resistance)
-        # TODO: capire tau se trattarla o meno e come trattarla + cambiare unit
 
-        # self.n_r = n_r
-        # self.n_c = n_c
 
         # Collections
         self._i_r1_series = []

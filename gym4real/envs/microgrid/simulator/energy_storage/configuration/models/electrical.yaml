@@ -20,80 +20,66 @@ use_fading: False
 #              interpolation between the table variables
 # ----------------------------------------------------------------------------
 components:
-    r0:
-        selected_type: lookup
+  r0:
+    selected_type: lookup
 
-        scalar: 10.
-        # function: To be implemented, maybe useless!
-        lookup:
-            table: 'r0_pack.csv'
-            inputs:
-                - var: 'temperature'
-                  label: 'temp'
-                  unit: 'degC'
-                - var: 'soc'
-                  label: 'soc'
-                  unit: null
-            output:
-                var: 'resistance'
-                label: 'r0'
-                unit: 'ohm'
+    scalar: 10.
+    # function: To be implemented, maybe useless!
+    lookup:
+      table: "r0_pack.csv"
+      inputs:
+        - var: "temperature"
+          label: "temp"
+        - var: "soc"
+          label: "soc"
+      output:
+        var: "resistance"
+        label: "r0"
 
-    r1:
-        selected_type: lookup
+  r1:
+    selected_type: lookup
 
-        scalar: 10.
-        # function: To be implemented, maybe useless!
-        lookup:
-            table: 'r1_pack.csv'
-            inputs:
-                -   var: 'temperature'
-                    label: 'temp'
-                    unit: 'degC'
-                -   var: 'soc'
-                    label: 'soc'
-                    unit: null
-            output:
-                var: 'resistance'
-                label: 'r1'
-                unit: 'ohm'
+    scalar: 10.
+    # function: To be implemented, maybe useless!
+    lookup:
+      table: "r1_pack.csv"
+      inputs:
+        - var: "temperature"
+          label: "temp"
+        - var: "soc"
+          label: "soc"
+      output:
+        var: "resistance"
+        label: "r1"
 
-    c:
-        selected_type: lookup
+  c:
+    selected_type: lookup
 
-        scalar: 10.
-        # function: To be implemented, maybe useless!
-        lookup:
-            table: 'c_pack.csv'
-            inputs:
-                -   var: 'temperature'
-                    label: 'temp'
-                    unit: 'degC'
-                -   var: 'soc'
-                    label: 'soc'
-                    unit: null
-            output:
-                var: 'capacity'
-                label: 'c'
-                unit: 'F'
+    scalar: 10.
+    # function: To be implemented, maybe useless!
+    lookup:
+      table: "c_pack.csv"
+      inputs:
+        - var: "temperature"
+          label: "temp"
+        - var: "soc"
+          label: "soc"
+      output:
+        var: "capacity"
+        label: "c"
 
+  v_ocv:
+    selected_type: lookup
 
-    v_ocv:
-        selected_type: lookup
-
-        scalar: 10.
-        # function: To be implemented, maybe useless!
-        lookup:
-            table: 'voc_pack.csv'
-            inputs:
-                -   var: 'temperature'
-                    label: 'temp'
-                    unit: 'degC'
-                -   var: 'soc'
-                    label: 'soc'
-                    unit: null
-            output:
-                var: 'voltage'
-                label: 'voc'
-                unit: 'V'
-
+    scalar: 10.
+    # function: To be implemented, maybe useless!
+    lookup:
+      table: "voc_pack.csv"
+      inputs:
+        - var: "temperature"
+          label: "temp"
+        - var: "soc"
+          label: "soc"
+      output:
+        var: "voltage"
+        label: "voc"

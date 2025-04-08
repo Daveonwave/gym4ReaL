@@ -2,8 +2,8 @@ import numpy as np
 from .dropflow import Dropflow
 from enum import Enum
 
-from ernestogym.ernesto.energy_storage.battery_models.generic_models import AgingModel
-from ernestogym.ernesto.energy_storage.battery_models.aging import stress_functions
+from .generic_models import AgingModel
+from . import aging_stress_functions as stress_functions
 
 
 class BolunDropflowModel(AgingModel):

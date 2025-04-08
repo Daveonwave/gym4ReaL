@@ -1,7 +1,7 @@
 from typing import Union
 
 from .generic_component import ECMComponent
-from ernestogym.ernesto.energy_storage.battery_models.parameters import Scalar, LookupTableFunction
+from gym4real.envs.microgrid.simulator.energy_storage.battery_models.parameters import Scalar, LookupTableFunction
 
 
 class OCVGenerator(ECMComponent):

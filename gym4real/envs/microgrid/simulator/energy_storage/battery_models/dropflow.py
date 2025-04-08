@@ -4,7 +4,6 @@ Implements incremental rainflow cycle counting algorythm for fatigue analysis
 according to section 5.4.4 in ASTM E1049-85 (2011).
 """
 from __future__ import division
-from collections import deque, defaultdict
 
 
 def format_output(point1, point2, count):

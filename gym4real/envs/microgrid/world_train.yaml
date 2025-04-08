@@ -1,26 +1,20 @@
 demand:
-  path: "ernestogym/ernesto/data/demand/rse_profiles_train.csv"
+  path: "gym4real/data/microgrid/demand/profiles_train.csv"
   timestep: 3600 # seconds
-  test_profiles: # column label to use to test the agent
-    - "70"
-    - "71"
-    - "72"
-    - "73"
-    - "74"
   data_usage: "end" # "circular/end"
 
 generation:
-  path: "ernestogym/ernesto/data/generation/pv_ninja_2015-2019_3kW_train.csv"
+  path: "gym4real/data/microgrid/generation/pv_ninja_2015-2019_3kW_train.csv"
   timestep: 3600 # seconds
   data_usage: "end" # "circular/end"
 
 temp_amb:
-  path: "ernestogym/ernesto/data/temp_amb/temp_amb_2015-2019_train.csv"
+  path: "gym4real/data/microgrid/temp_amb/temp_amb_2015-2019_train.csv"
   timestep: 86400 # seconds
   data_usage: "end" # "circular/end"
 
 market:
-  path: "ernestogym/ernesto/data/market/gme_2015-2019_train_new.csv"
+  path: "gym4real/data/microgrid/market/gme_2015-2019_train.csv"
   timestep: 3600 # seconds
   data_usage: "end" # "circular/end"
 
@@ -40,13 +34,6 @@ observations:
   - seconds_of_day
   - generation
   - market
-  # - energy_level
-
-# Aging options determining the reward term related to degradation
-# Only one can be set to True (at the moment)
-aging_options:
-  degradation: True
-  fading: False
 
 step: 3600 # in seconds
 random_battery_init: False # battery state initialization: if True it is randomized between declared bounds
@@ -59,8 +46,7 @@ termination:
 
 reward:
   trading_coeff: 1
-  operational_cost_coeff: 0
   degradation_coeff: 1
-  clip_action_coeff: 1
+  clip_action_coeff: 0.1
 
 use_reward_normalization: True
