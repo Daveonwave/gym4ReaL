@@ -29,7 +29,7 @@ jobs:
       - run: pip install -r docs/requirements.txt
 
       # build the website, save output to _site folder
-      # which is the folder name that actions/upload-pages-artifact@v2 expects by default
+      # which is the folder name that actions/upload-pages-artifact@v3 expects by default
       - name: Run sphinx-build
         run: sphinx-build -b html -v docs _site
 
@@ -37,7 +37,7 @@ jobs:
         run: rm -r _site/.doctrees _site/.buildinfo
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
 
   # Deployment job
   deploy:
