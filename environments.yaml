@@ -1,0 +1,23 @@
+microgrid:
+  description: "Train on the CartPole environment."
+  arguments:
+    - name: "--episodes"
+      type: int
+      default: 1000
+      help: "Number of training episodes"
+    - name: "--lr"
+      type: float
+      default: 0.01
+      help: "Learning rate"
+
+wds:
+  description: "Train on the MountainCar environment."
+  arguments:
+    - name: "--episodes"
+      type: int
+      default: 500
+      help: "Number of training episodes"
+    - name: "--gamma"
+      type: float
+      default: 0.99
+      help: "Discount factor"

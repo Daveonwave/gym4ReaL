@@ -180,3 +180,4 @@ logs/
 .github/workflows/ci-cd.yml
 *.zip
 *.DS_Store
+_site/
