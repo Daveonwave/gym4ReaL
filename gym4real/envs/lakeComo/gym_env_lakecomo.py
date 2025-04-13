@@ -24,15 +24,7 @@ class LakeComoEnv(Env):
         self.inflow = settings['inflow']
 
         # Model components
-        # self.ComoCatchment = Catchment(self.Como_catch_param)
         self.LakeComo = LakeComo(settings['lake_params'])
-        # self.LakeComo.set_evap(0)
-        # self.LakeComo.set_mef({
-        #     "filename": "../../data/lakeComo/MEF_como.txt",
-        #     "row": self.T
-        # })
-        # self.LakeComo.set_surface(145900000)
-        # self.LakeComo.set_init_cond(settings['init_condition'])
 
         # min_input = self.p_param["mIn"]
         # max_input = self.p_param["MIn"]
@@ -77,7 +69,7 @@ class LakeComoEnv(Env):
 
     def reset(self, seed=None, options=None):
         self._init_internal_state()
-        return self._get_observation()
+        return self._get_observation(), {}
 
     def step(self, action):
         t = self.current_step
@@ -106,12 +98,13 @@ class LakeComoEnv(Env):
 
         # Update step
         self.current_step += 1
-        self.done = self.current_step >= self.H
-
-        return self._get_observation(), reward, self.done, {
+        truncated = self.current_step >= self.H
+        info = {
             "flood": float(self.h[t + 1] > self.h_flo),
             "deficit": self._daily_deficit(t)
         }
+
+        return self._get_observation(), reward, False, truncated, info
 
     def _get_observation(self):
         t = self.current_step
@@ -125,6 +118,7 @@ class LakeComoEnv(Env):
         # Commented for the moment since it goes beyond the boundary when t > 365
         # if self.p_param["policyInput"] > 3:
         # obs.append(self.qForecast[t])
+        # print(obs)
         return np.array(obs, dtype=np.float32)
 
     def _calculate_reward(self, t):
@@ -157,13 +151,14 @@ class LakeComoEnv(Env):
     def close(self):
         # self.ComoCatchment = None
         self.LakeComo = None
-        self.mPolicy = None
+        # self.mPolicy = None
 
     def get_inflow(self, pt, ps):
         """
         Retrieve inflow for simulation point ps and time step pt.
         """
-        return self.inflow[ps][pt]
+        return self.inflow[pt]
+        # return self.inflow[ps][pt]    #fixme why ps?
 
 
 def from_str_to_num(s):
