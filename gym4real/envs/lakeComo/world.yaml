@@ -7,6 +7,7 @@ num_vars: 32
 num_objs: 2
 warmup: 0
 doy: 1
+flood_level: 1.24
 
 demand: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/lakeComo/comoDemand.csv'
 q_forecast: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/lakeComo/qSimAnomL51.csv'
