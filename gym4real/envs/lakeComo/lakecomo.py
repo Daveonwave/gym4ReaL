@@ -2,8 +2,8 @@ from lake import Lake
 import math
 
 class LakeComo(Lake):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, params):
+        super().__init__(params)
 
     def storage_to_level(self, s):
         """

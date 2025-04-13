@@ -4,12 +4,14 @@ from stable_baselines3.common.callbacks import CheckpointCallback, \
     StopTrainingOnMaxEpisodes, EvalCallback
 from stable_baselines3.ppo import MlpPolicy
 
-from gym_env_lakecomo_with_uniform_policy import LakeComoEnv
+# from gym_env_lakecomo_with_uniform_policy import LakeComoEnv
+from gym_env_lakecomo import LakeComoEnv
 from stable_baselines3 import PPO
+from utils import parameter_generator
 
 if __name__ == '__main__':
 
-    filename = "../../data/lakeComo/modified_settings_lakeComoHistory.txt"
+    # filename = "../../data/lakeComo/modified_settings_lakeComoHistory.txt"
     num_episodes = 500
     verbose = True
     gamma = 0.99
@@ -19,7 +21,10 @@ if __name__ == '__main__':
     days_in_year = 365
     log_rate = 1000
 
-    lakeComoEnv = LakeComoEnv(filename=filename)
+    params = parameter_generator(world_options='world.yaml',
+                                 lake_params='lake.yaml')
+
+    lakeComoEnv = LakeComoEnv(settings=params)
 
     print("Lake Como Environment Initialized")
 
@@ -44,7 +49,10 @@ if __name__ == '__main__':
     callback_max_episodes = StopTrainingOnMaxEpisodes(
         max_episodes=num_episodes, verbose=1)
 
-    eval_env = LakeComoEnv(filename=filename)
+    params = parameter_generator(world_options='world.yaml',
+                                 lake_params='lake.yaml')
+
+    eval_env = LakeComoEnv(settings=params)
     eval_callback = EvalCallback(eval_env,
                                  best_model_save_path="./logs/first_exp/models/eval/",
                                  log_path="./logs/",
