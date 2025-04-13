@@ -3,7 +3,7 @@ from utils import Utils
 
 class Lake:
     def __init__(self, params):
-        self.init_condition = None
+        self.init_condition = params['init_condition']
         self.EV = params['evaporation']
         self.evap_rates = []
         self.rating_curve = []
