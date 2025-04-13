@@ -20,18 +20,18 @@ class LakeComoEnv(Env):
         self.Nobj = settings['num_objs']
         self.Nvar = settings['num_vars']
         self.warmup = settings['warmup']
-        self.initDay = settings['doy']
+        self.init_day = settings['doy']
         self.inflow = settings['inflow']
 
         # Model components
-        self.LakeComo = LakeComo(settings['lake_params'])
+        self.lake_como = LakeComo(settings['lake_params'])
 
         # min_input = self.p_param["mIn"]
         # max_input = self.p_param["MIn"]
         # min_output = self.p_param["mOut"]
         # max_output = self.p_param["MOut"]
 
-        self.h_flo = 1.24
+        self.flood_level = settings['flood_level']
         self.demand = settings['demand']
         self.qForecast = settings['q_forecast']
 
@@ -56,16 +56,23 @@ class LakeComoEnv(Env):
 
     def _init_internal_state(self):
         self.current_step = 0
-        self.done = False
+        # self.done = False
 
-        self.h = np.full(self.H + 1, -999.0)
-        self.s = np.full(self.H + 1, -999.0)
-        self.r = np.full(self.H + 1, -999.0)
-        self.doy = np.full(self.H, -999, dtype=int)
-        self.u = np.full(self.H, -999.0)
+        # self.h = np.full(self.H + 1, -999.0)
+        # self.storage = np.full(self.H + 1, -999.0)
+        # self.r = np.full(self.H + 1, -999.0)
+        # self.doy = np.full(self.H, -999, dtype=int)
+        # self.u = np.full(self.H, -999.0)
 
-        self.h[0] = self.LakeComo.get_init_cond()
-        self.s[0] = self.LakeComo.level_to_storage(self.h[0])
+        self.level = []
+        self.storage = []
+        self.release = []
+        self.doy = []
+        self.actions = []
+
+        self.level.append(self.lake_como.get_init_cond())
+        self.storage.append(self.lake_como.level_to_storage(self.level[0]))
+        self.release.append(0.)
 
     def reset(self, seed=None, options=None):
         self._init_internal_state()
@@ -79,19 +86,25 @@ class LakeComoEnv(Env):
         #     raise RuntimeError("Episode is done. Call reset().")
 
         # Day of year
-        self.doy[t] = (self.initDay + t - 1) % self.T + 1
+        self.doy.append((self.init_day + t - 1) % self.T + 1)
 
         # Inflow + integration
         # qIn = self.ComoCatchment.get_inflow(t, ps)
-        qIn = self.get_inflow(t, ps)
+        inflow = self.get_inflow(t, ps)
 
-        self.u[t] = np.clip(action, self.action_space.low, self.action_space.high)
+        clipped_action = np.clip(action, self.action_space.low, self.action_space.high)
+
+        self.actions.append(clipped_action)
         # self.u[t] = np.clip(action[0], *self.action_space.bounds)
 
-        self.s[t + 1], self.r[t + 1] = self.LakeComo.integration(
-            self.integStep, t, self.s[t], self.u[t], qIn, self.doy[t], ps
+        new_storage, new_release = self.lake_como.integration(
+            self.integStep, t, self.storage[t], clipped_action, inflow, self.doy[t], ps
         )
-        self.h[t + 1] = self.LakeComo.storage_to_level(self.s[t + 1])
+
+        self.storage.append(new_storage)
+        self.release.append(new_release)
+
+        self.level.append(self.lake_como.storage_to_level(new_storage))
 
         # Compute reward
         reward = self._calculate_reward(t)
@@ -100,7 +113,7 @@ class LakeComoEnv(Env):
         self.current_step += 1
         truncated = self.current_step >= self.H
         info = {
-            "flood": float(self.h[t + 1] > self.h_flo),
+            "flood": float(self.level[-1] > self.flood_level),
             "deficit": self._daily_deficit(t)
         }
 
@@ -108,8 +121,8 @@ class LakeComoEnv(Env):
 
     def _get_observation(self):
         t = self.current_step
-        doy = (self.initDay + t - 1) % self.T + 1
-        h_t = self.h[t]
+        doy = (self.init_day + t - 1) % self.T + 1
+        h_t = self.level[t]
         obs = [
             sin(2 * pi * doy / self.T),
             cos(2 * pi * doy / self.T),
@@ -126,7 +139,7 @@ class LakeComoEnv(Env):
         """Negative cost: combination of flood + deficit"""
         penalty = 0.0
 
-        if self.h[t + 1] > self.h_flo:
+        if self.level[t + 1] > self.flood_level:
             penalty += 1.0
 
         # Deficit penalty
@@ -138,19 +151,19 @@ class LakeComoEnv(Env):
         doy = int(self.doy[t]) - 1
         # FIXME
         # why is there here a t+1?
-        qdiv = self.r[t + 1] - self.LakeComo.get_mef(doy)
+        qdiv = self.release[t + 1] - self.lake_como.get_mef(doy)
         qdiv = max(qdiv, 0.0)
         d = max(self.demand[doy] - qdiv, 0.0)
         if 120 < self.doy[t] <= 243:
             d *= 2
-        return d * d
+        return d**2
 
     def render(self, mode='human'):
-        print(f"Day {self.current_step}, Level: {self.h[self.current_step]:.2f}")
+        print(f"Day {self.current_step}, Level: {self.level[self.current_step]:.2f}")
 
     def close(self):
         # self.ComoCatchment = None
-        self.LakeComo = None
+        self.lake_como = None
         # self.mPolicy = None
 
     def get_inflow(self, pt, ps):

@@ -1,5 +1,5 @@
-
 from utils import Utils
+import numpy as np
 
 class Lake:
     def __init__(self, params):
@@ -12,25 +12,25 @@ class Lake:
         self.tailwater = []
         self.minEnvFlow = params['min_env_flow']
 
-    def integration(self, HH, tt, s0, uu, n_sim, cday, ps):
+    def integration(self, step, tt, init_storage, to_release, n_sim, cday, ps):
         """
         Simulates lake behavior over a discretized period.
         Returns a list [final_storage, mean_release]
         """
-        sim_step = 3600 * 24 / HH  # seconds per step
-        s = [-999.0] * (HH + 1)
-        r = [-999.0] * HH
+        sim_step = 3600 * 24 / step  # seconds per step
+        release = []
 
         # Initial condition
-        s[0] = s0
 
-        for i in range(HH):
+        curr_storage = init_storage
+
+        for i in range(step):
             # Compute actual release
-            r[i] = self.actual_release(uu, s[i], cday)
+            release.append(self.actual_release(to_release, curr_storage, cday))
 
             # Compute evaporation
             if self.EV == 1:
-                S = self.level_to_surface(self.storage_to_level(s[i]))
+                S = self.level_to_surface(self.storage_to_level(curr_storage))
                 E = self.evap_rates[cday - 1] / 1000 * S / 86400  # m³/s
             elif self.EV > 1:
                 # E = compute_evaporation()  # Not implemented
@@ -39,20 +39,19 @@ class Lake:
                 E = 0.0
 
             # System transition
-            s[i + 1] = s[i] + sim_step * (n_sim - r[i] - E)
+            curr_storage = curr_storage + sim_step * (n_sim - release[-1] - E)
 
-        final_storage = s[HH]
-        mean_release = Utils.compute_mean(r)
+        mean_release = np.mean(release)
 
-        return [final_storage, mean_release]
+        return [curr_storage, mean_release]
 
-    def actual_release(self, uu, s, cday):
+    def actual_release(self, to_release, storage, cday):
         """
         Returns the actual release amount based on decision and storage constraints.
         """
-        qm = self.min_release(s, cday)
-        qM = self.max_release(s, cday)
-        return min(qM, max(qm, uu))
+        qm = self.min_release(storage, cday)
+        qM = self.max_release(storage, cday)
+        return min(qM, max(qm, to_release))
 
     def rel_to_tailwater(self, r):
         """
