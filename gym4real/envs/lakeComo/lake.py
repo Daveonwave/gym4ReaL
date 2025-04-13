@@ -2,15 +2,15 @@
 from utils import Utils
 
 class Lake:
-    def __init__(self):
+    def __init__(self, params):
         self.init_condition = None
-        self.EV = 0
+        self.EV = params['evaporation']
         self.evap_rates = []
         self.rating_curve = []
         self.lsv_rel = []
-        self.A = 0.0
+        self.A = params['surface']
         self.tailwater = []
-        self.minEnvFlow = []
+        self.minEnvFlow = params['min_env_flow']
 
     def integration(self, HH, tt, s0, uu, n_sim, cday, ps):
         """

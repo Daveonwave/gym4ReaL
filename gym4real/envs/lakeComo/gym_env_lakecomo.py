@@ -5,24 +5,34 @@ from gymnasium import Env
 from gymnasium.spaces import Box
 from math import sin, cos, pi
 from utils import Utils
-from catchment import Catchment
+# from catchment import Catchment
 from lakecomo import LakeComo
 
 class LakeComoEnv(Env):
-    def __init__(self, filename):
+    def __init__(self, settings):
         super().__init__()
-        self.read_file_settings(filename)
+
+        self.Nsim = settings['num_sim']
+        self.NN = settings['dim_ensemble']
+        self.T = settings['period']
+        self.integStep = settings['integration']
+        self.H = settings['sim_horizon']
+        self.Nobj = settings['num_objs']
+        self.Nvar = settings['num_vars']
+        self.warmup = settings['warmup']
+        self.initDay = settings['doy']
+        self.inflow = settings['inflow']
 
         # Model components
-        self.ComoCatchment = Catchment(self.Como_catch_param)
-        self.LakeComo = LakeComo()
-        self.LakeComo.set_evap(0)
-        self.LakeComo.set_mef({
-            "filename": "../data/MEF_como.txt",
-            "row": self.T
-        })
-        self.LakeComo.set_surface(145900000)
-        self.LakeComo.set_init_cond(self.Como_param["initCond"])
+        # self.ComoCatchment = Catchment(self.Como_catch_param)
+        self.LakeComo = LakeComo(settings['lake_params'])
+        # self.LakeComo.set_evap(0)
+        # self.LakeComo.set_mef({
+        #     "filename": "../../data/lakeComo/MEF_como.txt",
+        #     "row": self.T
+        # })
+        # self.LakeComo.set_surface(145900000)
+        # self.LakeComo.set_init_cond(settings['init_condition'])
 
         # min_input = self.p_param["mIn"]
         # max_input = self.p_param["MIn"]
@@ -30,8 +40,8 @@ class LakeComoEnv(Env):
         # max_output = self.p_param["MOut"]
 
         self.h_flo = 1.24
-        self.demand = Utils.load_vector("../data/comoDemand.txt", 365)
-        self.qForecast = Utils.load_vector("../data/qSimAnomL51.txt", self.H)
+        self.demand = settings['demand']
+        self.qForecast = settings['q_forecast']
 
         # Action space = single release decision
         # FIXME these bounds should be modified
@@ -80,7 +90,8 @@ class LakeComoEnv(Env):
         self.doy[t] = (self.initDay + t - 1) % self.T + 1
 
         # Inflow + integration
-        qIn = self.ComoCatchment.get_inflow(t, ps)
+        # qIn = self.ComoCatchment.get_inflow(t, ps)
+        qIn = self.get_inflow(t, ps)
 
         self.u[t] = np.clip(action, self.action_space.low, self.action_space.high)
         # self.u[t] = np.clip(action[0], *self.action_space.bounds)
@@ -144,64 +155,15 @@ class LakeComoEnv(Env):
         print(f"Day {self.current_step}, Level: {self.h[self.current_step]:.2f}")
 
     def close(self):
-        self.ComoCatchment = None
+        # self.ComoCatchment = None
         self.LakeComo = None
         self.mPolicy = None
 
-
-    def read_file_settings(self, filename):
-        self.Como_catch_param = {"inflow_file": {}}
-        self.Como_param = {"minEnvFlow": {}}
-
-        print(os.getcwd())
-        filename = os.path.join(os.getcwd(), filename)
-        with open(filename, 'r') as f:
-            lines = f.readlines()
-
-        def find_and_read(key, return_line=False):
-            for i, line in enumerate(lines):
-                print(line.strip())
-                if line.strip().startswith(key):
-                    if return_line:
-                        return i
-                    print(line.split()[1])
-                    if from_str_to_num(line.split()[1]) != None:
-                        value = from_str_to_num(line.split()[1])
-                    else:
-                        raise ValueError(f"Invalid value for {key}: {line.split()[1]}")
-                    return value
-
-        self.Nsim = int(find_and_read("<NUM_SIM>"))
-        self.NN = int(find_and_read("<DIM_ENSEMBLE>"))
-        self.T = int(find_and_read("<PERIOD>"))
-        self.integStep = int(find_and_read("<INTEGRATION>"))
-        self.H = int(find_and_read("<SIM_HORIZON>"))
-        self.Nobj = int(find_and_read("<NUM_OBJ>"))
-        self.Nvar = int(find_and_read("<NUM_VAR>"))
-        self.warmup = int(find_and_read("<WARMUP>"))
-
-        initDay_or_file = find_and_read("<DOY>", False)
-
-        # This part has been simplified with respect to the cpp implementation
-        self.initDay = int(initDay_or_file)
-
-        self.Como_catch_param["CM"] = int(find_and_read("<CATCHMENT>"))
-        catchment_index = find_and_read("<CATCHMENT>", return_line=True)
-        self.Como_catch_param["inflow_file"]["filename"] = lines[catchment_index + 1].strip()
-        self.Como_catch_param["inflow_file"]["row"] = self.NN
-        self.Como_catch_param["inflow_file"]["col"] = self.H
-
-        self.Como_param["initCond"] = float(find_and_read("<INIT_CONDITION>"))
-
-        minEnvFlow_index = find_and_read("<MIN_ENV_FLOW_FILE>", return_line=True)
-        self.Como_param_minEnvFlow_filename = lines[
-            minEnvFlow_index + 1].strip()
-        print(self.Como_param_minEnvFlow_filename)
-        self.Como_param["minEnvFlow"] = Utils.load_matrix(
-            self.Como_param_minEnvFlow_filename,
-            self.NN,
-            self.H
-        )
+    def get_inflow(self, pt, ps):
+        """
+        Retrieve inflow for simulation point ps and time step pt.
+        """
+        return self.inflow[ps][pt]
 
 
 def from_str_to_num(s):
