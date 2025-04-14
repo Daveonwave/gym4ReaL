@@ -154,6 +154,7 @@ def parameter_generator(world_options: str,
               'warmup': world_settings['warmup'],
               'doy': world_settings['doy'],
               'flood_level': world_settings['flood_level'],
+              'observations': world_settings['observations'],
               'lake_params': lake_params}
 
     demand = read_csv(world_settings['demand'])['demand'].to_numpy()

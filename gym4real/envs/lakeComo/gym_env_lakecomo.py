@@ -15,13 +15,14 @@ class LakeComoEnv(Env):
         self.Nsim = settings['num_sim']
         self.NN = settings['dim_ensemble']
         self.T = settings['period']
-        self.integStep = settings['integration']
+        self.integ_step = settings['integration']
         self.H = settings['sim_horizon']
         self.Nobj = settings['num_objs']
         self.Nvar = settings['num_vars']
         self.warmup = settings['warmup']
         self.init_day = settings['doy']
         self.inflow = settings['inflow']
+        self.obs_keys = settings['observations']
 
         # Model components
         self.lake_como = LakeComo(settings['lake_params'])
@@ -40,29 +41,33 @@ class LakeComoEnv(Env):
         self.action_space = Box(
             low=0.,
             high=2.,
-            # low=np.array(0),
-            # high=np.array(2),
             dtype=np.float32
         )
 
-        # Observation = sin/cos(doy), lake level, forecast
-        # TODO see whether we need to modify this
-        obs_dim = 3
+        low = []
+        high = []
+
+        if 'level' in self.obs_keys:
+            low.append(0.)
+            high.append(np.inf)
+        if 'day_of_year' in self.obs_keys:
+            low.extend([0., 0.])
+            high.extend([1., 1.])
+        if 'q_forecast' in self.obs_keys:
+            low.append(-np.inf)
+            high.append(np.inf)
+
+        low = np.array(low)
+        high = np.array(high)
+
         self.observation_space = Box(
-            low=-np.inf, high=np.inf, shape=(obs_dim,), dtype=np.float32
+            low=low, high=high, dtype=np.float32
         )
 
         self._init_internal_state()
 
     def _init_internal_state(self):
         self.current_step = 0
-        # self.done = False
-
-        # self.h = np.full(self.H + 1, -999.0)
-        # self.storage = np.full(self.H + 1, -999.0)
-        # self.r = np.full(self.H + 1, -999.0)
-        # self.doy = np.full(self.H, -999, dtype=int)
-        # self.u = np.full(self.H, -999.0)
 
         self.level = []
         self.storage = []
@@ -98,7 +103,7 @@ class LakeComoEnv(Env):
         # self.u[t] = np.clip(action[0], *self.action_space.bounds)
 
         new_storage, new_release = self.lake_como.integration(
-            self.integStep, t, self.storage[t], clipped_action, inflow, self.doy[t], ps
+            self.integ_step, t, self.storage[t], clipped_action, inflow, self.doy[t], ps
         )
 
         self.storage.append(new_storage)
@@ -121,17 +126,17 @@ class LakeComoEnv(Env):
 
     def _get_observation(self):
         t = self.current_step
-        doy = (self.init_day + t - 1) % self.T + 1
-        h_t = self.level[t]
-        obs = [
-            sin(2 * pi * doy / self.T),
-            cos(2 * pi * doy / self.T),
-            h_t
-        ]
-        # Commented for the moment since it goes beyond the boundary when t > 365
-        # if self.p_param["policyInput"] > 3:
-        # obs.append(self.qForecast[t])
-        # print(obs)
+        doy = (self.init_day + t - 1) % self.T #+ 1
+        obs = []
+
+        if 'level' in self.obs_keys:
+            obs.append(self.level[t])
+        if 'day_of_year' in self.obs_keys:
+            obs.append(sin(2 * pi * doy / self.T))
+            obs.append(cos(2 * pi * doy / self.T))
+        if 'q_forecast' in self.obs_keys:
+            obs.append(self.qForecast[doy])
+
         return np.array(obs, dtype=np.float32)
 
     def _calculate_reward(self, t):
