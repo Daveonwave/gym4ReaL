@@ -4,18 +4,18 @@ import numpy as np
 class Lake:
     def __init__(self, params):
         self.init_condition = params['init_condition']
-        self.EV = params['evaporation']
+        self.evaporation = params['evaporation']
         self.evap_rates = []
         self.rating_curve = []
         self.lsv_rel = []
-        self.A = params['surface']
+        self.surface = params['surface']
         self.tailwater = []
         self.minEnvFlow = params['min_env_flow']
 
-    def integration(self, step, tt, init_storage, to_release, n_sim, cday, ps):
+    def integration(self, step, tt, init_storage, to_release, inflow, cday, ps):
         """
         Simulates lake behavior over a discretized period.
-        Returns a list [final_storage, mean_release]
+        Returns a tuple (final_storage, mean_release)
         """
         sim_step = 3600 * 24 / step  # seconds per step
         release = []
@@ -29,29 +29,29 @@ class Lake:
             release.append(self.actual_release(to_release, curr_storage, cday))
 
             # Compute evaporation
-            if self.EV == 1:
-                S = self.level_to_surface(self.storage_to_level(curr_storage))
-                E = self.evap_rates[cday - 1] / 1000 * S / 86400  # m³/s
-            elif self.EV > 1:
+            if self.evaporation == 1:
+                surf = self.level_to_surface(self.storage_to_level(curr_storage))
+                evaporated = self.evap_rates[cday - 1] / 1000 * surf / 86400  # m³/s
+            elif self.evaporation > 1:
                 # E = compute_evaporation()  # Not implemented
-                E = 0.0
+                evaporated = 0.
             else:
-                E = 0.0
+                evaporated = 0.
 
             # System transition
-            curr_storage = curr_storage + sim_step * (n_sim - release[-1] - E)
+            curr_storage = curr_storage + sim_step * (inflow - release[-1] - evaporated)
 
         mean_release = np.mean(release)
 
-        return [curr_storage, mean_release]
+        return curr_storage, mean_release
 
     def actual_release(self, to_release, storage, cday):
         """
         Returns the actual release amount based on decision and storage constraints.
         """
-        qm = self.min_release(storage, cday)
-        qM = self.max_release(storage, cday)
-        return min(qM, max(qm, to_release))
+        release_min = self.min_release(storage, cday)
+        release_max = self.max_release(storage, cday)
+        return min(release_max, max(release_min, to_release))
 
     def rel_to_tailwater(self, r):
         """
@@ -68,7 +68,7 @@ class Lake:
         return self.init_condition
 
     def set_evap(self, pEV):
-        self.EV = pEV
+        self.evaporation = pEV
 
     def set_evap_rates(self, pEvap):
         self.evap_rates = Utils.load_vector(pEvap["filename"], pEvap["row"])
@@ -80,7 +80,7 @@ class Lake:
         self.lsv_rel = Utils.load_matrix(pLSV_Rel["filename"], pLSV_Rel["row"], pLSV_Rel["col"])
 
     def set_surface(self, pA):
-        self.A = pA
+        self.surface = pA
 
     def set_tailwater(self, pTailWater):
         self.tailwater = Utils.load_matrix(pTailWater["filename"], pTailWater["row"], pTailWater["col"])
@@ -106,4 +106,4 @@ class Lake:
 
     def level_to_surface(self, level):
         # Define transformation from level to surface area
-        return self.A  # Simple constant surface fallback
+        return self.surface  # Simple constant surface fallback

@@ -5,13 +5,13 @@ class LakeComo(Lake):
     def __init__(self, params):
         super().__init__(params)
 
-    def storage_to_level(self, s):
+    def storage_to_level(self, storage):
         """
         Converts storage (m³) to water level (m).
         Linear relationship: h = s/A + h0
         """
         h0 = -0.5
-        return s / self.A + h0
+        return storage / self.surface + h0
 
     def level_to_storage(self, h):
         """
@@ -19,14 +19,14 @@ class LakeComo(Lake):
         Inverse of storage_to_level.
         """
         h0 = -0.5
-        return self.A * (h - h0)
+        return self.surface * (h - h0)
 
     def level_to_surface(self, h):
         """
         Returns surface area (m²) at level h.
         Constant surface area is assumed for Lake Como.
         """
-        return self.A
+        return self.surface
 
     def min_release(self, s, cday):
         """

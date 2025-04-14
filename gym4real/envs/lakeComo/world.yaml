@@ -12,3 +12,8 @@ flood_level: 1.24
 demand: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/lakeComo/comoDemand.csv'
 q_forecast: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/lakeComo/qSimAnomL51.csv'
 inflow: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/lakeComo/comoInflowSim.csv'
+
+observations:
+  - day_of_year
+  - level
+  - q_forecast
