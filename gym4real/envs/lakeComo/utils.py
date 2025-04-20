@@ -144,26 +144,28 @@ def parameter_generator(world_options: str,
 
     world_settings = read_yaml(world_options)
 
-    params = {'num_sim': world_settings['num_sim'],
-              'dim_ensemble': world_settings['dim_ensemble'],
-              'period': world_settings['period'],
-              'integration': world_settings['integration'],
-              'sim_horizon': world_settings['sim_horizon'],
-              'num_vars': world_settings['num_vars'],
-              'num_objs': world_settings['num_objs'],
-              'warmup': world_settings['warmup'],
-              'doy': world_settings['doy'],
-              'flood_level': world_settings['flood_level'],
-              'observations': world_settings['observations'],
-              'lake_params': lake_params}
+    params = {
+        'period': world_settings['period'],
+        'integration': world_settings['integration'],
+        'sim_horizon': world_settings['sim_horizon'],
+        'warmup': world_settings['warmup'],
+        'doy': world_settings['doy'],
+        'flood_level': world_settings['flood_level'],
+        'observations': world_settings['observations'],
+        'action': world_settings['action'],
+        'lake_params': lake_params,
+        'reward_coeff': world_settings['reward']
+    }
 
     demand = read_csv(world_settings['demand'])['demand'].to_numpy()
     params['demand'] = demand
+    print('sum demand: ', sum(demand))
 
     q_forecast = read_csv(world_settings['q_forecast'])['q_forecast'].to_numpy()
     params['q_forecast'] = q_forecast
 
     inflow = read_csv(world_settings['inflow'])['inflow'].to_numpy()
     params['inflow'] = inflow
+    print('sum inflow: ', sum(inflow))
 
     return params
