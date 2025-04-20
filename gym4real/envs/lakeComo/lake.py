@@ -1,9 +1,9 @@
-from utils import Utils
+from abc import ABC, abstractmethod
 import numpy as np
 
-class Lake:
+class Lake(ABC):
     def __init__(self, params):
-        self.init_condition = params['init_condition']
+        self.init_level = params['init_level']
         self.evaporation = params['evaporation']
         self.evap_rates = []
         self.rating_curve = []
@@ -12,7 +12,7 @@ class Lake:
         self.tailwater = []
         self.minEnvFlow = params['min_env_flow']
 
-    def integration(self, step, tt, init_storage, to_release, inflow, cday, ps):
+    def integration(self, step, tt, init_storage, to_release, inflow, cday):
         """
         Simulates lake behavior over a discretized period.
         Returns a tuple (final_storage, mean_release)
@@ -51,6 +51,7 @@ class Lake:
         """
         release_min = self.min_release(storage, cday)
         release_max = self.max_release(storage, cday)
+
         return min(release_max, max(release_min, to_release))
 
     def rel_to_tailwater(self, r):
@@ -58,52 +59,28 @@ class Lake:
         Converts release to tailwater level using rating curve interpolation.
         """
         if self.tailwater:
-            return Utils.interp_lin(self.tailwater[0], self.tailwater[1], r)
+            return np.interp(r, self.tailwater[0], self.tailwater[1], left=None, right=None)
         return 0.0
-
-    def set_init_cond(self, ci):
-        self.init_condition = ci
-
-    def get_init_cond(self):
-        return self.init_condition
-
-    def set_evap(self, pEV):
-        self.evaporation = pEV
-
-    def set_evap_rates(self, pEvap):
-        self.evap_rates = Utils.load_vector(pEvap["filename"], pEvap["row"])
-
-    def set_rat_curve(self, pRatCurve):
-        self.rating_curve = Utils.load_matrix(pRatCurve["filename"], pRatCurve["row"], pRatCurve["col"])
-
-    def set_lsv_rel(self, pLSV_Rel):
-        self.lsv_rel = Utils.load_matrix(pLSV_Rel["filename"], pLSV_Rel["row"], pLSV_Rel["col"])
-
-    def set_surface(self, pA):
-        self.surface = pA
-
-    def set_tailwater(self, pTailWater):
-        self.tailwater = Utils.load_matrix(pTailWater["filename"], pTailWater["row"], pTailWater["col"])
-
-    def set_mef(self, pMEF):
-        self.minEnvFlow = Utils.load_vector(pMEF["filename"], pMEF["row"])
 
     def get_mef(self, pDoy):
         return self.minEnvFlow[pDoy]
 
-    # Placeholder methods to be defined as needed
+    @abstractmethod
     def min_release(self, s, cday):
         # Define logic or interpolation using rating_curve / lsv_rel
-        return 0.0
+        pass
 
+    @abstractmethod
     def max_release(self, s, cday):
         # Define logic or interpolation using rating_curve / lsv_rel
-        return 1000.0
+        pass
 
+    @abstractmethod
     def storage_to_level(self, storage):
         # Define transformation from storage to level
-        return 0.0
+        pass
 
+    @abstractmethod
     def level_to_surface(self, level):
         # Define transformation from level to surface area
         return self.surface  # Simple constant surface fallback
