@@ -1,0 +1,176 @@
+<mujoco model="staubli_tx2_60">
+    <!--
+        inertiafromgeom = This attribute controls the automatic inference of body masses and inertias from geoms attached to the body
+        dalla versione 1 cambia la telecamera
+    -->
+
+    <compiler angle="radian" meshdir="../meshes/tx2_60/visual/" inertiafromgeom="auto" balanceinertia="false"/>
+
+    <option noslip_iterations="3" timestep="1e-3" iterations="10" tolerance="1e-6" impratio="30" cone="elliptic">
+      <flag multiccd="enable" />
+    </option>
+
+    <size  memory ="400M"></size>
+    <include file="object_v2.xml"/>    
+    <include file="box.xml"/>
+    <!--<include file="cubes.xml"/>-->
+    
+   <!--
+    cone="elliptic" The type of contact friction cone. Elliptic cones are a better model of the physical reality, but pyramidal 
+    cones sometimes make the solver faster and more robust.
+
+    
+    jacobian="dense" The type of constraint Jacobian and matrices computed from it. Auto resolves to dense when the number of degrees 
+    of freedom is up to 60, and sparse over 60.
+    
+    #Prouned
+    solver="Newton"
+
+    impratio= This attribute determines the ratio of frictional-to-normal constraint impedance for elliptic friction cones. 
+    The setting of solimp determines a single impedance value for all contact dimensions, which is then modulated by this attribute. 
+    Settings larger than 1 cause friction forces to be “harder” than normal forces, having the general effect of preventing slip, 
+    without increasing the actual friction coefficient. 
+    --> 
+
+    
+    <visual> <scale framelength="0.5" framewidth="0.001" contactwidth="0.01" contactheight="0.7" forcewidth="0.01"/> </visual>
+
+    <asset>
+        <mesh name="base_link" file="base_link.stl" />
+        <mesh name="link_1" file="link_1.stl" />
+        <mesh name="link_2" file="link_2.stl" />
+        <mesh name="link_3" file="link_3.stl" />
+        <mesh name="link_4" file="link_4.stl" />
+        <mesh name="link_5" file="link_5.stl" />
+        <mesh name="link_6" file="link_6.stl" />
+        <mesh name="hand" file="hand.stl" />
+        <mesh name="LeftFinger" file="LeftFinger.stl" />
+        <mesh name="RightFinger" file="RightFinger.stl" />
+        
+        <texture name="floor_tex" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 .2 .3" width="100" height="100" />
+        <material name='floor_mat' texture="floor_tex"  shininess="0.8" texrepeat="10 10" specular="0.7"  reflectance="0.5"/>
+        <material name="site_mat1" specular="0.0" shininess="0.0" rgba="1.0 0.5 0.2 0.0"/>
+
+        <texture name="skybox" type="skybox" builtin="gradient" rgb1="0.7 0.7 0.8" rgb2=".4 .6 .8" width="800" height="800" />
+    </asset>
+
+
+    <contact>
+        <exclude body1="link_1" body2="base_link"/>
+        <exclude body1="link_1" body2="link_2"/>
+	    <exclude body1="link_2" body2="link_3"/>
+	    <exclude body1="link_3" body2="link_4"/>
+        <exclude body1="link_4" body2="link_5"/>
+	    <exclude body1="link_5" body2="link_6"/>
+    	<exclude body1="flange" body2="tool0_rightfinger"/>
+        <exclude body1="flange" body2="tool0_leftfinger"/>
+        <exclude body1="tool0_leftfinger" body2="tool0_rightfinger"/>   
+        <exclude body1="link_6" body2="tool0_leftfinger"/>
+        <exclude body1="link_6" body2="tool0_rightfinger"/>
+        <exclude body1="link_6" body2="flange"/>
+
+        <exclude body1="tool0_rightfinger" body2="gripper_center"/>
+        <exclude body1="tool0_leftfinger" body2="gripper_center"/>
+        <exclude body1="flange" body2="gripper_center"/>
+    </contact>    
+
+    <worldbody>
+    
+        <!--Lighting parameters-->
+        <light name="light3" mode="targetbody" target="link_1" directional="true" pos="0 0 1" castshadow="false"/>
+        <camera name="top_down" mode="fixed" pos="-0.355 0.37  .63"  axisangle="0 0 1 41.65" fovy="40"/>
+        <camera name="angled_side_view_old" mode="fixed" pos="0 -1.5 1.0" axisangle="1 0 0 1.07854" fovy="40"/>
+
+        <camera name="angled_side_view" mode="fixed" pos="-1. -0.5 1.5" quat = "0.8535530659243842 0.35355417441229225 -0.14644693407519416 -0.35355325611101646" fovy="40"/>
+
+
+
+
+
+
+        <!--Floor Property-->
+        <geom name='floor' material="floor_mat" pos='0 0.25 0' size='5.25 5.25 1' type='plane' />
+
+        <body name="base_link" pos="0 0 0.11" quat="1 0 0 0">
+            <inertial pos="0 0 0" quat="0.5 0.5 -0.5 0.5" mass="4" diaginertia="0.0072 0.00443333 0.00443333"/>
+            <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.98 0.929 0.788 1" mesh="base_link" />
+
+            <body name="link_1" pos="0 0 0.375">
+                <inertial pos="0 0 0" mass="3.7" diaginertia="0.0102675 0.0102675 0.00666"/>
+                <joint name="joint_1" pos="0 0 -0.16" axis="0 0 -1" limited="true" range="0 6.28319" damping="800"/>
+                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.98 0.929 0.788 1" mesh="link_1" />
+
+                <body name="link_2" pos="0 0 0">
+                    <inertial pos="0 0 0" mass="3.7" diaginertia="0.0102675 0.0102675 0.00666"/>
+                    <joint name="joint_2" pos="0 0.12 0" axis="0 1 0" limited="true" range="-2.22529 2.22529" damping="800"/>
+                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.98 0.929 0.788 1" mesh="link_2" />
+
+                    <body name="link_3" pos="0 0.02 0.29">
+                        <inertial pos="0 0 0.28" mass="8.393" diaginertia="0.226891 0.226891 0.0151074"/>
+                        <joint name="joint_3" pos="0 0.1 0" axis="0 1 0" limited="true" range="-2.66163 2.66163" damping="800" />
+                        <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.98 0.929 0.788 1" mesh="link_3" />
+
+                        <body name="link_4" pos="0 0 0" quat="0 0 0 1">
+                            <inertial pos="0 0 0.25" mass="2.275" diaginertia="0.0494433 0.0494433 0.004095"/>
+                            <joint name="joint_4" pos="0 0.0 0.07" axis="0 0 1" limited="true" range="-4.71239 4.71239" damping="800"/>
+                            <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.98 0.929 0.788 1" mesh="link_4" />
+
+                            <body name="link_5" pos="0 0 0.31">
+                                <inertial pos="0 0 0.25" mass="2.275" diaginertia="0.0494433 0.0494433 0.004095"/>
+                                <joint name="joint_5" pos="0 0 0" axis="0 1 0" limited="true" range="-2.11185 2.31256" damping="800"/>
+                                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.529412 0.521569 0.505882 1" mesh="link_5" />
+                                
+                                <body name="link_6" pos="0 0 0.07">
+                                    <inertial pos="0 0 0.25" mass="2.275" diaginertia="0.0494433 0.0494433 0.004095"/>
+                                    <joint name="joint_6" pos="0 0 0" axis="0 0 1" limited="true" range="-4.71239 4.71239" damping="800"/>
+                                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.529412 0.521569 0.505882 1" mesh="link_6" />
+
+                                    <body name="flange" pos="0 0 0.01">
+                                    
+                                        <inertial pos="0 0 0" quat="0.5 0.5 -0.5 0.5" mass="1.219" diaginertia="0.21942 0.111173 0.111173"/>
+                                        <geom type="mesh" contype="0" conaffinity="0" group="1" mesh="hand" />
+                                        <geom type="mesh" contype="0" conaffinity="0" mesh="hand" />
+
+                                        <body name="tool0_leftfinger"  pos="0 -0.0073 0.075" quat="0.999962 0.00872654 0 0">
+                                            <inertial pos="-0.01 0 0" quat="0.5 0.5 0.5 0.5" mass="1" diaginertia="2.5e-05 2.5e-05 1.8e-05"/>
+                                            <joint name="tool0_leftfinger" pos="0 0 0" axis="0 -1 0" type="slide" limited="true" range="0 0.008" damping="600"/>
+                                            <geom type="mesh" mesh="LeftFinger" friction="1.9 1.6 1.6" solref="0.001 1" priority="3" condim="4" solimp="0.99 0.99 0.01"/>
+                                            
+                                        </body>
+
+                                        <body name="tool0_rightfinger" pos="0 0.0073 0.075" quat="0.999962 -0.00872654 0 0">
+                                            <inertial pos="-0.01 0 0" quat="0.5 0.5 0.5 0.5" mass="1" diaginertia="2.5e-05 2.5e-05 1.8e-05"/>
+                                            <joint name="tool0_rightfinger" pos="0 0 0" axis="0 1 0" type="slide" limited="true" range="0 0.008" damping="600" />
+                                            <geom type="mesh" mesh="RightFinger" friction="1.9 1.6 1.6"  solref="0.001 1" priority="3" condim="4" solimp="0.99 0.99 0.01"/>
+                                            
+                                            <body name="gripper_center" pos="0 -0.00791 0.035">
+                                                
+                                            </body>
+                                        </body>
+
+                                    </body>
+                                </body>
+                            </body>
+                        </body>
+                    </body>
+                </body>
+            </body>
+        </body>
+            
+        <site name="target" pos="-0.0882 0.4929 0.4" size="0.075" material="site_mat1" type="sphere"/>
+    </worldbody>
+
+    <actuator>
+        <position name='joint_1_position' forcelimited="false" ctrllimited="true" ctrlrange="0 6.24159" joint='joint_1' kp="33000"/>
+        <position name='joint_2_position' forcelimited="false" ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='joint_2' kp="33000"/>
+        <position name='joint_3_position' forcelimited="false" ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='joint_3' kp="33000"/>
+        <position name='joint_4_position' forcelimited="false" ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='joint_4' kp="33000" />
+        <position name='joint_5_position' forcelimited="false" ctrllimited="true" ctrlrange="-3.14159 3.14159" joint='joint_5' kp="33000"/>
+        <position name='joint_6_position' forcelimited="false" ctrllimited="true" ctrlrange="0 3.14159" joint='joint_6' kp="33000"/>
+        
+        <position name='tool0_leftfinger_position'  ctrllimited="true" forcelimited="false" ctrlrange="0  0.008" joint='tool0_leftfinger' kp="33000" />
+        <position name='tool0_rightfinger_position' ctrllimited="true" forcelimited="false" ctrlrange="0 0.008 " joint='tool0_rightfinger' kp="33000"/>
+
+        <position name='joint_box_position' forcelimited="auto" ctrllimited="true" ctrlrange="0.0001 0.03" joint='joint_box' kp="150000"/>        
+    </actuator>
+</mujoco>

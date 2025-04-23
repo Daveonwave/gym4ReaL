@@ -1,0 +1,30 @@
+--- #YAML documents start with a - (dash or hyphen) three times
+
+# Simulation Observation
+  OBSERVATION_IMAGE_DIM:  300 # 450 # 150
+
+# Robot work area Limits (in pixels)
+  X_LIMIT: 0 #27 # 23  #15
+  Y_DOWN: 0 #20 # 40 #10
+  Y_UP: 240 #215 # 320 #125
+
+# Simulation Controls
+  ACTION_LONG_PAUSE: .025
+  ACTION_SHORT_PAUSE: 0.016
+
+  DELTA_GRIPPER: 0.00355
+  OPEN_GRIPPER: 0.008
+  CLOSE_GRIPPER: 0.00125
+
+#ObjectToPick
+  NUMBER_OF_OBJECTS: 1
+  SHUFFLE_OBJECTS: True
+  OBJ_CORRECT_ORIENTATION: True
+
+#Simulator Setting
+  IS_SIMULATION_REAL_TIME: False
+  IS_SIMULATION_SHOWED: False
+  IS_SIMULATION_RECORD: False
+  RECORD_FOLDER : "/usr/src/data/recordings"
+
+... # The YAML document ends with an optional …

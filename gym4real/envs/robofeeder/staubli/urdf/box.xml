@@ -1,0 +1,66 @@
+<mujoco model="box">
+
+  <default>
+      <default class="visual">
+          <geom group="2" type="mesh" contype="0" conaffinity="0"/>
+      </default>
+
+      <default class="collision">
+          <geom group="3" type="mesh" solref="0.001 1" condim="4" solimp="0.99 0.99 0.01"/>
+      </default>
+  </default>    
+  
+  <asset>
+    <mesh file="box_sopra.obj"/>
+    <mesh file="box_sopra_collision_0.obj"/>
+    <mesh file="box_sopra_collision_1.obj"/>
+    <mesh file="box_sopra_collision_3.obj"/>
+    <mesh file="box_sopra_collision_5.obj"/>
+    <mesh file="box_sopra_collision_6.obj"/>
+    <mesh file="box_sopra_collision_7.obj"/>
+    <mesh file="box_sopra_collision_8.obj"/>
+    <mesh file="box_sopra_collision_9.obj"/>
+    
+    <!--<mesh file="box_sotto.obj"/>-->
+    <mesh file="piatto.obj"/>
+    <mesh file="robot_base.obj"/>
+
+    <material name="Aluminum_Anodized_Charcoal" specular="0.5" shininess="0.36" rgba="0.8 0.8 0.8 1.0"/>
+    <material name="table_base_transparent" specular="0.5" shininess="0.36" rgba="0.8 0.4 0.8 0.0"/>
+    <material name="table_base" specular="0.5" shininess="0.36" rgba="0.160784314 0.160784314 0.156862745 1.0"/>
+  </asset>
+
+
+
+  <worldbody>
+  
+    <body name="box_sopra" pos="-0.47 0 -0.075" euler="0 0 -2.3315">
+      <inertial pos="-0.35 -0.175 0.1" mass="40." diaginertia="0.00001 0.00001 0.00001" />
+      <geom material="Aluminum_Anodized_Charcoal" mesh="box_sopra" class="visual"/>
+      <geom material="table_base" mesh="piatto" class="visual"/>
+
+      <geom name = "PickBoxPlane" size=".18 .255 .005" pos ="-0.346 -0.225 0.25535" type="box" material="table_base_transparent" solref="0.001 1" condim="4" solimp="0.99 0.99 0.01"/>
+      <joint name="joint_box" pos="-0.35 -0.25  0.2" axis="0 0 1" type="slide" limited="true" range="0.0 0.03" damping="800"/>
+
+      <geom mesh="box_sopra_collision_0" class="collision"/>
+      <geom mesh="box_sopra_collision_1" class="collision"/>
+      <geom mesh="box_sopra_collision_3" class="collision"/>
+      <geom mesh="box_sopra_collision_5" class="collision"/>
+      <geom mesh="box_sopra_collision_6" class="collision"/>
+      <geom mesh="box_sopra_collision_7" class="collision"/>
+      <geom mesh="box_sopra_collision_8" class="collision"/>
+      <geom mesh="box_sopra_collision_9" class="collision"/>
+    </body>
+
+        
+    <body name="box_sotto" pos="-0.47 0 -0.075" euler="0 0 -2.3315">
+      <geom material="Aluminum_Anodized_Charcoal" size=".15 .23 .075" pos ="-0.346 -0.225 0.15" type="box" class="visual"/>
+    </body>
+
+    
+    <body name="robot_base" quat="0.1 0.1 0.25 0.25" pos="-0.47 0 -0.065">
+      <geom material="Aluminum_Anodized_Charcoal" mesh="robot_base" class="visual"/>
+    </body>
+    
+  </worldbody>
+</mujoco>
