@@ -1,0 +1,25 @@
+<mujoco model="object">
+  <default>
+      <default class="visual1">
+          <geom group="2" type="mesh" contype="0" conaffinity="0" />
+      </default>
+
+      <default class="collision1">
+            
+          <geom group="3" type="mesh" solimp="0.99 0.99 0.01" solref="0.001 1" condim="4" friction="0.3 0.3 0.8"  margin="0.0005"/>
+      </default>
+  </default>  
+
+   <asset>
+    <material name="Iron_Scratched" specular="0.0" shininess="0.0" rgba="0.8 0.8 0.8 1.0"/>
+    <material name="highlight" specular="0.0" shininess="0.0" rgba="0.8 0.8 0.0 0.0"/>  
+    <mesh file="object.obj" scale="10 10 10"/>
+    <mesh file="object_collision_0.obj" scale="10 10 10" />
+    <mesh file="object_collision_1.obj" scale="10 10 10" /> <!-- lato1 -->
+    <mesh file="object_collision_2.obj" scale="10 10 10" /> <!-- lato2 -->
+    <mesh file="object_collision_3.obj" scale="10 10 10" />
+    <mesh file="object_collision_4.obj" scale="10 10 10" />
+  </asset>
+  
+  <worldbody>
+
