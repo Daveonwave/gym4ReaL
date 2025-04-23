@@ -5,15 +5,15 @@ import numpy as np
 import time
 import yaml
 import imageio
-
-#import ros_planner
-import obj_configurator
-
-# Open the file and load the file
 import mujoco
 import mujoco.viewer
-from planner import PlanningClass
 import cv2
+
+#import ros_planner
+from . import obj_configurator
+# Open the file and load the file
+from .planner import PlanningClass
+
 
 
 class robot_simulator:

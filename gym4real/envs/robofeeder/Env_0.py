@@ -3,8 +3,7 @@ from gymnasium.spaces import Box
 
 import numpy as np
 from scipy.spatial.transform import Rotation
-
-import robot_simulator
+from . import robot_simulator
 
 #ex env 10
 
