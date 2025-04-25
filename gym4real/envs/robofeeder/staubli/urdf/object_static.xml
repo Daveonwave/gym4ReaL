@@ -1,0 +1,79 @@
+<mujoco model="object">
+  <default>
+      <default class="visual1">
+          <geom group="2" type="mesh" contype="0" conaffinity="0" />
+      </default>
+
+      <default class="collision1">
+          <geom group="3" type="mesh" solimp="0.99 0.99 0.01" solref="0.001 1" condim="4" friction="0.3 0.3 0.8"  margin="0.0005"/>
+      </default>
+  </default>  
+
+
+  <asset>
+    <material name="Iron_Scratched" specular="0.0" shininess="0.0" rgba="0.8 0.8 0.8 1.0"/>
+    <material name="highlight" specular="0.0" shininess="0.0" rgba="0.8 0.8 0.0 0.0"/>
+    
+    <mesh file="object.obj" scale="10 10 10"/>
+    <mesh file="object_collision_0.obj" scale="10 10 10" />
+    <mesh file="object_collision_1.obj" scale="10 10 10" /> <!-- lato1 -->
+    <mesh file="object_collision_2.obj" scale="10 10 10" /> <!-- lato2 -->
+    <mesh file="object_collision_3.obj" scale="10 10 10" />
+    <mesh file="object_collision_4.obj" scale="10 10 10" />
+
+  </asset>
+  
+  <worldbody>
+    <body name="object0" pos="-0.35 0.35 0.21" quat="1 0 0 0">
+      <site name="site_obj0" pos="0.002 -0.013 0.0" size="0.017" material="highlight" type="sphere"/>
+      <joint type="free" limited = "auto" armature="0.000001"/>
+      <inertial pos="0 0 0" mass="0.1" diaginertia="0.0001 0.0001 0.0001"/>
+      <geom name = "obj0" material="Iron_Scratched" mesh="object" class="visual1"/>
+      <geom mesh="object_collision_0" class="collision1"/>
+      <geom mesh="object_collision_1" class="collision1" margin="0.00075"/>
+      <geom mesh="object_collision_2" class="collision1" margin="0.00075"/>
+      <geom mesh="object_collision_3" class="collision1"/>
+      <geom mesh="object_collision_4" class="collision1"/>
+    </body>
+
+
+    <body name="object1" pos="-0.35 0.365 0.22" quat="0.2 0 0 -0.4">
+    <site name="site_obj1" pos="0.002 -0.013 0.0" size="0.025" material="highlight" type="sphere"/>
+      <joint type="free" limited = "auto" armature="0.000001"/>
+      <inertial pos="0 0 0" mass="0.1" diaginertia="0.0001 0.0001 0.0001"/>
+      <geom name = "obj1" material="Iron_Scratched" mesh="object" class="visual1"/>
+      <geom mesh="object_collision_0" class="collision1"/>
+      <geom mesh="object_collision_1" class="collision1" margin="0.00075"/>
+      <geom mesh="object_collision_2" class="collision1" margin="0.00075"/>
+      <geom mesh="object_collision_3" class="collision1"/>
+      <geom mesh="object_collision_4" class="collision1"/>
+    </body>
+
+
+    <body name="object2" pos="-0.35 0.45 0.21" quat="0.5 0 0 0.3">
+      <site name="site_obj2" pos="0.002 -0.013 0.0" size="0.002" material="highlight" type="sphere"/>
+      <joint type="free" limited = "auto" armature="0.000001"/>
+      <inertial pos="0 0 0" mass="0.1" diaginertia="0.0001 0.0001 0.0001"/>
+      <geom name = "obj2" material="Iron_Scratched" mesh="object" class="visual1"/>
+      <geom mesh="object_collision_0" class="collision1"/>
+      <geom mesh="object_collision_1" class="collision1" margin="0.00075"/>
+      <geom mesh="object_collision_2" class="collision1" margin="0.00075"/>
+      <geom mesh="object_collision_3" class="collision1"/>
+      <geom mesh="object_collision_4" class="collision1"/>
+    </body>
+  
+  <!--
+      <body name="object3" pos="-0.42 0.35 0.21" quat="0.8 0 0 -0.5">
+      <site name="site_obj3" pos="0.002 -0.013 0.0" size="0.002" material="highlight" type="sphere"/>
+      <joint type="free" limited = "auto" armature="0.000001"/>
+      <inertial pos="0 0 0" mass="0.1" diaginertia="0.0001 0.0001 0.0001"/>
+      <geom name = "obj3" material="Iron_Scratched" mesh="object" class="visual1"/>
+      <geom mesh="object_collision_0" class="collision1"/>
+      <geom mesh="object_collision_1" class="collision1" margin="0.00075"/>
+      <geom mesh="object_collision_2" class="collision1" margin="0.00075"/>
+      <geom mesh="object_collision_3" class="collision1"/>
+      <geom mesh="object_collision_4" class="collision1"/>
+    </body>
+-->
+  </worldbody>
+</mujoco>

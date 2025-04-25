@@ -1,0 +1,13 @@
+gym[mujoco_py]==0.26.2
+opencv_python==4.11.0.86
+imageio==2.37.0
+imageio-ffmpeg==0.6.0
+numpy==1.23.5
+torch==2.0.1
+onnxruntime
+Pillow==9.5.0
+PyYAML==6.0
+scipy==1.8.0
+stable_baselines3[extra]
+tensorboard
+
