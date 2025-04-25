@@ -67,9 +67,6 @@ class MicroGridEnv(Env):
         self._use_reward_normalization = settings['use_reward_normalization']
         self._trad_norm_term = None
 
-        # MDP information
-        self._state = None
-        self.total_reward = 0
         
         # Reward without normalization and weights
         self.pure_rewards = {'r_trad':0, 'r_deg':0, 'r_clip': 0}
@@ -213,8 +210,8 @@ class MicroGridEnv(Env):
                 - "battery": A snapshot of the battery's current state.
         """
         info = {
-            "cumulated_reward": self.total_reward,
             "action": action,
+            "profile": self.demand.profile,
         }
         
         if self._collect_complete_info:
@@ -243,7 +240,6 @@ class MicroGridEnv(Env):
             tuple: A tuple containing the initial state and an empty info dictionary.
         """
         super().reset(seed=seed, options=options)
-        print('Resetting the environment...')
         
         self.total_reward = 0
         self._trad_norm_term = None
@@ -255,8 +251,6 @@ class MicroGridEnv(Env):
             self.demand.profile = options['eval_profile']
         else:
             self.demand.profile = np.random.choice(self.demand.labels)
-
-        print("Consumption profile: ", self.demand.profile)
         
         # If seed is -1 we take datasets from the beginning
         if not self._random_data_init:
@@ -282,8 +276,8 @@ class MicroGridEnv(Env):
         self._battery.reset()
         self._battery.init(init_info=init_info)
                 
-        self._state = np.array(list(self._get_obs().values()), dtype=np.float32)
-        return self._state, {}
+        state = np.array(list(self._get_obs().values()), dtype=np.float32)
+        return state, {}
 
     def step(self, action: np.ndarray):
         """
@@ -298,8 +292,6 @@ class MicroGridEnv(Env):
         Returns:
             tuple: A tuple containing the new state, reward, termination flag, truncation flag, and info dictionary.
         """
-        assert self._state is not None, "Call reset before using step method."
-
         # Retrieve the actual amount of demand, generation and market
         obs, actual_state = self._get_obs(), self._get_actual_state()
 
@@ -356,12 +348,11 @@ class MicroGridEnv(Env):
 
         # Combining reward terms
         reward = sum(self.weighted_rewards.values())
-        self.total_reward += reward
         
-        self._state = np.array(list(self._get_obs().values()), dtype=np.float32)
+        state = np.array(list(self._get_obs().values()), dtype=np.float32)
         info = self._get_info(to_trade=to_trade, action=action[0])
             
-        return self._state, reward, terminated, truncated, info
+        return state, reward, terminated, truncated, info
     
         
     def _normalize_rewards(self, rewards: list):

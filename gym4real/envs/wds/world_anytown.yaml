@@ -1,0 +1,203 @@
+town: "anytown"
+inp_file: "gym4real/data/wds/towns/anytown_map.inp"
+
+duration: 604800 # 1 week
+hyd_step: 300 # 5 min
+seed: 42
+
+demand:
+  path: "gym4real/data/wds/demand/anytown_demands.yaml"
+  pattern_step: 3600 # seconds
+  event_probs: # conditions for the demand patterns
+    normal: 0.6
+    stressful: 0.35
+    extreme: 0.05
+
+attackers:
+  path: "gym4real/data/wds/attacks/anytown_attackers.yaml"
+
+reward:
+  dsr_coeff: 1
+  overflow_coeff: 0.25
+  flow_coeff: 0.1
+  pump_usage_coeff: 0.05
+
+observations:
+  - "T41"
+  - "T42"
+  - "J1"
+  - "J2"
+  - "J3"
+  - "J4"
+  - "J5"
+  - "J6"
+  - "J7"
+  - "J8"
+  - "J9"
+  - "J10"
+  - "J11"
+  - "J12"
+  - "J13"
+  - "J14"
+  - "J15"
+  - "J16"
+  - "J17"
+  - "J18"
+  - "J19"
+  - "J20"
+  - "J21"
+  - "J22"
+  - "seconds_of_day"
+  - "demand_moving_average"
+  #- "demand_exp_moving_average"
+  #- "under_attack"
+
+actions:
+  - "P78"
+  - "P79"
+
+plcs:
+  - name: PLC1
+    type: actuator
+    vars:
+      links:
+        P78:
+          - status
+        P79:
+          - status
+
+  - name: PLC2
+    type: sensor
+    vars:
+      nodes:
+        T41:
+          - pressure
+          - overflow
+          - level
+        J20:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J21:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J14:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J2:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J13:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J1:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J3:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J6:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J15:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J5:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J19:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+      links:
+        P78:
+          - status
+          - flow
+
+  - name: PLC3
+    type: sensor
+    vars:
+      nodes:
+        T42:
+          - pressure
+          - overflow
+          - level
+        J4:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J18:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J12:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J7:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J8:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J16:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J17:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J11:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J10:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J9:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+        J22:
+          - pressure
+          - demand
+          - basedemand
+          - demand_deficit
+      links:
+        P79:
+          - status
+          - flow

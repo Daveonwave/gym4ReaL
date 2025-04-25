@@ -1,4 +1,4 @@
-  Page 1                                    Wed Apr 20 12:53:34 2022
+  Page 1                                    Fri Apr 25 14:26:26 2025
 
   ******************************************************************
   *                           E P A N E T                          *
@@ -7,4 +7,22 @@
   *                         Version 2.2                            *
   ******************************************************************
   
-  Analysis begun Wed Apr 20 12:53:34 2022
+  Analysis begun Fri Apr 25 14:26:26 2025
+
+  WARNING: Pump P79 closed because cannot deliver head at 50:00:00 hrs.
+   
+  WARNING: Pump P78 closed because cannot deliver head at 50:10:00 hrs.
+   
+  WARNING: Pump P78 closed because cannot deliver head at 50:20:00 hrs.
+   
+  WARNING: Pump P79 closed because cannot deliver head at 50:30:00 hrs.
+   
+  WARNING: Pump P79 closed because cannot deliver head at 50:40:00 hrs.
+   
+  WARNING: Pump P78 closed because cannot deliver head at 50:50:00 hrs.
+   : Pump P78 closed because cannot deliver head at 50:20:00 hrs.
+   
+  WARNING: Pump P78 closed because cannot deliver head at 50:40:00 hrs.
+   
+  WARNING: Pump P78 closed because cannot deliver head at 50:50:00 hrs.
+   

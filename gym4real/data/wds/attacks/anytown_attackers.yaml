@@ -1,0 +1,4 @@
+dataset_path: "gym4real/data/wds/attacks/"
+
+train: "attacks_sensors_5000_prob0_7.json"
+test: "attacker_test.json"

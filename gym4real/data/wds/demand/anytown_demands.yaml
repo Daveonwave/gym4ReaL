@@ -1,0 +1,46 @@
+# Following demand patterns intervals have been generated with Riccardo's control rules.
+# They are split in different buckets depending on their impact on the system.
+
+dataset_path: "gym4real/data/wds/demand/datasets/"
+
+train:
+  normal: # tanks almost never empty
+    - "interval_0_01-0_1.csv"
+    - "interval_0_01-0_3.csv"
+    - "interval_0_01-0_5.csv"
+    - "interval_0_01-0_55.csv"
+    - "interval_0_025-0_1.csv"
+    - "interval_0_025-0_3.csv"
+    - "interval_0_025-0_5.csv"
+    - "interval_0_025-0_55.csv"
+    - "interval_0_05-0_1.csv"
+    - "interval_0_05-0_3.csv"
+    - "interval_0_05-0_5.csv"
+    - "interval_0_05-0_55.csv"
+    - "interval_0_075-0_1.csv"
+    - "interval_0_075-0_3.csv"
+    - "interval_0_075-0_5.csv"
+    - "interval_0_075-0_55.csv"
+    - "interval_0_1-0_3.csv"
+    - "interval_0_1-0_5.csv"
+    - "interval_0_1-0_55.csv"
+    - "interval_0_3-0_5.csv"
+
+  stressful: # tanks empty during some time
+    - "interval_0_01-0_6.csv"
+    - "interval_0_025-0_6.csv"
+    - "interval_0_05-0_6.csv"
+    - "interval_0_075-0_6.csv"
+    - "interval_0_1-0_6.csv"
+
+  extreme: # tanks almost never empty
+    - "interval_0_3-0_55.csv"
+    - "interval_0_3-0_6.csv"
+    - "interval_0_01-1.csv"
+    - "interval_0_025-1.csv"
+    - "interval_0_05-1.csv"
+    - "interval_0_075-1.csv"
+    - "interval_0_1-1.csv"
+    - "interval_0_3-1.csv"
+
+test: "test1000.csv"

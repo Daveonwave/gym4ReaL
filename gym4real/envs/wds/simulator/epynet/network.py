@@ -8,9 +8,6 @@ from .curve import Curve
 from .pattern import Pattern
 import os
 
-pathToRoot = os.path.dirname(os.path.realpath(__file__))
-towns_path = os.path.join(pathToRoot, '../../towns')
-
 
 class Network(object):
     """ self.epANET Network Simulation Class """
@@ -20,7 +17,7 @@ class Network(object):
         self.ep = epanet2.EPANET2(charset=charset)
 
         if inputfile:
-            self.inputfile = os.path.join(towns_path, inputfile)
+            self.inputfile = inputfile
             self.rptfile = self.inputfile[:-3]+"rpt"
             self.binfile = self.inputfile[:-3]+"bin"
             self.ep.ENopen(self.inputfile, self.rptfile, self.binfile)

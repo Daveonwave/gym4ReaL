@@ -1,22 +1,19 @@
 import pandas as pd
-import datetime
-from pathlib import Path
-from tqdm import tqdm
+from collections import defaultdict
 from .epynet import utils
-from epynet.network import Network
+from .epynet.network import Network
 
 
-class WaterDistributionSystem(Network):
+class WaterNetwork(Network):
     """
     Class of the network inherited from Epynet.Network
     """
     def __init__(self, inpfile: str):
         super().__init__(inputfile=inpfile)
         self.times = []
-        self.sensor_plcs = []
-
-        # Interactive flag can be set in run() or in init_simulation() if you want to build manually the step-by-step
-        self.network_state = pd.Series()
+        self.duration = 0
+        self.hydraulic_step = 0
+        self.pattern_step = 0
 
     def set_time_params(self, duration=None, hydraulic_step=None, pattern_step=None, report_step=None, start_time=None,
                         rule_step=None):
@@ -29,6 +26,10 @@ class WaterDistributionSystem(Network):
         :param start_time: EN_STARTTIME
         :param rule_step: EN_RULESTEP
         """
+        self.duration = duration if duration is not None else self.duration
+        self.hydraulic_step = hydraulic_step if hydraulic_step is not None else self.hydraulic_step
+        self.pattern_step = pattern_step if pattern_step is not None else self.pattern_step
+        
         if duration is not None:
             self.ep.ENsettimeparam(utils.get_time_param_code('EN_DURATION'), duration)
         if hydraulic_step is not None:
@@ -168,69 +169,40 @@ class WaterDistributionSystem(Network):
                 links_dict = {key: self.pumps[uid].results[key][-1] for key in ['status', 'flow']}
                 network_state[uid] = links_dict
         return network_state
-
-    def create_df_reports(self, do_create_nodes_report=False, do_create_links_report=False):
+    
+    def get_snapshot(self, current_pattern_step=None):
+        state = defaultdict(dict)
+          
+        for link in self.pumps:
+            state[link.uid] = self._get_link(link.uid)
+        for node in self.nodes:
+            state[node.uid] = self._get_node(node.uid)
+        
+        return state
+    
+    def _get_link(self, uid:str):
         """
-        Create nodes and links report dataframes - 3 level dataframe
-        How to access: df['node', 'id', 'property'] -> column
-        TODO: create a unique 4 level dataframe with 0 level distinguishing between node and link
+        Get the components of the network
+        :return: list of components
         """
-        if self.df_nodes_report is not None:
-            del self.df_nodes_report
-        if self.df_links_report is not None:
-            del self.df_links_report
-
-        if do_create_nodes_report:
-            tanks_ids = [uid for uid in self.tanks.uid]
-            junctions_ids = [uid for uid in self.junctions.uid]
-            tanks_iterables = [['tanks'], tanks_ids, ['head', 'pressure']]
-            junct_iterables = [['junctions'], junctions_ids,
-                               ['head', 'pressure', 'basedemand', 'demand', 'demand_deficit']]
-            tanks_indices = pd.MultiIndex.from_product(iterables=tanks_iterables, names=["node", "id", "properties"])
-            junctions_indices = pd.MultiIndex.from_product(iterables=junct_iterables, names=["node", "id", "properties"])
-
-            # We use timestamp as index for both nodes and links dataframes
-            times = [datetime.timedelta(seconds=time) for time in self.times]
-
-            # Nodes dataframes creation
-            df_tanks = pd.DataFrame(columns=tanks_indices, index=times)
-            df_junctions = pd.DataFrame(columns=junctions_indices, index=times)
-
-            # Dataframe filling
-            for i, j in zip(df_tanks.columns.get_level_values(1), df_tanks.columns.get_level_values(2)):
-                df_tanks['tanks', i, j] = self.tanks.results[i][j]
-            for i, j in zip(df_junctions.columns.get_level_values(1), df_junctions.columns.get_level_values(2)):
-                df_junctions['junctions', i, j] = self.junctions.results[i][j]
-
-            self.df_nodes_report = pd.concat([df_tanks, df_junctions], axis=1)
-
-        if do_create_links_report:
-            # We can assume that there is always at least one pump in each network, since would be pointless to study a
-            # wds without this kind of links.
-            pumps_ids = [uid for uid in self.pumps.uid]
-            pumps_iterables = [['pumps'], pumps_ids, ['flow', 'energy', 'status']]
-            pumps_indices = pd.MultiIndex.from_product(iterables=pumps_iterables, names=["link", "id", "properties"])
-
-            # We use timestamp as index for both nodes and links dataframes
-            times = [datetime.timedelta(seconds=time) for time in self.times]
-            df_pumps = pd.DataFrame(columns=pumps_indices, index=times)
-
-            # Pump dataframe filling and columns renaming
-            for i, j in zip(df_pumps.columns.get_level_values(1), df_pumps.columns.get_level_values(2)):
-                df_pumps['pumps', i, j] = self.pumps.results[i][j]
-
-            self.df_links_report = df_pumps
-
-            # We cannot do the same assumption for valves, as we can see in "anytown" network
-            if self.valves:
-                valves_ids = [uid for uid in self.valves.uid]
-                valves_iterables = [['valves'], valves_ids, ['velocity', 'flow', 'status']]
-                valves_indices = pd.MultiIndex.from_product(iterables=valves_iterables, names=["link", "id", "properties"])
-
-                df_valves = pd.DataFrame(columns=valves_indices, index=times)
-
-                # Valves dataframe filling and columns renaming
-                for i, j in zip(df_valves.columns.get_level_values(1), df_valves.columns.get_level_values(2)):
-                    df_valves['valves', i, j] = self.valves.results[i][j]
-
-                self.df_links_report = pd.concat([df_pumps, df_valves], axis=1)
+        data = {}
+        for prop in self.links[uid].properties:
+            data[prop] = self.links[uid].results[prop][-1] if prop in self.links[uid].results else []
+        for prop in self.links[uid].static_properties:
+            data[prop] = getattr(self.links[uid], prop) if prop in self.links[uid].static_properties else []
+        return data   
+    
+    def _get_node(self, uid:str):
+        """
+        Get the components of the network
+        :return: list of components
+        """
+        data = {}
+        for prop in self.nodes[uid].properties:
+            data[prop] = self.nodes[uid].results[prop][-1] if prop in self.nodes[uid].results else []
+        for prop in self.nodes[uid].static_properties:
+            data[prop] = getattr(self.nodes[uid], prop) if prop in self.nodes[uid].static_properties else []
+            if uid.startswith('J'):
+                data['multiplier'] = self.nodes[uid].pattern.values[(self.duration // self.pattern_step) % len(self.nodes[uid].pattern.values)]
+        return data
+        

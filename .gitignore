@@ -181,3 +181,4 @@ logs/
 *.zip
 *.DS_Store
 _site/
+*.rpt
