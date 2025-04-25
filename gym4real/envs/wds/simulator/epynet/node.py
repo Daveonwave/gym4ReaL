@@ -83,8 +83,7 @@ class Reservoir(Node):
 class Junction(Node):
     """ EPANET Junction Class """
     static_properties = {'elevation': epanet2.EN_ELEVATION, 'basedemand': epanet2.EN_BASEDEMAND, 'emitter': epanet2.EN_EMITTER}
-    properties = {'head': epanet2.EN_HEAD, 'pressure': epanet2.EN_PRESSURE, 'demand': epanet2.EN_DEMAND,
-                  'demand_deficit': epanet2.EN_DEMANDDEFICIT}
+    properties = {'head': epanet2.EN_HEAD, 'pressure': epanet2.EN_PRESSURE, 'demand': epanet2.EN_DEMAND, 'demand_deficit': epanet2.EN_DEMANDDEFICIT, 'basedemand': epanet2.EN_BASEDEMAND}
     node_type = "Junction"
 
     @property
@@ -110,7 +109,7 @@ class Tank(Node):
     """ EPANET Tank Class """
     node_type = "Tank"
 
-    static_properties = {'elevation': epanet2.EN_ELEVATION, 'basedemand': epanet2.EN_BASEDEMAND,
+    static_properties = {'elevation': epanet2.EN_ELEVATION, 
                          'initvolume': epanet2.EN_INITVOLUME, 'diameter': epanet2.EN_TANKDIAM,
                          'minvolume': epanet2.EN_MINVOLUME, 'minlevel': epanet2.EN_MINLEVEL,
                          'maxlevel': epanet2.EN_MAXLEVEL, 'maxvolume': 25, 'tanklevel': epanet2.EN_TANKLEVEL}

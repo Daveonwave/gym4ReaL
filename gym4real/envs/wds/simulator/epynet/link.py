@@ -80,10 +80,6 @@ class Pump(Link):
                   'velocity': epanet2.EN_VELOCITY, 'state_type': epanet2.EN_PUMP_STATE}
 
     @property
-    def velocity(self):
-        return 1.0
-
-    @property
     def curve(self):
         curve_index = self.network().ep.ENgetheadcurveindex(self.index)
         curve_uid = self.network().ep.ENgetcurveid(curve_index)

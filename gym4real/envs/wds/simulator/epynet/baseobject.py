@@ -61,7 +61,8 @@ class BaseObject(object):
 
         elif name in self.properties.keys():
             if not self.network().solved:
-                warnings.warn("requesting dynamic properties from an unsolved network")
+                pass
+                #warnings.warn("requesting dynamic properties from an unsolved network")
             if self.results == {}:
                 return self.get_property(self.properties[name])
             else:

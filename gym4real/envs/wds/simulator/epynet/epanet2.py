@@ -14,9 +14,14 @@ class EPANET2(object):
     def __init__(self, charset='UTF8'):
         _plat= platform.system()
         if _plat=='Darwin':
-            dll_path = os.path.join(os.path.dirname(__file__), "lib/libepanet.dylib")
-            self._lib = ctypes.cdll.LoadLibrary(dll_path)
-            ctypes.c_float = ctypes.c_double
+            if 'arm' in platform.platform().lower():
+                dll_path = os.path.join(os.path.dirname(__file__), "lib/libepanet2.dylib")
+                self._lib = ctypes.cdll.LoadLibrary(dll_path)
+                ctypes.c_float = ctypes.c_double
+            else:
+                dll_path = os.path.join(os.path.dirname(__file__), "lib/libepanet22.dylib")
+                self._lib = ctypes.cdll.LoadLibrary(dll_path)
+                ctypes.c_float = ctypes.c_double
         elif _plat=='Linux':
             dll_path = os.path.join(os.path.dirname(__file__), "lib/libepanet.so")
             self._lib = ctypes.CDLL(dll_path)
@@ -37,7 +42,6 @@ class EPANET2(object):
 
         else:
           raise Exception('Platform '+ _plat +' unsupported (not yet)')
-
 
         self.charset = charset
         self._current_simulation_time=  ctypes.c_long()
