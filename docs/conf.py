@@ -38,6 +38,9 @@ extensions = [
     # automatically generate API Reference
     # this also imports 'sphinx.ext.autodoc'
     'autoapi.extension',
+    
+    # it automatically adds the .nojekyll file on make html
+    'sphinx.ext.githubpages'
 ]
 
 # allow using `single ticks` for code
