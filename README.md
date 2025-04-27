@@ -28,7 +28,7 @@ Gym4ReaL is released under a [Apache-2.0](https://www.apache.org/licenses/LICENS
 
 ## Citation
 
-Please cite SustainGym as
+Please cite Gym4ReaL as
 
 >
 

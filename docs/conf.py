@@ -11,6 +11,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath('../'))
+os.makedirs('api', exist_ok=True)
 
 
 project = 'Gym4ReaL'
@@ -85,9 +86,11 @@ autoapi_options = [
     'members', 'undoc-members', 'show-inheritance', 'show-module-summary',
     'imported-members'
 ]
+autoapi_type = "python"
 autoapi_root = 'api'
 autoapi_dirs = ['../gym4real']
 autoapi_add_toctree_entry = False
+autoapi_keep_files = True
 # autoapi_python_use_implicit_namespaces = True
 autodoc_typehints = 'both'
 
