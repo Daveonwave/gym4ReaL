@@ -1,0 +1,6 @@
+surface: 145900000
+evaporation: 0
+
+init_level: 0.35
+
+min_env_flow: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/lakeComo/MEF_como.csv'
