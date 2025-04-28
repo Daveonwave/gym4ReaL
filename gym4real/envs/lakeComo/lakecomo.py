@@ -1,32 +1,30 @@
 from lake import Lake
-import math
 
 class LakeComo(Lake):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, params):
+        super().__init__(params)
+        self.h0 = -0.5
 
-    def storage_to_level(self, s):
+    def storage_to_level(self, storage):
         """
         Converts storage (m³) to water level (m).
         Linear relationship: h = s/A + h0
         """
-        h0 = -0.5
-        return s / self.A + h0
+        return storage / self.surface + self.h0
 
     def level_to_storage(self, h):
         """
         Converts water level (m) to storage (m³).
         Inverse of storage_to_level.
         """
-        h0 = -0.5
-        return self.A * (h - h0)
+        return self.surface * (h - self.h0)
 
     def level_to_surface(self, h):
         """
         Returns surface area (m²) at level h.
         Constant surface area is assumed for Lake Como.
         """
-        return self.A
+        return self.surface
 
     def min_release(self, s, cday):
         """
@@ -36,7 +34,7 @@ class LakeComo(Lake):
         DMV = self.minEnvFlow[cday - 1]
         h = self.storage_to_level(s)
 
-        if h <= -0.50:
+        if h <= self.h0:
             q = 0.0
         elif h <= 1.25:
             q = DMV
@@ -52,7 +50,7 @@ class LakeComo(Lake):
         """
         h = self.storage_to_level(s)
 
-        if h <= -0.5:
+        if h <= self.h0:
             q = 0.0
         elif h <= -0.40:
             q = 1488.1 * h + 744.05

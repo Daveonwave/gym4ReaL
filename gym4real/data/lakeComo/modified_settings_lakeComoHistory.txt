@@ -13,12 +13,12 @@
 
 # model of the catchment
 <CATCHMENT>   1                  # type of catchment model: 1 = load inflows from file, 2 = HBV
-    ../data/lakeComo/comoInflowSim.txt
+    ../../data/lakeComo/comoInflowSim.txt
 
 # initial conditions
 <INIT_CONDITION>    0.35
 
 # min env flow
 <MIN_ENV_FLOW_FILE>
-    ../data/lakeComo/MEF_como.txt
+    ../../data/lakeComo/MEF_como.txt
 

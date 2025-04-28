@@ -1,5 +1,8 @@
 import numpy as np
 import random
+import yaml
+import os
+import pandas as pd
 
 class Utils:
 
@@ -104,3 +107,65 @@ class Utils:
     @staticmethod
     def generate_random_unif(lower_bound, upper_bound):
         return random.uniform(lower_bound, upper_bound)
+
+def read_csv(csv_file: str) -> pd.DataFrame:
+    """
+    Read data from csv files
+    """
+    # Check file existence
+    if not os.path.isfile(csv_file):
+        raise FileNotFoundError("The specified file '{}' doesn't not exist.".format(csv_file))
+    df = None
+    try:
+        df = pd.read_csv(csv_file)
+    except Exception as err:
+        print("Error during the loading of '{}':".format(csv_file), type(err).__name__, "-", err)
+    return df
+
+
+def read_yaml(yaml_file: str):
+    """
+
+    Args:
+        yaml_file (str): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    with open(yaml_file, 'r') as fin:
+        params = yaml.safe_load(fin)
+    return params
+
+def parameter_generator(world_options: str,
+                        lake_params: str) -> dict:
+
+    lake_params = read_yaml(lake_params)
+    lake_params['min_env_flow'] = read_csv(lake_params['min_env_flow'])['MEF'].to_numpy()
+
+    world_settings = read_yaml(world_options)
+
+    params = {
+        'period': world_settings['period'],
+        'integration': world_settings['integration'],
+        'sim_horizon': world_settings['sim_horizon'],
+        'warmup': world_settings['warmup'],
+        'doy': world_settings['doy'],
+        'flood_level': world_settings['flood_level'],
+        'observations': world_settings['observations'],
+        'action': world_settings['action'],
+        'lake_params': lake_params,
+        'reward_coeff': world_settings['reward']
+    }
+
+    demand = read_csv(world_settings['demand'])['demand'].to_numpy()
+    params['demand'] = demand
+    print('sum demand: ', sum(demand))
+
+    q_forecast = read_csv(world_settings['q_forecast'])['q_forecast'].to_numpy()
+    params['q_forecast'] = q_forecast
+
+    inflow = read_csv(world_settings['inflow'])['inflow'].to_numpy()
+    params['inflow'] = inflow
+    print('sum inflow: ', sum(inflow))
+
+    return params
