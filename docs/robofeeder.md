@@ -2,7 +2,7 @@
 This repository contains all the necessary files to train a deep reinforcement learning agent to perform robot grasping in the MuJoCo simulator. The environment is composed of the robot, a box containing all the objects to pick, and a hidden virtual camera above the items to keep track of their current status. The box contains a vibrating plate that permits the reorganization of the position and of the orientation of the objects inside
 
 <div align="center">
-<img src="/media/result.gif" width="450">
+<img src="/_static/result.gif" width="450">
 </div>
 
 The environment is based on the [OpenAI Gym](https://gym.openai.com/) framework and the [MuJoCo](http://www.mujoco.org/) simulator. The robot used is [staubli TX2-60](https://www.staubli.com/tw/en/robotics/products/industrial-robots/tx2-60.html)
@@ -11,7 +11,7 @@ equipped with a simple picking hand. The motion of the robot is controlled by th
 The agent is trained using the [Stable Baselines](https://stable-baselines3.readthedocs.io/en/master/) library, for some environments, some pre-trained agents are used as part of the new agent, [onnxruntime](https://onnxruntime.ai/) is used to run the pre-trained agent.
 
 <div align="center">
-<img src="/media/architecture.png" width="500">
+<img src="/_static/architecture.png" width="500">
 </div>
 
 
@@ -112,7 +112,7 @@ and the observation space is represented by the image of the camera
 
 Sample of the observation space:
 <div align="center">
-<img src="/media/env0.png" height="260">
+<img src="/_static/env0.png" height="260">
 </div>
 
 #### Env 1
@@ -121,7 +121,7 @@ This environment is provided with a pre-trained image segmentation model. In it,
 
 Sample of the observation space:
 <div align="center">
-<img src="/media/env1.png" height="260">
+<img src="/_static/env1.png" height="260">
 </div>
 
 #### Env 2
@@ -131,7 +131,7 @@ The goal is to provide the cropped image index to perform a pick action on the c
 
 Sample of the observation space:
 <div align="center">
-<img src="/media/env2.png" height="260">
+<img src="/_static/env2.png" height="260">
 </div>
 
 
