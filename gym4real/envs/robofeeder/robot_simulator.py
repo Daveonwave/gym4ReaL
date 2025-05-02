@@ -23,15 +23,11 @@ class robot_simulator:
         with open(config_file) as f: self.configs = yaml.load(f, Loader=yaml.SafeLoader)
 
         try:
-
             # Get the directory this script is in
             current_dir = os.path.dirname(__file__)
-
             # Build the path to staubli/urdf relative to this file
             urdf_path = os.path.join(current_dir, "staubli", "urdf/")
-
             obj_configurator.set_XML_obj(urdf_path,self.configs["NUMBER_OF_OBJECTS"])
-            
             #Inizialize the Mujoco model
             xml_path = urdf_path + 'tx2_60.xml'
             self.model = mujoco.MjModel.from_xml_path(xml_path)

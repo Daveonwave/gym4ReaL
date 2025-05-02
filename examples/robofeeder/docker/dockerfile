@@ -1,0 +1,31 @@
+# Use a base image with Python
+FROM python:3.10-slim
+
+# System dependencies
+RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
+    libglew-dev \
+    libglfw3 \
+    libglfw3-dev \
+    libosmesa6-dev \
+    patchelf \
+    ffmpeg \
+    git \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set environment variables for MuJoCo
+ENV MUJOCO_GL=osmesa
+
+COPY ./gym4real/envs/robofeeder/requirements.txt /usr/src/requirements.txt
+
+# Install Python dependencies
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r /usr/src/requirements.txt
+# # Optional: copy your code into the container
+# WORKDIR /app
+# COPY . /app
+
+# Default command
+#CMD ["python3"]
+CMD ["tail", "-f", "/dev/null"]
