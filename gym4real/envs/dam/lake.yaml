@@ -1,0 +1,17 @@
+surface: 145900000
+evaporation: False
+
+init_level: 0.35
+
+min_env_flow: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/dam/MEF_como.csv'
+
+alpha: -2.5
+beta: 2.015
+
+min_level: -0.5
+max_level: 1.25
+C_r: 33.37
+
+linear_slope: 1488.1
+linear_intercept: 744.05
+linear_limit: -0.4

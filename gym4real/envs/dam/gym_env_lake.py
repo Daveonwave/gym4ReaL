@@ -1,10 +1,13 @@
 import math
+import random
 
 import numpy as np
 from gymnasium import Env
 from gymnasium.spaces import Box
 from math import sin, cos, pi
-from lakecomo import LakeComo
+from gym4real.envs.dam.lake import Lake
+
+from collections import OrderedDict
 
 class LakeEnv(Env):
 
@@ -17,15 +20,17 @@ class LakeEnv(Env):
         self.H = settings['sim_horizon']
         self.warmup = settings['warmup']
         self.init_day = settings['doy']
-        self.inflow = settings['inflow']
         self.obs_keys = settings['observations']
         self.reward_coeff = settings['reward_coeff']
 
         # Model components
-        self.lake = LakeComo(settings['lake_params'])
+        self.lake = Lake(settings['lake_params'])
 
         self.flood_level = settings['flood_level']
-        self.demand = settings['demand']
+        self.demand_data = OrderedDict(settings['demand'])
+        self.inflow_data = OrderedDict(settings['inflow'])
+        self.demand = None
+        self.inflow = None
         self.qForecast = settings['q_forecast']
 
         # Action space = single release decision
@@ -55,9 +60,14 @@ class LakeEnv(Env):
             low=low, high=high, dtype=np.float32
         )
 
+        self._rng = random.Random(settings['seed'])
+        self.random_init = settings['random_init']
+
+        self.curr_year_data = None
+
         self._init_internal_state()
 
-    def _init_internal_state(self):
+    def _init_internal_state(self, seed=None):
         self.current_step = 0
 
         self.level = []
@@ -70,8 +80,24 @@ class LakeEnv(Env):
         self.storage.append(self.lake.level_to_storage(self.level[0]))
         self.release.append(0.)
 
+        if self.random_init:
+            if seed is None:
+                rng = self._rng
+            else:
+                rng = random.Random(seed)
+            self.curr_year_data = rng.choice(list(self.demand_data.keys()))
+        else:
+            data_years = list(self.demand_data.keys())
+            if self.curr_year_data is None:
+                self.curr_year_data = data_years[0]
+            else:
+                self.curr_year_data = data_years[(data_years.index(self.curr_year_data)+1)%len(data_years)]
+
+        self.demand = self.demand_data[self.curr_year_data]
+        self.inflow = self.inflow_data[self.curr_year_data]
+
     def reset(self, seed=None, options=None):
-        self._init_internal_state()
+        self._init_internal_state(seed=seed)
         return self._get_observation(), {}
 
     def step(self, action):
@@ -180,7 +206,6 @@ class LakeEnv(Env):
         qdiv = self.release[t+1] - self.lake.get_mef(doy)
         qdiv = max(qdiv, 0.0)
         d = max(self.demand[doy] - qdiv, 0.0)
-        d_pure = d
         if 120 < self.doy[t] <= 243:
             d *= 2
         # d *= 0.5 * (3 - math.cos(doy * math.pi/self.DAYS_IN_YEAR))

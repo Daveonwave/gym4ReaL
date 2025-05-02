@@ -141,6 +141,7 @@ def parameter_generator(world_options: str,
 
     lake_params = read_yaml(lake_params)
     lake_params['min_env_flow'] = read_csv(lake_params['min_env_flow'])['MEF'].to_numpy()
+    lake_params['evaporation_rates'] = read_csv(lake_params['evaporation_rates'])['MEF'].to_numpy() if 'evaporation_rates' in lake_params.keys() else None
 
     world_settings = read_yaml(world_options)
 
@@ -154,18 +155,25 @@ def parameter_generator(world_options: str,
         'observations': world_settings['observations'],
         'action': world_settings['action'],
         'lake_params': lake_params,
-        'reward_coeff': world_settings['reward']
+        'reward_coeff': world_settings['reward'],
+        'seed': world_settings['seed'],
+        'random_init': world_settings['random_init'],
     }
 
-    demand = read_csv(world_settings['demand'])['demand'].to_numpy()
+    demand = read_csv(world_settings['demand']).to_dict(orient='list')
+    inflow = read_csv(world_settings['inflow']).to_dict(orient='list')
+
+    assert set(demand.keys()) == set(inflow.keys())
+
+    for key in demand.keys():
+        demand[key] = [x for x in demand[key] if not np.isnan(x)]
+        inflow[key] = [x for x in inflow[key] if not np.isnan(x)]
+        assert len(inflow[key]) == len(demand[key])
+
     params['demand'] = demand
-    print('sum demand: ', sum(demand))
+    params['inflow'] = inflow
 
     q_forecast = read_csv(world_settings['q_forecast'])['q_forecast'].to_numpy()
     params['q_forecast'] = q_forecast
-
-    inflow = read_csv(world_settings['inflow'])['inflow'].to_numpy()
-    params['inflow'] = inflow
-    print('sum inflow: ', sum(inflow))
 
     return params
