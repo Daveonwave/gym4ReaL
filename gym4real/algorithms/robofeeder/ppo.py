@@ -7,7 +7,7 @@ from stable_baselines3 import PPO
 from stable_baselines3.ppo import MlpPolicy
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.callbacks import StopTrainingOnMaxEpisodes, EvalCallback
-from gym4real.envs.robofeeder.Env_1 import robotEnv
+from gym4real.envs.robofeeder.rf_picking_easy import robotEnv
 
 
 def train_ppo(envs, args, config_params, model_file=None):
