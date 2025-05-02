@@ -26,10 +26,10 @@ class robotEnv(Env):
 
         # Init the ONNX runtime session
         providers = ['CUDAExecutionProvider','CPUExecutionProvider']
-        currend_dir = os.path.dirname(__file__)
+        current_dir = os.path.dirname(__file__)
         # Load the object detection network
-        model_dir = os.path.join(currend_dir, "utils", "objDetectionNetwork/")
-        pretrained_ppo_dir = os.path.join(currend_dir, "utils", "Pretrained/")        
+        model_dir = os.path.join(current_dir, "utils", "objDetectionNetwork/")
+        pretrained_ppo_dir = os.path.join(current_dir, "utils", "Pretrained/")        
         self.ort_sess_fe = rt.InferenceSession(model_dir + 'objDetection.onnx',providers=providers)
         self.ort_sess_ppo = rt.InferenceSession(pretrained_ppo_dir + 'PPO_Stoc.onnx',providers=providers)
         
@@ -79,7 +79,7 @@ class robotEnv(Env):
         rotation = (result_ppo[2]+1)*np.pi/2                # Convert the rotation from [-1,1] to [0,pi]
         
         # Simulate the action
-        obj_position = self.simulator.pixel2Wolrd(pixelCoordinates=target_pos)     
+        obj_position = self.simulator.pixel2World(pixelCoordinates=target_pos)     
         resultIMG, self.rew = self.simulator.simulate_pick(np.append(obj_position,0.08222582),rotation)
         
         if (self.rew is None): # If the action is not feasible
@@ -163,3 +163,7 @@ class robotEnv(Env):
         self.simulator.vibrate_sinuisodal()
         self.current_obs = self.rgb2gray(self.simulator.get_state())
         return self.current_obs
+
+    def close(self):
+        print("CLOSE")
+        self.simulator.close()
