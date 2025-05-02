@@ -1,0 +1,29 @@
+period: 365
+integration: 24
+sim_horizon: 365
+warmup: 0
+doy: 1
+flood_level: 1.24
+
+seed: 123
+random_init: True
+
+demand: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/dam/clean_data/demand_test.csv'
+q_forecast: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/dam/qSimAnomL51.csv'
+#q_forecast: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/lakeComo/qForecast_debug.csv'
+inflow: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/dam/clean_data/inflow_test.csv'
+
+observations:
+  - day_of_year
+  - level
+#  - q_forecast
+
+action:
+  low: 0.
+  high: 491.61
+
+reward:
+  daily_deficit_coeff: 1
+  overflow_coeff: 1000
+  wasted_water_coeff: 1
+  clip_action_coeff: 0.01

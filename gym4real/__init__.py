@@ -6,6 +6,11 @@ register(
 )
 
 register(
+    id='gym4real/dam-v0',
+    entry_point='gym4real.envs.dam.gym_env_lake:LakeEnv',
+)
+
+register(
     id='gym4real/wds_cps-v0',
     entry_point='gym4real.envs.wds.env_cps:WaterDistributionSystemEnv',
 )

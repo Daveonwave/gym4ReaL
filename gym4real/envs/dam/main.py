@@ -88,7 +88,7 @@ if __name__ == '__main__':
     # Save a checkpoint every 1000 steps
     checkpoint_callback = CheckpointCallback(
         save_freq=5000,
-        save_path='./logs/first_exp/models/',
+        save_path='logs/first_exp/models/',
         name_prefix='ppo',
         save_replay_buffer=True,
         save_vecnormalize=True
@@ -105,12 +105,12 @@ if __name__ == '__main__':
     eval_env = wrap_env(eval_env, normalize_obs=False, rescale_obs=True, normalize_reward=False, rescale_reward=True)
 
     eval_callback = CustomEvalCallback(eval_env,
-                                 best_model_save_path='./logs/first_exp/models/eval/',
-                                 log_path='./logs/',
-                                 eval_freq=10000,
-                                 n_eval_episodes=1,
-                                 deterministic=True,
-                                 render=False)
+                                       best_model_save_path='logs/first_exp/models/eval/',
+                                       log_path='logs/',
+                                       eval_freq=10000,
+                                       n_eval_episodes=1,
+                                       deterministic=True,
+                                       render=False)
     # stop_train_callback = StopTrainingOnNoModelImprovement(max_no_improvement_evals=3, min_evals=5, verbose=1)
     callbacks = [
         callback_max_episodes, eval_callback] # stop_train_callback]
