@@ -88,7 +88,7 @@ class robot_simulator:
         if(self.configs["SHUFFLE_OBJECTS"]):
             for i in range(self.configs["NUMBER_OF_OBJECTS"]):
                 #random position and orientation
-                res = self.pixel2Wolrd(np.array([x[i],y[i]]))
+                res = self.pixel2World(np.array([x[i],y[i]]))
                 randomlist=random.choices(self.possibleOrietnation,k=4)
                 self.data.qpos[i*7:i*7+3] = [res[0], res[1], 0.21]
                 if(self.configs["OBJ_CORRECT_ORIENTATION"]): # the first obj is always in the right orientation
@@ -253,7 +253,7 @@ class robot_simulator:
         full_cam_matrix = np.vstack((camera_matrix, np.array([0, 0, 0, 1])))
         return np.linalg.inv(full_cam_matrix)
     
-    def pixel2Wolrd(self,pixelCoordinates):
+    def pixel2World(self,pixelCoordinates):
         depth =  0.42078046 #static value of the camera depth
         x,y= pixelCoordinates[0]*(-depth),pixelCoordinates[1]*(-depth)
 

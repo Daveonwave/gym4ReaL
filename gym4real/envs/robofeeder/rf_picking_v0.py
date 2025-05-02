@@ -21,9 +21,9 @@ class robotEnv(Env):
         super(robotEnv, self).__init__()
 
         providers = ['CUDAExecutionProvider','CPUExecutionProvider']
-        currend_dir = os.path.dirname(__file__)
+        current_dir = os.path.dirname(__file__)
         # Load the object detection network
-        model_dir = os.path.join(currend_dir, "utils", "objDetectionNetwork/")
+        model_dir = os.path.join(current_dir, "utils", "objDetectionNetwork/")
         self.ort_sess = rt.InferenceSession(model_dir + 'objDetection.onnx',providers=providers)
         
         # Init the simulation
@@ -58,14 +58,14 @@ class robotEnv(Env):
         rotation = (action[2]+1)*np.pi/2 
         
         # Simulate the action
-        obj_position = self.simulator.pixel2Wolrd(pixelCoordinates=target_pos)     
+        obj_position = self.simulator.pixel2World(pixelCoordinates=target_pos)     
         resultIMG, self.rew = self.simulator.simulate_pick(np.append(obj_position,0.08222582),rotation)
         
         if (self.rew is None): # If the action is not feasible
             self.rew = -1
             done = (self.max_episode_steps == self.curr_num_episode)
             if(self.is_log_set): self.log_file.write(f"{action},NONVALID\n")
-            return self.current_obs,self.rew, done,False,{} # If the action is not feasible
+            return self.current_obs,self.rew, done,done,{} # If the action is not feasible
                 
         
         # 3.1 reward
@@ -103,7 +103,7 @@ class robotEnv(Env):
         self.current_obs = self.rgb2gray(resultIMG)
         # 3.3. done
         done = (self.max_episode_steps == self.curr_num_episode) or (sum(self.simulator.objPicked) == self.simulator.configs["NUMBER_OF_OBJECTS"])   
-        return self.current_obs, self.rew, done, False,{}
+        return self.current_obs, self.rew, done, done,{}
     # END STEP
     
     # Inizialize a new episode
@@ -147,8 +147,9 @@ class robotEnv(Env):
 
     def close(self):
         print("CLOSE")
+        self.simulator.close()
         #self.simulator.planner.shutdown()
-        self.log_file.close()
+        #self.log_file.close()
 
     def normalizeAngle(self,angle):
         if(angle>np.pi): angle -=np.pi

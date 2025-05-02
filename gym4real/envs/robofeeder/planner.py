@@ -99,8 +99,6 @@ class PlanningClass:
             initial_joint_position = [0.0] + initial_joint_position + [0.0, 0.0]
             initial_joint_position = np.array(initial_joint_position)
 
-        print("Initial Joint Position:", initial_joint_position)
-        print("Object Position:", obj_position)
         waypoints = []
         indices = []
 
