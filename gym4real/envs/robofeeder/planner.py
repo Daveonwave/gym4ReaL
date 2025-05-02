@@ -1,3 +1,4 @@
+import os
 from ikpy.chain import Chain
 from ikpy.link import URDFLink
 import numpy as np
@@ -8,7 +9,13 @@ class PlanningClass:
 
     def __init__(self):
         # Load the robot arm chain from URDF or manually
-        self.robot_chain = Chain.from_urdf_file("staubli/urdf/tx2_60.urdf", active_links_mask = [False, True, True, True, True, True, True, False, False])
+
+        # Get the directory this script is in
+        current_dir = os.path.dirname(__file__)
+
+        # Build the path to staubli/urdf relative to this file
+        urdf_path = os.path.join(current_dir, "staubli", "urdf/")
+        self.robot_chain = Chain.from_urdf_file(urdf_path + "tx2_60.urdf", active_links_mask = [False, True, True, True, True, True, True, False, False])
         self.above_offset = 0.15
         self.final_position = [-0.0882, 0.4929, 0.4596]
         self.num_interpolated_points = 5  # Number of interpolated points between each waypoint pair

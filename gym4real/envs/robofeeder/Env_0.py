@@ -16,7 +16,7 @@ class robotEnv(Env):
         """    
         # Init the simulation
         super(robotEnv, self).__init__()
-        self.simulator = robot_simulator.robot_simulator(config_file,seed=123) # use as seed the ROS_ID        
+        self.simulator = robot_simulator(config_file,seed=123) # use as seed the ROS_ID        
         
         #Spaces
         # Set the action space to [x,y,rotation]

@@ -5,7 +5,7 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 
 from . import robot_simulator
-
+import os 
 import torch # This import is needed to run onnx on GPU 
 import onnxruntime as rt
 import cv2 
@@ -21,10 +21,13 @@ class robotEnv(Env):
         super(robotEnv, self).__init__()
 
         providers = ['CUDAExecutionProvider','CPUExecutionProvider']
-        self.ort_sess = rt.InferenceSession('utils/objDetectionNetwork/objDetection.onnx',providers=providers)
+        currend_dir = os.path.dirname(__file__)
+        # Load the object detection network
+        model_dir = os.path.join(currend_dir, "utils", "objDetectionNetwork/")
+        self.ort_sess = rt.InferenceSession(model_dir + 'objDetection.onnx',providers=providers)
         
         # Init the simulation
-        self.simulator = robot_simulator.robot_simulator(config_file,seed=123) # use as numpy random seed the ROS_ID
+        self.simulator = robot_simulator(config_file,seed=123) # use as numpy random seed the ROS_ID
         
         # Get Simulation data
         self.inv_camera_matrix = self.simulator.inv_camera_matrix
@@ -38,6 +41,7 @@ class robotEnv(Env):
         self.max_episode_steps = 4
         self.curr_num_episode = 0
 
+        self.is_log_set = False
 
         #get the first obs
         self.reset()
