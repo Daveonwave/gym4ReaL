@@ -16,16 +16,16 @@ register(
 )
 
 register(
-    id='gym4real/robofeeder-v0',
-    entry_point='gym4real.envs.robofeeder.Env_0:robotEnv',
+    id='gym4real/robofeeder-picking-v0',
+    entry_point='gym4real.envs.robofeeder.rf_picking_v0:robotEnv',
 )
 
 register(
-    id='gym4real/robofeeder-v1',
-    entry_point='gym4real.envs.robofeeder.Env_1:robotEnv',
+    id='gym4real/robofeeder-picking-v1',
+    entry_point='gym4real.envs.robofeeder.rf_picking_v1:robotEnv',
 )
 
 register(
-    id='gym4real/robofeeder-v2',
-    entry_point='gym4real.envs.robofeeder.Env_2:robotEnv',
+    id='gym4real/robofeeder-planning',
+    entry_point='gym4real.envs.robofeeder.rf_planning:robotEnv',
 )
