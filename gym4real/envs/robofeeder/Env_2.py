@@ -5,7 +5,7 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 
 from . import robot_simulator
-
+import os
 import torch # This import is needed to run onnx on GPU 
 import onnxruntime as rt
 import cv2 
@@ -25,12 +25,16 @@ class robotEnv(Env):
         super(robotEnv, self).__init__()
 
         # Init the ONNX runtime session
-        providers = ['CUDAExecutionProvider','CPUExecutionProvider']        
-        self.ort_sess_fe = rt.InferenceSession('utils/objDetectionNetwork/objDetection.onnx',providers=providers)
-        self.ort_sess_ppo = rt.InferenceSession('utils/PPO_Stoc.onnx',providers=providers)
+        providers = ['CUDAExecutionProvider','CPUExecutionProvider']
+        currend_dir = os.path.dirname(__file__)
+        # Load the object detection network
+        model_dir = os.path.join(currend_dir, "utils", "objDetectionNetwork/")
+        pretrained_ppo_dir = os.path.join(currend_dir, "utils", "Pretrained/")        
+        self.ort_sess_fe = rt.InferenceSession(model_dir + 'objDetection.onnx',providers=providers)
+        self.ort_sess_ppo = rt.InferenceSession(pretrained_ppo_dir + 'PPO_Stoc.onnx',providers=providers)
         
         # Init the simulation
-        self.simulator = robot_simulator.robot_simulator(config_file,seed=123) # use as numpy random seed the ROS_ID
+        self.simulator = robot_simulator(config_file,seed=123) # use as numpy random seed the ROS_ID
         
         #Spaces
         self.IMAGE_NUM = 3
@@ -43,11 +47,7 @@ class robotEnv(Env):
         self.curr_num_episode = 0
         #self.total_rew = 0
 
-        # #set the log file (if available)
-        # self.is_log_set = ("LOG_FOLDER" in env_config)
-        # if(self.is_log_set):
-        #     self.log_file = open(env_config["LOG_FOLDER"]+"/sim{}.csv".format(env_config["ROS_ID"]), "w")
-        #     self.log_file.write("action,reward\n")
+        self.is_log_set = False
 
         #get the first obs
         self.reset()
