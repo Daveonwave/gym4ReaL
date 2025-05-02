@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  robofeeder:
+    build: .
+    container_name: robofeeder
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    network_mode: host
+    environment:
+      - DISPLAY=${DISPLAY}
+      - MUJOCO_GL=egl
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    volumes:
+      - ./:/usr/src/data
+    restart: unless-stopped

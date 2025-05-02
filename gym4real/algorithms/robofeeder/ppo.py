@@ -10,7 +10,7 @@ from stable_baselines3.common.callbacks import StopTrainingOnMaxEpisodes, EvalCa
 from gym4real.envs.robofeeder.Env_1 import robotEnv
 
 
-def train_ppo(envs, args, eval_env_params, model_file=None):
+def train_ppo(envs, args, config_params, model_file=None):
     print("######## PPO is running... ########")
     
     logdir = "./logs/" + args['exp_name']
@@ -18,8 +18,7 @@ def train_ppo(envs, args, eval_env_params, model_file=None):
     model_folder = "./logs/{}/models/".format(args['exp_name'])
     
     callback_max_episodes = StopTrainingOnMaxEpisodes(max_episodes=args['n_episodes'], verbose=1)
-    configs = "gym4real/envs/robofeeder/configuration.yaml"
-    eval_env = robotEnv(config_file=eval_env_params)
+    eval_env = robotEnv(config_file=config_params)
     eval_callback = EvalCallback(eval_env, 
                                  best_model_save_path="./logs/{}/models/eval/".format(args['exp_name']),
                                  log_path="./logs/", 
@@ -69,6 +68,8 @@ if __name__ == '__main__':
         'save_model_as': 'dqn_ppo_100_episodes',
     }
     
-    envs = make_vec_env("gym4real/robofeeder-v0", n_envs=args['n_envs'], env_kwargs={'settings':params})    
+    config_params = "gym4real/envs/robofeeder/configuration.yaml"
+
+    envs = make_vec_env("gym4real/robofeeder-v0", n_envs=args['n_envs'], env_kwargs={'config_file':config_params})    
     
-    train_ppo(envs=envs, args=args, eval_env_params=params)
+    train_ppo(envs=envs, args=args, config_params=config_params)
