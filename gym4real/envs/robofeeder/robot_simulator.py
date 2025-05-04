@@ -84,8 +84,8 @@ class robot_simulator:
             viewer = mujoco.viewer.launch_passive(self.model, self.data)
             viewer.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTFORCE] = 0
             viewer.opt.flags[mujoco.mjtVisFlag.mjVIS_JOINT]=0
-            viewer.scn.flags[mujoco.mjtRndFlag.mjRND_SHADOW]=0
-            viewer.scn.flags[mujoco.mjtRndFlag.mjRND_REFLECTION]=0
+            # viewer.scn.flags[mujoco.mjtRndFlag.mjRND_SHADOW]=0
+            # viewer.scn.flags[mujoco.mjtRndFlag.mjRND_REFLECTION]=0
             self.viewer = viewer
     # END INIT  
 
@@ -176,14 +176,14 @@ class robot_simulator:
         def controller(model, data):
             # perform simulation step after a delay in simulation time (stability reason)
             if(data.time - self.step_time>self.limit and not self.isFinished):
-                if (self.step_count <= computed_plan_index[-1] and not self.openTime and not self.closeTime):
+                if (self.step_count <= computed_plan_index[-1]-1 and not self.openTime and not self.closeTime):
                     # perform arm movement
                     data.ctrl[0:5] = computed_plan[self.step_count][1:6] #6 dof [index 5] is moved at initial timestamp 
                     self.limit= self.configs["ACTION_LONG_PAUSE"] if(self.step_count in computed_plan_index) else self.configs["ACTION_SHORT_PAUSE"]
                     self.closeTime = (self.step_count +1 == computed_plan_index[1])
-                    self.openTime = (self.step_count +1 == computed_plan_index[-1])
+                    #self.openTime = (self.step_count +1 == computed_plan_index[-1])
 
-                    if(self.openTime):self.finalObjsPos= [self.data.qpos[i*7:i*7+3].copy() for i in range(self.configs["NUMBER_OF_OBJECTS"])]
+                    #if(self.openTime):self.finalObjsPos= [self.data.qpos[i*7:i*7+3].copy() for i in range(self.configs["NUMBER_OF_OBJECTS"])]
                     self.step_count += 1
                     
                 else:
@@ -204,7 +204,10 @@ class robot_simulator:
                         if(data.ctrl[6]>=self.configs["OPEN_GRIPPER"]):
                             self.last_pos = computed_plan[-1][1:7].tolist()
                             self.openTime = False
-                            self.isFinished = True     
+                            #self.isFinished = True
+                    if self.step_count == computed_plan_index[-1]:
+                        self.finalObjsPos= [self.data.qpos[i*7:i*7+3].copy() for i in range(self.configs["NUMBER_OF_OBJECTS"])]
+                        self.isFinished = True     
                 self.step_time = data.time
         # END CONTROLLER  
 
@@ -346,7 +349,7 @@ class robot_simulator:
         """
         # The reward is 1 if the object is in the goal position (site of the drop Pose).
         for i in range(self.configs["NUMBER_OF_OBJECTS"]):
-            if(np.linalg.norm(self.rewCheck-self.finalObjsPos[i])<0.085 and self.objPicked[i]==0):
+            if(np.linalg.norm(self.rewCheck-self.finalObjsPos[i])<0.12 and self.objPicked[i]==0):
                 self.reward=1
                 self.objPicked[i]=1
                 break
