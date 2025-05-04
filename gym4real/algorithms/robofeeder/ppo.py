@@ -54,19 +54,22 @@ class CustomCNN(BaseFeaturesExtractor):
         return self.linear(features)
 
 
-pi = [256,256,128]
-vf = [256,256,128]
+pi = [512, 512, 512]
+vf = [512, 512, 512]
 
 features_dim = 256
-optimizer_kwargs= dict (weight_decay=1e-5,)
+optimizer_kwargs= dict(weight_decay=2e-5,)
+
+## Example of policy_kwargs with custom features extractor
+# policy_kwargs = dict(normalize_images=False,
+#                      features_extractor_class=CustomCNN,
+#                      features_extractor_kwargs=dict(features_dim=features_dim),
+#                      net_arch=dict(pi=pi, vf=vf),
+#                      optimizer_kwargs=optimizer_kwargs
+#                      )
 
 
-policy_kwargs = dict(normalize_images=False,
-                     features_extractor_class=CustomCNN,
-                     features_extractor_kwargs=dict(features_dim=features_dim),
-                     net_arch=dict(pi=pi, vf=vf),
-                     optimizer_kwargs=optimizer_kwargs
-                     )
+policy_kwargs = dict(normalize_images=False) #,net_arch=dict(pi=pi, vf=vf), optimizer_kwargs=optimizer_kwargs)
 
 
 
@@ -89,11 +92,13 @@ def train_ppo(envs, args, model_file=None):
                     tensorboard_log="./logs/tensorboard/robofeeder-env0/ppo/".format(args['exp_name']),
                     n_steps=args['n_steps'],
                     n_epochs=args['n_epochs'],
+                    batch_size=args['n_batches'],
                     learning_rate=args['learning_rate'],
+                    # ent_coef=0.01,
                     policy_kwargs=policy_kwargs,
                     )
         
-    model.learn(total_timesteps=1000000,
+    model.learn(total_timesteps=100000,
                 progress_bar=True,
                 tb_log_name="ppo_{}".format(args['exp_name']),
                 reset_num_timesteps=False,
@@ -105,16 +110,17 @@ def train_ppo(envs, args, model_file=None):
 if __name__ == '__main__':
     # Example parameters
     args = {
-        'exp_name': 'robofeeder_env0_100_episodes',
+        'exp_name': 'robofeeder_env0_20M',
         'n_episodes': 100,
-        'n_envs': 10,
-        'n_steps': 100,
+        'n_envs': 8,
+        'n_steps': 3,
         'n_epochs': 8,
+        'n_batches': 128,
         'verbose': 1,
-        'gamma': 0.99,
-        'learning_rate': 0.001,
+        'gamma': 0.9,
+        'learning_rate': 0.05,
         'log_rate': 1,
-        'save_model_as': 'ppo_100_episodes',
+        'save_model_as': 'ppo_20M',
     }
     
     config_params = "gym4real/envs/robofeeder/configuration.yaml"

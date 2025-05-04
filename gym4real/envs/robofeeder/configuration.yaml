@@ -25,6 +25,6 @@
   IS_SIMULATION_REAL_TIME: False
   IS_SIMULATION_SHOWED: False
   IS_SIMULATION_RECORD: False
-  RECORD_FOLDER : "/usr/src/data/recordings"
+  RECORD_FOLDER : "/usr/src/gym4real"
 
 ... # The YAML document ends with an optional …
