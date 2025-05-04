@@ -9,7 +9,6 @@ import os
 import torch # This import is needed to run onnx on GPU 
 import onnxruntime as rt
 import cv2 
-import math
 """
 This version includes the following changes:
 - Object Detection network that feed the network with obj small images
@@ -60,7 +59,7 @@ class robotEnv(Env):
         
         # Simulate the action
         obj_position = self.simulator.pixel2World(pixelCoordinates=target_pos)     
-        resultIMG, self.rew = self.simulator.simulate_pick(np.append(obj_position,0.080),rotation)
+        resultIMG, self.rew = self.simulator.simulate_pick(np.append(obj_position,0.08222582),rotation)
         
         if (self.rew is None): # If the action is not feasible
             self.rew = -1
@@ -87,33 +86,18 @@ class robotEnv(Env):
 
             if(self.simulator.objPicked[distance_index]==0): # if the object is not picked (or not considered in the reward)
                 #Reward Parameters
+                REW_COEFF = 1
                 DISTANCE_LIMIT = 0.012
                 ROTATION_LIMIT = 0.35
 
-                # # Decay rate to match approximately the same falloff near threshold
-                # alpha_d = -math.log(0.1) / (DISTANCE_LIMIT ** 2)       # reward ~0.1 at limit
-                # alpha_theta = -math.log(0.1) / (ROTATION_LIMIT ** 2)   # reward ~0.1 at limit
+                distance_coeff, rotation_coeff= 0,0
+                #Compute reward with Rot            
+                if( distance < DISTANCE_LIMIT): 
+                    distance_coeff = round(REW_COEFF*3/4*(1-distance/DISTANCE_LIMIT),3)
+                    if (deltarot<ROTATION_LIMIT): 
+                        rotation_coeff =  round(REW_COEFF *1/4*(1-(deltarot/ROTATION_LIMIT)),3)
 
-                # # Inputs: `distance` and `deltarot` in same units as limits
-                # r_d = 0.75 * math.exp(-alpha_d * (distance ** 2))
-                # r_theta = 0.25 * math.exp(-alpha_theta * (deltarot ** 2))
-
-                # self.rew = r_d + r_theta #self.rew + distance_coeff + rotation_coeff # If near reward can go from -1 to 0
-                # deltarot rates
-                alpha_d = -math.log(0.5) / (DISTANCE_LIMIT ** 2)
-                alpha_theta = -math.log(0.5) / (ROTATION_LIMIT ** 2)
-
-                # Distance reward (always computed)
-                r_d = 0.85 * math.exp(-alpha_d * (distance ** 2))
-
-                # Orientation reward (only meaningful if we're close)
-                # if distance < DISTANCE_LIMIT:
-                
-                r_theta = 0.15 * math.exp(-alpha_theta * (deltarot ** 2))
-                # else:
-                #     r_theta = 0.0
-
-                self.rew = self.rew + r_d + r_theta
+                self.rew = self.rew + distance_coeff + rotation_coeff # If near reward can go from -1 to 0
         
         # 3.2. current_state
         self.current_obs = self.rgb2gray(resultIMG)
