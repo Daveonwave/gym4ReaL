@@ -4,7 +4,7 @@ from gymnasium.spaces import Box
 import numpy as np
 from scipy.spatial.transform import Rotation
 
-from . import robot_simulator
+from .src import robot_simulator
 import os 
 import torch # This import is needed to run onnx on GPU 
 import onnxruntime as rt
@@ -90,28 +90,13 @@ class robotEnv(Env):
                 DISTANCE_LIMIT = 0.012
                 ROTATION_LIMIT = 0.35
 
-                # # Decay rate to match approximately the same falloff near threshold
-                # alpha_d = -math.log(0.1) / (DISTANCE_LIMIT ** 2)       # reward ~0.1 at limit
-                # alpha_theta = -math.log(0.1) / (ROTATION_LIMIT ** 2)   # reward ~0.1 at limit
-
-                # # Inputs: `distance` and `deltarot` in same units as limits
-                # r_d = 0.75 * math.exp(-alpha_d * (distance ** 2))
-                # r_theta = 0.25 * math.exp(-alpha_theta * (deltarot ** 2))
-
-                # self.rew = r_d + r_theta #self.rew + distance_coeff + rotation_coeff # If near reward can go from -1 to 0
-                # deltarot rates
                 alpha_d = -math.log(0.5) / (DISTANCE_LIMIT ** 2)
                 alpha_theta = -math.log(0.5) / (ROTATION_LIMIT ** 2)
 
                 # Distance reward (always computed)
                 r_d = 0.85 * math.exp(-alpha_d * (distance ** 2))
-
-                # Orientation reward (only meaningful if we're close)
-                # if distance < DISTANCE_LIMIT:
                 
                 r_theta = 0.15 * math.exp(-alpha_theta * (deltarot ** 2))
-                # else:
-                #     r_theta = 0.0
 
                 self.rew = self.rew + r_d + r_theta
         

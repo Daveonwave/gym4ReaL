@@ -3,7 +3,8 @@ from gymnasium.spaces import Box
 
 import numpy as np
 from scipy.spatial.transform import Rotation
-from . import robot_simulator
+from .src import robot_simulator
+import math
 
 #ex env 10
 
@@ -86,16 +87,18 @@ class robotEnv(Env):
             if(self.simulator.objPicked[distance_index]==0): # if the object is not picked (or not considered in the reward)
                 #Reward Parameters
                 REW_COEFF = 1
-                DISTANCE_LIMIT = 0.013
-                ROTATION_LIMIT = 0.4
+                DISTANCE_LIMIT = 0.012
+                ROTATION_LIMIT = 0.35
 
-                #Compute the reward 
-                distance_coeff,rotation_coeff = 0,0 
-                if( distance < DISTANCE_LIMIT): 
-                    distance_coeff = round(REW_COEFF*3/4*(1-distance/DISTANCE_LIMIT),3)
-                    if (deltarot<ROTATION_LIMIT): 
-                        rotation_coeff =  round(REW_COEFF *1/4*(1-(deltarot/ROTATION_LIMIT)),3)
-                self.rew = self.rew + distance_coeff + rotation_coeff 
+                alpha_d = -math.log(0.5) / (DISTANCE_LIMIT ** 2)
+                alpha_theta = -math.log(0.5) / (ROTATION_LIMIT ** 2)
+
+                # Distance reward (always computed)
+                r_d = 0.85 * math.exp(-alpha_d * (distance ** 2))
+                
+                r_theta = 0.15 * math.exp(-alpha_theta * (deltarot ** 2))
+
+                self.rew = self.rew + r_d + r_theta
 
         # 3.2. current_state
         self.current_obs = self.rgb2gray(resultIMG)

@@ -54,8 +54,8 @@ class CustomCNN(BaseFeaturesExtractor):
         return self.linear(features)
 
 
-pi = [512, 512, 512]
-vf = [512, 512, 512]
+pi = [256, 128, 64]
+vf = [256, 128, 64]
 
 features_dim = 256
 optimizer_kwargs= dict(weight_decay=2e-5,)
@@ -69,7 +69,7 @@ optimizer_kwargs= dict(weight_decay=2e-5,)
 #                      )
 
 
-policy_kwargs = dict(normalize_images=False) #,net_arch=dict(pi=pi, vf=vf), optimizer_kwargs=optimizer_kwargs)
+policy_kwargs = dict(normalize_images=False , net_arch=dict(pi=pi, vf=vf))
 
 
 
@@ -98,7 +98,7 @@ def train_ppo(envs, args, model_file=None):
                     policy_kwargs=policy_kwargs,
                     )
         
-    model.learn(total_timesteps=100000,
+    model.learn(total_timesteps=5000,
                 progress_bar=True,
                 tb_log_name="ppo_{}".format(args['exp_name']),
                 reset_num_timesteps=False,
@@ -110,23 +110,24 @@ def train_ppo(envs, args, model_file=None):
 if __name__ == '__main__':
     # Example parameters
     args = {
-        'exp_name': 'robofeeder_env0_20M',
+        'exp_name': 'robofeeder_planning_5k',
         'n_episodes': 100,
         'n_envs': 8,
-        'n_steps': 3,
+        'n_steps': 10,
         'n_epochs': 8,
         'n_batches': 128,
         'verbose': 1,
-        'gamma': 0.9,
-        'learning_rate': 0.05,
+        'gamma': 0.99,
+        'learning_rate': 0.005,
         'log_rate': 1,
-        'save_model_as': 'ppo_20M',
+        'save_model_as': 'ppo_5k',
     }
     
     config_params = "gym4real/envs/robofeeder/configuration.yaml"
 
-    envs = make_vec_env("gym4real/robofeeder-picking-v0", n_envs=args['n_envs'], env_kwargs={'config_file':config_params})    
-    
+    #envs = make_vec_env("gym4real/robofeeder-picking-v0", n_envs=args['n_envs'], env_kwargs={'config_file':config_params})    
+    envs = make_vec_env("gym4real/robofeeder-planning", n_envs=args['n_envs'], env_kwargs={'config_file':config_params}) 
+
     train_ppo(envs=envs, args=args)
 
     envs.close()
