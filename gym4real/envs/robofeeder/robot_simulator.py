@@ -70,7 +70,7 @@ class robot_simulator:
         #Initilize data
         if(seed is not None): np.random.seed(seed)
         self.last_pos= [0.0,0.0,0.0,0.0,0.0,0.0]
-        self.rewCheck= np.array([-0.19096066,  0.47406576,  0.41207368]) #np.array([-0.0882, 0.4929, 0.4])
+        self.rewCheck= np.array([-0.19096066,  0.47406576,  0.52]) #np.array([-0.0882, 0.4929, 0.4])
         self.possibleOrietnation = np.arange(-1,1.1,0.2)
         self.objPicked = [0]*self.configs["NUMBER_OF_OBJECTS"]
 
@@ -205,9 +205,12 @@ class robot_simulator:
                             self.last_pos = computed_plan[-1][1:7].tolist()
                             self.openTime = False
                             #self.isFinished = True
-                    if self.step_count == computed_plan_index[-1]:
-                        self.finalObjsPos= [self.data.qpos[i*7:i*7+3].copy() for i in range(self.configs["NUMBER_OF_OBJECTS"])]
-                        self.isFinished = True     
+                    if self.step_count >= computed_plan_index[-1]:
+                        self.step_count += 1
+                        if self.step_count == computed_plan_index[-1]+ 5:
+                            # perform arm movement
+                            self.finalObjsPos= [self.data.qpos[i*7:i*7+3].copy() for i in range(self.configs["NUMBER_OF_OBJECTS"])]
+                            self.isFinished = True     
                 self.step_time = data.time
         # END CONTROLLER  
 

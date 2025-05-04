@@ -56,7 +56,7 @@ class robotEnv(Env):
         obj_prediction = self.simulator.pixel2World(pixelCoordinates=action[0:2]) 
         
         # Simulate the action
-        resultIMG, self.rew = self.simulator.simulate_pick(np.append(obj_prediction,0.08222582),action[2])
+        resultIMG, self.rew = self.simulator.simulate_pick(np.append(obj_prediction,0.11),action[2])
         #resultIMG, self.rew = self.simulator.simulate_pick(np.append(obj_prediction,0.0),action[2])
         
         if (self.rew is None): # If the action is not feasible
