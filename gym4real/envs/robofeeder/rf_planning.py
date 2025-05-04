@@ -80,7 +80,7 @@ class robotEnv(Env):
         
         # Simulate the action
         obj_position = self.simulator.pixel2World(pixelCoordinates=target_pos)     
-        resultIMG, self.rew = self.simulator.simulate_pick(np.append(obj_position,0.08222582),rotation)
+        resultIMG, self.rew = self.simulator.simulate_pick(np.append(obj_position,0.11),rotation)
         
         if (self.rew is None): # If the action is not feasible
             self.rew = -1
