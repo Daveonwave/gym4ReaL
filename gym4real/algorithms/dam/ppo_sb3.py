@@ -17,7 +17,7 @@ from gym4real.envs.dam.utils import parameter_generator
 
 from gymnasium.wrappers import NormalizeObservation, NormalizeReward, RescaleAction, TransformReward, TransformObservation
 
-def wrap_env(env, normalize_obs=True, normalize_reward=True, rescale_action=True, rescale_reward=False, rescale_obs=False):
+def wrap_env(env, normalize_obs=False, normalize_reward=True, rescale_action=True, rescale_reward=False, rescale_obs=False):
     if normalize_obs:
         env = NormalizeObservation(env)
     if rescale_obs:
@@ -96,7 +96,7 @@ if __name__ == '__main__':
         'verbose': 1,
         'gamma': 0.995,
         'ent_coef': 0.01,
-        'learning_rate': 0.0001,
+        'learning_rate': 0.001,
         'log_rate': 10,
         'seed': 123,
         'save_model_as': 'dqn_ppo_100_episodes',
@@ -119,4 +119,4 @@ if __name__ == '__main__':
                         #                 'rescale_reward': True}
                         )
 
-    train_ppo(envs=envs, args=args, eval_env_params=params)
+    train_ppo(envs=envs, args=args, eval_env_params=eval_params)

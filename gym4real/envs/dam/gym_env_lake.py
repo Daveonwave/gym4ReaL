@@ -44,10 +44,10 @@ class LakeEnv(Env):
         high = []
 
         if 'level' in self.obs_keys:
-            low.append(0.)
+            low.append(-np.inf)
             high.append(np.inf)
         if 'day_of_year' in self.obs_keys:
-            low.extend([0., 0.])
+            low.extend([-1., -1.])
             high.extend([1., 1.])
         if 'q_forecast' in self.obs_keys:
             low.append(-np.inf)
@@ -97,12 +97,14 @@ class LakeEnv(Env):
         self.inflow = self.inflow_data[self.curr_year_data]
 
     def reset(self, seed=None, options=None):
+
+        if options is not None and options.get('rewind_profiles', False):
+            self.curr_year_data = None
         self._init_internal_state(seed=seed)
         return self._get_observation(), {}
 
     def step(self, action):
 
-        action = action.item()
         clipped_action = np.clip(action, self.action_space.low, self.action_space.high).item()
         self.actions.append(clipped_action)
 
