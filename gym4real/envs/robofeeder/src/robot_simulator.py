@@ -18,6 +18,31 @@ from .planner import PlanningClass
 
 class robot_simulator:
     def __init__(self,config_file,seed=None):
+        """
+        Initializes the RobotSimulator class.
+        This constructor sets up the robot simulation environment by loading configurations,
+        initializing the Mujoco model, setting up the planner, and preparing the simulation
+        for rendering and interaction.
+        Args:
+            config_file (str): Path to the configuration YAML file containing simulation parameters.
+            seed (int, optional): Seed for random number generation to ensure reproducibility. Defaults to None.
+        Attributes:
+            configs (dict): Loaded configuration parameters from the YAML file.
+            model (mujoco.MjModel): Mujoco model initialized from the URDF file.
+            data (mujoco.MjData): Mujoco data object associated with the model.
+            renderer (mujoco.Renderer): Renderer for generating simulation images.
+            isRealTime (bool): Flag indicating whether the simulation runs in real-time.
+            planner (PlanningClass): Instance of the planning class for robot motion planning.
+            counter (int): Counter to track simulation steps.
+            last_pos (list): Last recorded position of the robot.
+            rewCheck (numpy.ndarray): Array used for reward checking in the simulation.
+            possibleOrietnation (numpy.ndarray): Array of possible orientations for objects.
+            objPicked (list): List tracking the number of objects picked in the simulation.
+            inv_camera_matrix (numpy.ndarray): Inverse camera matrix for rendering.
+            viewer (mujoco.viewer.Viewer, optional): Viewer for visualizing the simulation if enabled.
+        Raises:
+            Exception: If there is an error loading the Mujoco model or initializing the simulation.
+        """
 
         # Load the constants from the configuration file
         with open(config_file) as f: self.configs = yaml.load(f, Loader=yaml.SafeLoader)
@@ -45,7 +70,7 @@ class robot_simulator:
         #Initilize data
         if(seed is not None): np.random.seed(seed)
         self.last_pos= [0.0,0.0,0.0,0.0,0.0,0.0]
-        self.rewCheck= np.array([-0.19096066,  0.47406576,  0.41207368]) #np.array([-0.0882, 0.4929, 0.4])
+        self.rewCheck= np.array([-0.19096066,  0.47406576,  0.52]) #np.array([-0.0882, 0.4929, 0.4])
         self.possibleOrietnation = np.arange(-1,1.1,0.2)
         self.objPicked = [0]*self.configs["NUMBER_OF_OBJECTS"]
 
@@ -59,12 +84,33 @@ class robot_simulator:
             viewer = mujoco.viewer.launch_passive(self.model, self.data)
             viewer.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTFORCE] = 0
             viewer.opt.flags[mujoco.mjtVisFlag.mjVIS_JOINT]=0
-            viewer.scn.flags[mujoco.mjtRndFlag.mjRND_SHADOW]=0
-            viewer.scn.flags[mujoco.mjtRndFlag.mjRND_REFLECTION]=0
+            # viewer.scn.flags[mujoco.mjtRndFlag.mjRND_SHADOW]=0
+            # viewer.scn.flags[mujoco.mjtRndFlag.mjRND_REFLECTION]=0
             self.viewer = viewer
     # END INIT  
 
     def reset(self):
+        """
+        Resets the simulation environment to its initial state.
+        This method initializes object positions and orientations in the simulation
+        environment, ensuring that objects do not overlap. It also stabilizes the
+        simulation and synchronizes the viewer if applicable.
+        Args:
+            None
+        Returns:
+            None
+        Attributes:
+            objPicked (list): A list initialized to track the picked state of objects.
+            last_pos (list): A list to store the last positions of the robot.
+            counter (int): A counter initialized to zero for tracking purposes.
+        Behavior:
+            - Randomly generates non-overlapping positions for objects within specified
+              bounds.
+            - Converts pixel coordinates to world coordinates for object placement.
+            - Assigns random or correct orientations to objects based on configuration.
+            - Stabilizes the simulation by stepping it multiple times.
+            - Synchronizes the viewer if it is active.
+        """
         self.objPicked = [0]*self.configs["NUMBER_OF_OBJECTS"]
         mujoco.mj_resetDataKeyframe(self.model, self.data, 0)
         self.last_pos = [0.0,0.0,0.0,0.0,0.0,0.0]
@@ -88,9 +134,9 @@ class robot_simulator:
         if(self.configs["SHUFFLE_OBJECTS"]):
             for i in range(self.configs["NUMBER_OF_OBJECTS"]):
                 #random position and orientation
-                res = self.pixel2Wolrd(np.array([x[i],y[i]]))
+                res = self.pixel2World(np.array([x[i],y[i]]))
                 randomlist=random.choices(self.possibleOrietnation,k=4)
-                self.data.qpos[i*7:i*7+3] = [res[0], res[1], 0.21]
+                self.data.qpos[i*7:i*7+3] = [res[0], res[1],0.21]
                 if(self.configs["OBJ_CORRECT_ORIENTATION"]): # the first obj is always in the right orientation
                     # the rotation of the obj is correct on z axis 
                     self.data.qpos[i*7+3]= randomlist[0]
@@ -130,14 +176,14 @@ class robot_simulator:
         def controller(model, data):
             # perform simulation step after a delay in simulation time (stability reason)
             if(data.time - self.step_time>self.limit and not self.isFinished):
-                if (self.step_count <= computed_plan_index[-1] and not self.openTime and not self.closeTime):
+                if (self.step_count <= computed_plan_index[-1]-1 and not self.openTime and not self.closeTime):
                     # perform arm movement
                     data.ctrl[0:5] = computed_plan[self.step_count][1:6] #6 dof [index 5] is moved at initial timestamp 
                     self.limit= self.configs["ACTION_LONG_PAUSE"] if(self.step_count in computed_plan_index) else self.configs["ACTION_SHORT_PAUSE"]
                     self.closeTime = (self.step_count +1 == computed_plan_index[1])
-                    self.openTime = (self.step_count +1 == computed_plan_index[-1])
+                    #self.openTime = (self.step_count +1 == computed_plan_index[-1])
 
-                    if(self.openTime):self.finalObjsPos= [self.data.qpos[i*7:i*7+3].copy() for i in range(self.configs["NUMBER_OF_OBJECTS"])]
+                    #if(self.openTime):self.finalObjsPos= [self.data.qpos[i*7:i*7+3].copy() for i in range(self.configs["NUMBER_OF_OBJECTS"])]
                     self.step_count += 1
                     
                 else:
@@ -158,6 +204,12 @@ class robot_simulator:
                         if(data.ctrl[6]>=self.configs["OPEN_GRIPPER"]):
                             self.last_pos = computed_plan[-1][1:7].tolist()
                             self.openTime = False
+                            #self.isFinished = True
+                    if self.step_count >= computed_plan_index[-1]:
+                        self.step_count += 1
+                        if self.step_count == computed_plan_index[-1]+ 5:
+                            # perform arm movement
+                            self.finalObjsPos= [self.data.qpos[i*7:i*7+3].copy() for i in range(self.configs["NUMBER_OF_OBJECTS"])]
                             self.isFinished = True     
                 self.step_time = data.time
         # END CONTROLLER  
@@ -210,6 +262,16 @@ class robot_simulator:
     #### UTILITY FUNCTIONS ####
 
     def get_state(self):
+        """
+        Retrieves the current state of the simulation by stepping the Mujoco model,
+        updating the renderer, and capturing a rendered frame.
+
+        This method performs a simulation step, updates the scene using the 
+        specified camera view, and returns the rendered frame as an image.
+
+        Returns:
+            numpy.ndarray: A rendered frame of the current simulation state.
+        """
         mujoco.mj_step(self.model, self.data)
         self.renderer.update_scene(self.data, camera="top_down")
         frame = self.renderer.render()
@@ -253,7 +315,19 @@ class robot_simulator:
         full_cam_matrix = np.vstack((camera_matrix, np.array([0, 0, 0, 1])))
         return np.linalg.inv(full_cam_matrix)
     
-    def pixel2Wolrd(self,pixelCoordinates):
+    def pixel2World(self,pixelCoordinates):
+        """
+        Converts pixel coordinates to world coordinates using the camera's intrinsic parameters.
+
+        This method takes pixel coordinates and transforms them into world coordinates
+        by applying the inverse camera matrix and a static depth value.
+
+        Args:
+            pixelCoordinates (tuple): A tuple containing the x and y pixel coordinates.
+
+        Returns:
+            numpy.ndarray: A 2D numpy array containing the x and y world coordinates.
+        """
         depth =  0.42078046 #static value of the camera depth
         x,y= pixelCoordinates[0]*(-depth),pixelCoordinates[1]*(-depth)
 
@@ -261,14 +335,48 @@ class robot_simulator:
         return result[0:2]
     
     def compute_reward(self): 
+        """
+        Computes the reward for the current state of the environment.
+
+        The reward is calculated based on whether any object is within a specified 
+        distance (0.085) of the goal position (`rewCheck`) and has not been picked yet. 
+        If such an object is found, the reward is set to 1, and the object is marked 
+        as picked to prevent further rewards for the same object.
+
+        Args:
+            None
+
+        Returns:
+            None: The method updates the `reward` attribute and modifies the 
+            `objPicked` list to reflect the objects that have been rewarded.
+        """
         # The reward is 1 if the object is in the goal position (site of the drop Pose).
         for i in range(self.configs["NUMBER_OF_OBJECTS"]):
-            if(np.linalg.norm(self.rewCheck-self.finalObjsPos[i])<0.085 and self.objPicked[i]==0):
+            if(np.linalg.norm(self.rewCheck-self.finalObjsPos[i])<0.12 and self.objPicked[i]==0):
                 self.reward=1
                 self.objPicked[i]=1
                 break
     
     def vibrate_sinuisodal(self,duration=850,frequency=0.045,amplitude=0.0135):
+        """
+        Perform sinusoidal vibrations on the robot's control system.
+
+        This method applies sinusoidal vibrations to the robot's control system for a specified 
+        duration, frequency, and amplitude. It uses the MuJoCo physics engine to simulate the 
+        vibrations in real-time or non-real-time mode. After the vibration, the control system 
+        is reset, and the simulation is stabilized.
+
+        Args:
+            duration (int, optional): The number of simulation steps to perform the vibration. 
+                Defaults to 850.
+            frequency (float, optional): The frequency of the sinusoidal vibration in Hz. 
+                Defaults to 0.045.
+            amplitude (float, optional): The amplitude of the sinusoidal vibration. 
+                Defaults to 0.0135.
+
+        Returns:
+            None
+        """
         #Perform Vibrations
         for _ in range(duration):
             step_start = time.time() #for real time simulation
@@ -298,6 +406,24 @@ class robot_simulator:
         return 
 
     def save_video(self,frames):  
+        """
+        Saves a sequence of frames as a video file.
+
+        Args:
+            frames (list): A list of frames (images) to be saved as a video.
+
+        Returns:
+            None
+
+        This method saves the provided frames as a video file in MP4 format. 
+        The video is saved in the folder specified by the "RECORD_FOLDER" 
+        configuration, with a filename that includes the current counter value. 
+        The video is saved at 30 frames per second (fps).
+
+        Example:
+            frames = [frame1, frame2, frame3]
+            save_video(frames)
+        """
         # Save video
         video_name = f"simulated_pick_{self.counter}.mp4"
         video_path = os.path.join(self.configs["RECORD_FOLDER"], video_name)
@@ -306,6 +432,19 @@ class robot_simulator:
 
 
     def close(self):
+        """
+        Closes and cleans up resources used by the robot simulator.
+
+        This method ensures that all resources such as the viewer, model, data, 
+        and renderer are properly released to prevent memory leaks or other issues.
+        Closes the viewer and renderer, and releases associated resources.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         # Properly close viewer and renderer
         if self.viewer is not None:
             self.viewer.close()
@@ -313,10 +452,3 @@ class robot_simulator:
         self.model = None
         self.data = None
         self.renderer = None
-
-        # if self.renderer is not None:
-        #     self.renderer.close()
-        #     self.renderer = None
-
-    # def __del__(self):
-    #     self.close()

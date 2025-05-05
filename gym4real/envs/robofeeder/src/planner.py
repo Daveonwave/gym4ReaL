@@ -16,11 +16,25 @@ class PlanningClass:
         # Build the path to staubli/urdf relative to this file
         urdf_path = os.path.join(current_dir, "staubli", "urdf/")
         self.robot_chain = Chain.from_urdf_file(urdf_path + "tx2_60.urdf", active_links_mask = [False, True, True, True, True, True, True, False, False])
-        self.above_offset = 0.15
+        self.above_offset = 0.25
         self.final_position = [-0.0882, 0.4929, 0.4596]
         self.num_interpolated_points = 5  # Number of interpolated points between each waypoint pair
 
     def make_transform_matrix(self,position, quat):
+        """
+        Creates a 4x4 transformation matrix from a given position and quaternion.
+        This method converts a quaternion into a 3x3 rotation matrix and combines it
+        with a position vector to form a 4x4 transformation matrix. The resulting
+        matrix can be used to represent the pose of an object in 3D space.
+        Args:
+            position (array-like): A 3-element array or list representing the 
+                position [x, y, z] in 3D space.
+            quat (array-like): A 4-element array or list representing the quaternion 
+                [x, y, z, w], where w is the scalar part.
+        Returns:
+            numpy.ndarray: A 4x4 transformation matrix combining the rotation and 
+            translation.
+        """
         # Convert quaternion to 3x3 rotation matrix
         rot = R.from_quat(quat).as_matrix()  # quat = [x, y, z, w]
         
@@ -31,6 +45,22 @@ class PlanningClass:
         return transform
     
     def extract_axis_from_quat(self, quat, axis="Z"):
+        """
+        Extracts a specific axis vector from a quaternion.
+
+        This method converts a quaternion into a rotation matrix and retrieves the 
+        specified axis vector (X, Y, or Z) from the matrix.
+
+        Args:
+            quat (array-like): The quaternion in the format [x, y, z, w].
+            axis (str): The axis to extract ('X', 'Y', or 'Z'). Defaults to 'Z'.
+
+        Returns:
+            numpy.ndarray: The extracted axis vector as a 3-element array.
+
+        Raises:
+            ValueError: If an invalid axis is specified.
+        """
         r = R.from_quat(quat)  # x, y, z, w format
         rot_matrix = r.as_matrix()
 
@@ -44,6 +74,23 @@ class PlanningClass:
             raise ValueError("Invalid axis")
 
     def compute_ik(self, position, quat, axis="Z", initial_j_position=None):
+        """
+        Computes the inverse kinematics (IK) solution for a given target position and orientation.
+
+        This method calculates the joint positions required for the robot to reach a specified 
+        position and orientation in space. The orientation is determined based on the specified 
+        axis and the quaternion provided.
+
+        Args:
+            position (list or tuple): The target position in 3D space as [x, y, z].
+            quat (list or tuple): The target orientation represented as a quaternion [x, y, z, w].
+            axis (str, optional): The axis to align the orientation with. Defaults to "Z".
+            initial_j_position (list or tuple, optional): The initial joint positions to seed the 
+                IK solver. Defaults to None.
+
+        Returns:
+            list: A list of joint positions representing the IK solution.
+        """
         direction = self.extract_axis_from_quat(quat, axis=axis)
 
         ik_solution = self.robot_chain.inverse_kinematics(
@@ -92,6 +139,24 @@ class PlanningClass:
 
 
     def planFunction(self, initial_joint_position=None, obj_position=[0.0882 , 0.0  ,0.4596]):
+        """
+        Plans a trajectory for the robot arm to pick an object and place it at a final position.
+        This function computes a sequence of waypoints for the robot arm to follow, including
+        pre-pick, pick, post-pick, and place positions. It uses inverse kinematics (IK) to calculate
+        joint configurations for each waypoint and interpolates between them using cubic splines
+        to generate a smooth trajectory.
+        Args:
+            initial_joint_position (list or None): The initial joint positions of the robot arm.
+                If None, the initial joint positions are set to zeros. Otherwise, the provided
+                joint positions are used, with additional zeros added for the base link, flange,
+                and gripper.
+            obj_position (list): The 3D position of the object to be picked, specified as
+                [x, y, z]. Defaults to [0.0882, 0.0, 0.4596].
+        Returns:
+            tuple: A tuple containing:
+                - plan (numpy.ndarray): The planned trajectory, including interpolated points.
+                - indices (list): Indices of the key waypoints in the trajectory.
+        """
         if initial_joint_position is None:
             initial_joint_position = np.zeros(len(self.robot_chain.links))
         else:
@@ -99,8 +164,6 @@ class PlanningClass:
             initial_joint_position = [0.0] + initial_joint_position + [0.0, 0.0]
             initial_joint_position = np.array(initial_joint_position)
 
-        print("Initial Joint Position:", initial_joint_position)
-        print("Object Position:", obj_position)
         waypoints = []
         indices = []
 
