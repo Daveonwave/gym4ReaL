@@ -3,7 +3,8 @@ from gymnasium.spaces import Box
 
 import numpy as np
 from scipy.spatial.transform import Rotation
-from . import robot_simulator
+from .src import robot_simulator
+import math
 
 #ex env 10
 
@@ -53,17 +54,17 @@ class robotEnv(Env):
         action[0:2] = (action[0:2]+1)*self.simulator.configs["OBSERVATION_IMAGE_DIM"]/2 
         
         #Compute the position of the object in the world frame
-        obj_prediction = self.simulator.pixel2Wolrd(pixelCoordinates=action[0:2]) 
+        obj_prediction = self.simulator.pixel2World(pixelCoordinates=action[0:2]) 
         
         # Simulate the action
-        resultIMG, self.rew = self.simulator.simulate_pick(np.append(obj_prediction,0.08222582),action[2])
+        resultIMG, self.rew = self.simulator.simulate_pick(np.append(obj_prediction,0.11),action[2])
         #resultIMG, self.rew = self.simulator.simulate_pick(np.append(obj_prediction,0.0),action[2])
         
         if (self.rew is None): # If the action is not feasible
             self.rew = -1
             done = (self.max_episode_steps == self.curr_num_episode)
             if(self.is_log_set): self.log_file.write(f"{action},NONVALID\n")
-            return self.current_obs,self.rew, done,{} # If the action is not feasible
+            return self.current_obs,self.rew, done,done,{} # If the action is not feasible
 
         # 3.1 reward
         #From the simulator: 1 if the object is picked, -1 if the object is not picked (now improve the reward)
@@ -86,16 +87,18 @@ class robotEnv(Env):
             if(self.simulator.objPicked[distance_index]==0): # if the object is not picked (or not considered in the reward)
                 #Reward Parameters
                 REW_COEFF = 1
-                DISTANCE_LIMIT = 0.013
-                ROTATION_LIMIT = 0.4
+                DISTANCE_LIMIT = 0.012
+                ROTATION_LIMIT = 0.35
 
-                #Compute the reward 
-                distance_coeff,rotation_coeff = 0,0 
-                if( distance < DISTANCE_LIMIT): 
-                    distance_coeff = round(REW_COEFF*3/4*(1-distance/DISTANCE_LIMIT),3)
-                    if (deltarot<ROTATION_LIMIT): 
-                        rotation_coeff =  round(REW_COEFF *1/4*(1-(deltarot/ROTATION_LIMIT)),3)
-                self.rew = self.rew + distance_coeff + rotation_coeff 
+                alpha_d = -math.log(0.5) / (DISTANCE_LIMIT ** 2)
+                alpha_theta = -math.log(0.5) / (ROTATION_LIMIT ** 2)
+
+                # Distance reward (always computed)
+                r_d = 0.85 * math.exp(-alpha_d * (distance ** 2))
+                
+                r_theta = 0.15 * math.exp(-alpha_theta * (deltarot ** 2))
+
+                self.rew = self.rew + r_d + r_theta
 
         # 3.2. current_state
         self.current_obs = self.rgb2gray(resultIMG)
@@ -103,7 +106,7 @@ class robotEnv(Env):
         done = (self.max_episode_steps == self.curr_num_episode) or (sum(self.simulator.objPicked) == self.simulator.configs["NUMBER_OF_OBJECTS"])   
 
         # if(self.is_log_set): self.log_file.write(str(action[0])+","+str(action[1])+","+str(action[2])+","+str(self.rew)+"\n")
-        return self.current_obs, self.rew, done, False,{}
+        return self.current_obs, self.rew, done, done,{}
     # END STEP
     
     # Inizialize a new episode
@@ -117,14 +120,13 @@ class robotEnv(Env):
     # END RESET
             
     def rgb2gray(self,rgb):
-        gray = np.dot(rgb[...,:3], np.array([0.2989, 0.5870, 0.1140],dtype=np.float32)).reshape(1,300,300) #shape = (1,h,w)
+        gray = np.dot(rgb[...,:3], np.array([0.2989, 0.5870, 0.1140],dtype=np.float32)).reshape(1,self.simulator.configs["OBSERVATION_IMAGE_DIM"],self.simulator.configs["OBSERVATION_IMAGE_DIM"]) #shape = (1,h,w)
         gray = gray/255.0 #Normalize 
         return gray
 
     def close(self):
         print("CLOSE")
-        #self.planner.shutdown()
-        self.log_file.close()
+        self.simulator.close()
 
     def normalizeAngle(self,angle):
         if(angle>np.pi): angle -=np.pi

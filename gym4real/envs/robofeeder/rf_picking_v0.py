@@ -4,11 +4,12 @@ from gymnasium.spaces import Box
 import numpy as np
 from scipy.spatial.transform import Rotation
 
-from . import robot_simulator
+from .src import robot_simulator
 import os 
 import torch # This import is needed to run onnx on GPU 
 import onnxruntime as rt
 import cv2 
+import math
 """
 This version includes the following changes:
 - Object Detection network that feed the network with obj small images
@@ -21,9 +22,9 @@ class robotEnv(Env):
         super(robotEnv, self).__init__()
 
         providers = ['CUDAExecutionProvider','CPUExecutionProvider']
-        currend_dir = os.path.dirname(__file__)
+        current_dir = os.path.dirname(__file__)
         # Load the object detection network
-        model_dir = os.path.join(currend_dir, "utils", "objDetectionNetwork/")
+        model_dir = os.path.join(current_dir, "utils", "objDetectionNetwork/")
         self.ort_sess = rt.InferenceSession(model_dir + 'objDetection.onnx',providers=providers)
         
         # Init the simulation
@@ -38,7 +39,7 @@ class robotEnv(Env):
         self.observation_space = Box(low=0, high=1, shape=(1,self.CROP_DIM,self.CROP_DIM))  # Set the observation space to [rgb] gray immage array
 
         # Set the Episode length
-        self.max_episode_steps = 4
+        self.max_episode_steps = 1
         self.curr_num_episode = 0
 
         self.is_log_set = False
@@ -58,14 +59,14 @@ class robotEnv(Env):
         rotation = (action[2]+1)*np.pi/2 
         
         # Simulate the action
-        obj_position = self.simulator.pixel2Wolrd(pixelCoordinates=target_pos)     
-        resultIMG, self.rew = self.simulator.simulate_pick(np.append(obj_position,0.08222582),rotation)
+        obj_position = self.simulator.pixel2World(pixelCoordinates=target_pos)     
+        resultIMG, self.rew = self.simulator.simulate_pick(np.append(obj_position,0.11),rotation)
         
         if (self.rew is None): # If the action is not feasible
             self.rew = -1
             done = (self.max_episode_steps == self.curr_num_episode)
             if(self.is_log_set): self.log_file.write(f"{action},NONVALID\n")
-            return self.current_obs,self.rew, done,False,{} # If the action is not feasible
+            return self.current_obs,self.rew, done,done,{} # If the action is not feasible
                 
         
         # 3.1 reward
@@ -86,24 +87,24 @@ class robotEnv(Env):
 
             if(self.simulator.objPicked[distance_index]==0): # if the object is not picked (or not considered in the reward)
                 #Reward Parameters
-                REW_COEFF = 1
                 DISTANCE_LIMIT = 0.012
                 ROTATION_LIMIT = 0.35
 
-                distance_coeff, rotation_coeff= 0,0
-                #Compute reward with Rot            
-                if( distance < DISTANCE_LIMIT): 
-                    distance_coeff = round(REW_COEFF*3/4*(1-distance/DISTANCE_LIMIT),3)
-                    if (deltarot<ROTATION_LIMIT): 
-                        rotation_coeff =  round(REW_COEFF *1/4*(1-(deltarot/ROTATION_LIMIT)),3)
+                alpha_d = -math.log(0.5) / (DISTANCE_LIMIT ** 2)
+                alpha_theta = -math.log(0.5) / (ROTATION_LIMIT ** 2)
 
-                self.rew = self.rew + distance_coeff + rotation_coeff # If near reward can go from -1 to 0
+                # Distance reward (always computed)
+                r_d = 0.85 * math.exp(-alpha_d * (distance ** 2))
+                
+                r_theta = 0.15 * math.exp(-alpha_theta * (deltarot ** 2))
+
+                self.rew = self.rew + r_d + r_theta
         
         # 3.2. current_state
         self.current_obs = self.rgb2gray(resultIMG)
         # 3.3. done
         done = (self.max_episode_steps == self.curr_num_episode) or (sum(self.simulator.objPicked) == self.simulator.configs["NUMBER_OF_OBJECTS"])   
-        return self.current_obs, self.rew, done, False,{}
+        return self.current_obs, self.rew, done, done,{}
     # END STEP
     
     # Inizialize a new episode
@@ -147,8 +148,9 @@ class robotEnv(Env):
 
     def close(self):
         print("CLOSE")
+        self.simulator.close()
         #self.simulator.planner.shutdown()
-        self.log_file.close()
+        #self.log_file.close()
 
     def normalizeAngle(self,angle):
         if(angle>np.pi): angle -=np.pi
