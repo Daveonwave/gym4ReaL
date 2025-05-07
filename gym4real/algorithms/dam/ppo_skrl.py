@@ -116,8 +116,9 @@ def train_ppo(params, args, eval_env_params, device='gpu'):
     cfg["value_loss_scale"] = args.get('value_loss_scale', 0.5)
     cfg["kl_threshold"] = args.get('kl_threshold', 0)
     cfg["mixed_precision"] = True
-    # cfg["state_preprocessor"] = RunningStandardScaler
-    # cfg["state_preprocessor_kwargs"] = {"size": env.observation_space, "device": device}
+    if args.get('normalize_observations', True):
+        cfg["state_preprocessor"] = RunningStandardScaler
+        cfg["state_preprocessor_kwargs"] = {"size": env.observation_space, "device": device}
     cfg["value_preprocessor"] = RunningStandardScaler
     cfg["value_preprocessor_kwargs"] = {"size": 1, "device": device}
     # logging to TensorBoard and write checkpoints (in timesteps)
@@ -154,7 +155,10 @@ def train_ppo(params, args, eval_env_params, device='gpu'):
         for i in range(365*5):
             output = agent.act(obs, i, 0)
             act = output[-1]["mean_actions"]
+            obs_old = obs
             obs, tot_reward, terminated, truncated, info = eval_env.step(act)
+
+            print(f"{info['weighted_reward']['overflow_reward']}\t\t{tot_reward}\t\t{obs_old}\t\t{info['action']}\t\t{info['demand']}")
 
             rew_cumul += tot_reward
             for key in sep_reward_cumul.keys():
@@ -180,7 +184,8 @@ if __name__ == '__main__':
         'learning_rate': 1e-4,
         'net_arch': [16, 16],
         'initial_log_std': -0.5,
-        'seed': 123
+        'seed': 123,
+        'normalize_observations': True
     }
 
     params = parameter_generator(
