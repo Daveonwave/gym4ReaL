@@ -22,6 +22,8 @@ class LakeEnv(Env):
         self.init_day = settings['doy']
         self.obs_keys = settings['observations']
         self.reward_coeff = settings['reward_coeff']
+        self.exponential_average_coeff = settings.get('exponential_average_coeff', 0.8)
+        self.smooth_daily_deficit_coeff = settings['smooth_daily_deficit_coeff']
 
         # Model components
         self.lake = Lake(settings['lake_params'])
@@ -31,7 +33,6 @@ class LakeEnv(Env):
         self.inflow_data = OrderedDict(settings['inflow'])
         self.demand = None
         self.inflow = None
-        self.qForecast = settings['q_forecast']
 
         # Action space = single release decision
         self.action_space = Box(
@@ -49,8 +50,8 @@ class LakeEnv(Env):
         if 'day_of_year' in self.obs_keys:
             low.extend([-1., -1.])
             high.extend([1., 1.])
-        if 'q_forecast' in self.obs_keys:
-            low.append(-np.inf)
+        if 'exponential_average_demand' in self.obs_keys:
+            low.append(0.)
             high.append(np.inf)
 
         low = np.array(low)
@@ -69,6 +70,8 @@ class LakeEnv(Env):
 
     def _init_internal_state(self, seed=None):
         self.current_step = 0
+
+        self.exponential_average_demand = 0.
 
         self.level = []
         self.storage = []
@@ -113,6 +116,9 @@ class LakeEnv(Env):
         # Day of year
         self.doy.append((self.init_day + t - 1) % self.T + 1)
 
+        demand = self.demand[int(self.doy[t]) - 1]
+        self.exponential_average_demand = self.exponential_average_coeff * self.exponential_average_demand + (1 - self.exponential_average_coeff) * demand
+
         inflow = self.get_inflow(t)
 
         new_storage, new_release = self.lake.integration(
@@ -142,7 +148,7 @@ class LakeEnv(Env):
             'release': new_release,
             'action': action,
             'level': self.level[-1],
-            'demand': self.demand[int(self.doy[t]) - 1]
+            'demand': demand
         }
 
         return self._get_observation(), tot_reward, False, truncated, info
@@ -157,13 +163,12 @@ class LakeEnv(Env):
         if 'day_of_year' in self.obs_keys:
             obs.append(sin(2 * pi * doy / self.T))
             obs.append(cos(2 * pi * doy / self.T))
-        if 'q_forecast' in self.obs_keys:
-            obs.append(self.qForecast[doy])
+        if 'exponential_average_demand' in self.obs_keys:
+            obs.append(self.exponential_average_demand)
 
         return np.array(obs, dtype=np.float32)
 
     def _calculate_reward(self, t):
-        # FIXME redefine the reward function?
         """Negative cost: combination of flood + deficit + wasted water + clip"""
 
         action = self.actions[t]
@@ -174,7 +179,6 @@ class LakeEnv(Env):
 
         # Deficit penalty
         daily_deficit_reward = self._daily_deficit(t)
-        daily_deficit_reward = math.sqrt(daily_deficit_reward)
         daily_deficit_reward = - daily_deficit_reward
 
         assert release == self.release[t+1]
@@ -203,16 +207,19 @@ class LakeEnv(Env):
 
     def _daily_deficit(self, t):
         doy = int(self.doy[t]) - 1
-        # FIXME
-        # why is there here a t+1?
+
         qdiv = self.release[t+1] - self.lake.get_mef(doy)
         qdiv = max(qdiv, 0.0)
         d = max(self.demand[doy] - qdiv, 0.0)
-        if 120 < self.doy[t] <= 243:
-            d *= 2
-        # d *= 0.5 * (3 - math.cos(doy * math.pi/self.DAYS_IN_YEAR))
 
-        return d**2
+        # scale depending on day of the year
+        if self.smooth_daily_deficit_coeff:
+            d *= 0.5 * (3 - math.cos(doy * 2*math.pi/self.DAYS_IN_YEAR))
+        else:
+            if 120 < self.doy[t] <= 243:
+                d *= 2
+
+        return d
 
     def _wasted_water(self, t):
         doy = int(self.doy[t]) - 1
