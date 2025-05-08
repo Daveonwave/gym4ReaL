@@ -5,6 +5,9 @@ import numpy as np
 from gymnasium import Env
 from gymnasium.spaces import Box
 from math import sin, cos, pi
+
+from pygame.examples.midi import key_class
+
 from gym4real.envs.dam.lake import Lake
 
 from collections import OrderedDict
@@ -20,7 +23,6 @@ class LakeEnv(Env):
         self.H = settings['sim_horizon']
         self.warmup = settings['warmup']
         self.init_day = settings['doy']
-        self.obs_keys = settings['observations']
         self.reward_coeff = settings['reward_coeff']
         self.exponential_average_coeff = settings.get('exponential_average_coeff', 0.8)
         self.smooth_daily_deficit_coeff = settings['smooth_daily_deficit_coeff']
@@ -44,13 +46,19 @@ class LakeEnv(Env):
         low = []
         high = []
 
-        if 'level' in self.obs_keys:
+
+        self.obs_keys = []
+
+        if 'level' in settings['observations']:
+            self.obs_keys.append('level')
             low.append(-np.inf)
             high.append(np.inf)
-        if 'day_of_year' in self.obs_keys:
+        if 'day_of_year' in settings['observations']:
+            self.obs_keys.extend(['sin_day_of_year', 'cos_day_of_year'])
             low.extend([-1., -1.])
             high.extend([1., 1.])
-        if 'exponential_average_demand' in self.obs_keys:
+        if 'exponential_average_demand' in settings['observations']:
+            self.obs_keys.append('exponential_average_demand')
             low.append(0.)
             high.append(np.inf)
 
@@ -158,13 +166,16 @@ class LakeEnv(Env):
         doy = (self.init_day + t - 1) % self.T #+ 1
         obs = []
 
-        if 'level' in self.obs_keys:
-            obs.append(self.level[t])
-        if 'day_of_year' in self.obs_keys:
-            obs.append(sin(2 * pi * doy / self.T))
-            obs.append(cos(2 * pi * doy / self.T))
-        if 'exponential_average_demand' in self.obs_keys:
-            obs.append(self.exponential_average_demand)
+        for key in self.obs_keys:
+            match key:
+                case 'level':
+                    obs.append(self.level[doy])
+                case 'sin_day_of_year':
+                    obs.append(sin(2 * pi * doy / self.T))
+                case 'cos_day_of_year':
+                    obs.append(cos(2 * pi * doy / self.T))
+                case 'exponential_average_demand':
+                    obs.append(self.exponential_average_demand)
 
         return np.array(obs, dtype=np.float32)
 
