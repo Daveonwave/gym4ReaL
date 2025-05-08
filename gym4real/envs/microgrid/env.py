@@ -56,7 +56,6 @@ class MicroGridEnv(Env):
         self.elapsed_time = 0
         self.iterations = 0
         self._env_step = settings['step']
-        self._collect_complete_info = settings['collect_complete_info']
         self.termination = settings['termination']
         self.termination['max_iterations'] = len(self.generation) - 1 if self.termination['max_iterations'] is None else self.termination['max_iterations']
 
@@ -188,7 +187,7 @@ class MicroGridEnv(Env):
 
         return info
     
-    def _get_info(self, to_trade: float, action: float) -> dict[str, Any]:
+    def _get_info(self, to_trade: float) -> dict[str, Any]:
         """
         Retrieve detailed information about the current environment state.
 
@@ -197,7 +196,6 @@ class MicroGridEnv(Env):
 
         Args:
             to_trade (float): The amount of energy traded (positive for selling, negative for buying).
-            action (float): The action taken by the agent, representing the fraction of energy to store.
 
         Returns:
             dict[str, Any]: A dictionary containing the following keys:
@@ -210,19 +208,14 @@ class MicroGridEnv(Env):
                 - "battery": A snapshot of the battery's current state.
         """
         info = {
-            "action": action,
             "profile": self.demand.profile,
+            "pure_rewards": self.pure_rewards,
+            "norm_rewards": self.norm_rewards,
+            "weighted_rewards": self.weighted_rewards,
+            "traded_energy": to_trade,
+            "battery": self._battery.get_snapshot()
         }
         
-        if self._collect_complete_info:
-            info.update({
-                "pure_rewards": self.pure_rewards,
-                "norm_rewards": self.norm_rewards,
-                "weighted_rewards": self.weighted_rewards,
-                "traded_energy": to_trade,
-                "battery": self._battery.get_snapshot()
-        })
-            
         return info
 
     def reset(self, seed=None, options=None):
@@ -343,14 +336,14 @@ class MicroGridEnv(Env):
         self.pure_rewards = {'r_trad': r_trading, 'r_deg': r_deg, 'r_clip': r_clipping}
         self._normalize_rewards(rewards=list(self.pure_rewards.values()))
         self.weighted_rewards = {'r_trad': self.norm_rewards['r_trad'] * self._trading_coeff,
-                               'r_deg': self.norm_rewards['r_deg'] * self._deg_coeff,
-                               'r_clip': self.norm_rewards['r_clip'] * self._clip_action_coeff}   
+                                 'r_deg': self.norm_rewards['r_deg'] * self._deg_coeff,
+                                 'r_clip': self.norm_rewards['r_clip'] * self._clip_action_coeff}   
 
         # Combining reward terms
         reward = sum(self.weighted_rewards.values())
         
         state = np.array(list(self._get_obs().values()), dtype=np.float32)
-        info = self._get_info(to_trade=to_trade, action=action[0])
+        info = self._get_info(to_trade=to_trade)
             
         return state, reward, terminated, truncated, info
     

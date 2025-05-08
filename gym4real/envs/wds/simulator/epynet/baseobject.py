@@ -74,6 +74,8 @@ class BaseObject(object):
         if name in self.properties.keys():
             if name == 'status':
                 self.set_static_property(self.properties[name], value)
+            elif name == 'settings':
+                self.set_static_property(self.properties[name], value)
             else:
                 raise AttributeError("Illegal Assignment to Computed Value")
 

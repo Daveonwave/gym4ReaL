@@ -1,8 +1,10 @@
-from gym4real.envs.wds.simulator.water_network import WaterNetwork
-from gym4real.envs.wds.env_cps import WaterDistributionSystemEnv
+import sys
+import os
+
+sys.path.append(os.getcwd())
+
 from gym4real.envs.wds.utils import parameter_generator
-from gym4real.algorithms.wds.dqn import dqn
-from rich.pretty import pprint
+import gymnasium as gym
 from tqdm.rich import tqdm
 import cProfile, pstats, functools
 
@@ -13,13 +15,15 @@ if __name__ == '__main__':
     #profiler = cProfile.Profile()
     #profiler.enable()
     
-    params = parameter_generator()    
-    dqn(params)
-    exit(0)
-    
+    params = parameter_generator(world_options='gym4real/envs/wds/world_anytown.yaml',
+                                 hydraulic_step=600,
+                                 duration=24 * 3600 * 7,
+                                 seed=42,
+                                 reward_coeff={'dsr_coeff': 1.0, 'overflow_coeff': 1.0, 'flow_coeff': 1.0, 'pump_usage_coeff': 1.0},
+                                 use_reward_normalization=True)
+    #dqn(params)
         
-    env = WaterDistributionSystemEnv(params)
-
+    env = gym.make("gym4real/wds-v0", **{'settings':params})
     n_episodes = 1
     rewards = []
     cumulated_reward = 0
@@ -29,7 +33,7 @@ if __name__ == '__main__':
         done = False
 
         while not done:
-            action = env.action_space.sample()  # Randomly select an action
+            action = 3  # Randomly select an action
             obs, reward, terminated, truncated, info = env.step(action)  # Return observation and reward
             done = terminated or truncated
             cumulated_reward += reward

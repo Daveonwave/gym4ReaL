@@ -5,7 +5,7 @@ import yaml
 from pathlib import Path
 from gymnasium import Env, spaces
 from gym4real.envs.wds.simulator.plc import SensorPLC, ActuatorPLC
-from gym4real.envs.wds.simulator.water_network import WaterNetwork
+from gym4real.envs.wds.simulator.wn import WaterNetwork
 from gym4real.envs.wds.simulator.demand import WaterDemandPattern
 from gym4real.envs.wds.simulator.attacker import AttackScheduler
 from gym4real.envs.wds.rewards import *
