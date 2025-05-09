@@ -182,6 +182,7 @@ logs/
 *.DS_Store
 _site/
 *.rpt
-
+*.pkl
+*.json
 
 */recordings/*
