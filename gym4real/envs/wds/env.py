@@ -5,7 +5,7 @@ import yaml
 from pathlib import Path
 from gymnasium import Env, spaces
 from gym4real.envs.wds.simulator.plc import SensorPLC, ActuatorPLC
-from gym4real.envs.wds.simulator.water_network import WaterNetwork
+from gym4real.envs.wds.simulator.wn import WaterNetwork
 from gym4real.envs.wds.simulator.demand import WaterDemandPattern
 from gym4real.envs.wds.simulator.attacker import AttackScheduler
 from gym4real.envs.wds.rewards import *
@@ -42,11 +42,13 @@ class WaterDistributionSystemEnv(Env):
         # Demand patterns
         self._demand = WaterDemandPattern(**settings['demand'])
         
+        # Reward components
+        self._dsr = 0
+        self._overflow = 0
+        
         # Reward weights
         self.dsr_coeff = settings['reward']['dsr_coeff']
         self.overflow_coeff = settings['reward']['overflow_coeff']
-        self.flow_coeff = settings['reward']['flow_coeff']
-        self.pump_usage_coeff = settings['reward']['pump_usage_coeff']
         
         self._obs_keys = []
         obs_space = {}
@@ -104,7 +106,7 @@ class WaterDistributionSystemEnv(Env):
             match key:
                 case key if key.startswith('T'):
                     obs[key] = self._wn.nodes[key].pressure.iloc[-1] if self.elapsed_time > 0 else 0
-                
+                    
                 case key if key.startswith('J'):
                     obs[key] = self._wn.nodes[key].pressure.iloc[-1] if self.elapsed_time > 0 else 0
 
@@ -131,7 +133,10 @@ class WaterDistributionSystemEnv(Env):
         Returns the current observation
         :return:
         """
-        return {}
+        return {'profile': self._demand.pattern,
+                'elapsed_time': self.elapsed_time,
+                'pure_rewards': {'dsr': self._dsr, 'overflow': self._overflow},
+                'weighted_rewards': {'dsr': self._dsr * self.dsr_coeff, 'overflow': self._overflow * self.overflow_coeff}}
     
     def reset(self, seed=None, options=None):
         """
@@ -139,9 +144,11 @@ class WaterDistributionSystemEnv(Env):
         :param state:
         :return:
         """
-        print("Resetting environment...")
         self._wn.reset()
         self._wn.solved = False
+        
+        self._dsr = 0
+        self._overflow = 0
 
         self.elapsed_time = 0
         self.timestep = 1
@@ -177,13 +184,18 @@ class WaterDistributionSystemEnv(Env):
         """
         pump_actuation = {pump_id: 0 for pump_id in self._wn.pumps.keys()}
         bin_action = '{0:0{width}b}'.format(action, width=int(np.log2(self.action_space.n)))
-        
+                
         for i, key in enumerate(pump_actuation.keys()):
             pump_actuation[key] = int(bin_action[i])
         self._wn.update_pumps(new_status=pump_actuation)
 
         # Simulate the next hydraulic step
         self.timestep = self._wn.simulate_step(self.elapsed_time)
+        
+        #print(self._wn.links['P79'].settings.iloc[-1], self._wn.links['P79'].status, self._wn.links['P79'].energy.iloc[-1], self._wn.nodes['T41'].pressure.iloc[-1])
+        
+        #self._wn.links['P79'].power = 0
+        #self._wn.links['P78'].power = 0
                 
         # Retrieve current state and reward from the chosen action
         reward = self._compute_reward()
@@ -208,8 +220,10 @@ class WaterDistributionSystemEnv(Env):
         state = self._wn.get_snapshot((self.elapsed_time // self._demand._pattern_step) % len(self._demand.pattern))
         
         reward = 0
-        reward += dsr(state) * self.dsr_coeff
-        reward -= overflow(state) * self.overflow_coeff
+        self._dsr = dsr(state)
+        self._overflow = overflow(state)
+        reward += self._dsr * self.dsr_coeff
+        reward -= self._overflow * self.overflow_coeff
         
         return reward
 

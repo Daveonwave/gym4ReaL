@@ -77,7 +77,7 @@ class Pump(Link):
     static_properties = {'length': epanet2.EN_LENGTH, 'initstatus': epanet2.EN_INITSTATUS, 
                          'speed': epanet2.EN_INITSETTING}
     properties = {'flow': epanet2.EN_FLOW, 'energy': epanet2.EN_ENERGY, 'status': epanet2.EN_STATUS,
-                  'velocity': epanet2.EN_VELOCITY, 'state_type': epanet2.EN_PUMP_STATE}
+                  'velocity': epanet2.EN_VELOCITY, 'settings': epanet2.EN_SETTING}
 
     @property
     def curve(self):

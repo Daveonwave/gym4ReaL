@@ -11,13 +11,13 @@ register(
 )
 
 register(
-    id='gym4real/wds_cps-v0',
-    entry_point='gym4real.envs.wds.env_cps:WaterDistributionSystemEnv',
+    id='gym4real/wds-v0',
+    entry_point='gym4real.envs.wds.env:WaterDistributionSystemEnv',
 )
 
 register(
-    id='gym4real/wds-v0',
-    entry_point='gym4real.envs.wds.env:WaterDistributionSystemEnv',
+    id='gym4real/wds_cps-v0',
+    entry_point='gym4real.envs.wds.env_cps:WaterDistributionSystemEnv',
 )
 
 register(
@@ -34,3 +34,8 @@ register(
     id='gym4real/robofeeder-planning',
     entry_point='gym4real.envs.robofeeder.rf_planning:robotEnv',
 )
+
+register(
+    id='gym4real/elevator-v0',
+    entry_point='gym4real.envs.elevator.env:ElevatorEnv'
+    )

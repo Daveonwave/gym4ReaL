@@ -55,7 +55,6 @@ def parameter_generator(battery_options: str = BATTERY,
                         use_reward_normalization: bool = True,
                         spread_factor: float = 1.0,
                         replacement_cost: float = 3000.0,
-                        collect_complete_info: bool = False
                         ) -> dict:
     """
     Generates the parameters dict for `EnergyStorageEnv`.
@@ -121,6 +120,5 @@ def parameter_generator(battery_options: str = BATTERY,
     # Termination settings
     params['termination'] = {'max_iterations': max_iterations if max_iterations is not None else world_settings['termination']['max_iterations'],
                              'min_soh': min_soh if min_soh is not None else world_settings['termination']['min_soh']}
-    params['collect_complete_info'] = collect_complete_info
     
     return params

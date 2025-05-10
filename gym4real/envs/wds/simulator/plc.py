@@ -1,7 +1,7 @@
 from pathlib import Path
 import pandas as pd
 from collections import defaultdict
-from gym4real.envs.wds.simulator.water_network import WaterNetwork
+from gym4real.envs.wds.simulator.wn import WaterNetwork
 
 # TODO: discuss the hierarchy (can differ between sensor and actuators).
 # Used when we have concurrent attacks to decide which one has to be applied before.

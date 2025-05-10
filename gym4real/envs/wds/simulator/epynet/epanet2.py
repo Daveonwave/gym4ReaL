@@ -997,6 +997,7 @@ EN_STATUS        = 11
 EN_SETTING       = 12
 EN_ENERGY        = 13
 EN_PUMP_STATE    = 16
+EN_PUMP_POWER    = 18
 
 EN_PUMP_XHEAD    = 0      # /* Pump State Type */
 EN_PUMP_CLOSED   = 1
