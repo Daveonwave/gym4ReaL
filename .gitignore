@@ -174,7 +174,6 @@ cython_debug/
 .pypirc
 
 
-
 # Our custom stuff to ignore
 logs/
 .github/workflows/ci-cd.yml
@@ -184,5 +183,6 @@ _site/
 *.rpt
 *.pkl
 *.json
+gym4real/data/trading/forex/*
 
 */recordings/*
