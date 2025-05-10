@@ -1,7 +1,6 @@
 period: 365
 integration: 24
 sim_horizon: 365
-warmup: 0
 doy: 1
 flood_level: 1.24
 
