@@ -4,7 +4,7 @@ anomalous_days: []
 persistence: 1
 number_of_deltas: 60
 offset_delta : 1
-sequential: False
+sequential: True
 fillna_features: True
 ffill_limit_data: 5
 capital: 100_000
