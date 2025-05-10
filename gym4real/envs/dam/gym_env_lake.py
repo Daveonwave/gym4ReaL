@@ -112,7 +112,7 @@ class LakeEnv(Env):
         if options is not None and options.get('rewind_profiles', False):
             self.curr_year_data = None
         self._init_internal_state(seed=seed)
-        return self._get_observation(), {}
+        return self._get_observation(), {'exponential_average_demand': 0.}
 
     def step(self, action):
 
@@ -156,7 +156,8 @@ class LakeEnv(Env):
             'release': new_release,
             'action': action,
             'level': self.level[-1],
-            'demand': demand
+            'demand': demand,
+            'exponential_average_demand': self.exponential_average_demand
         }
 
         return self._get_observation(), tot_reward, False, truncated, info

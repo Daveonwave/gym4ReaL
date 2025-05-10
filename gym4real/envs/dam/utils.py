@@ -3,7 +3,7 @@ import yaml
 import os
 import pandas as pd
 
-def read_csv(csv_file: str) -> pd.DataFrame:
+def read_csv(csv_file: str, **kwargs) -> pd.DataFrame:
     """
     Read data from csv files
     """
@@ -12,7 +12,7 @@ def read_csv(csv_file: str) -> pd.DataFrame:
         raise FileNotFoundError("The specified file '{}' doesn't not exist.".format(csv_file))
     df = None
     try:
-        df = pd.read_csv(csv_file)
+        df = pd.read_csv(csv_file, **kwargs)
     except Exception as err:
         print("Error during the loading of '{}':".format(csv_file), type(err).__name__, "-", err)
     return df
@@ -56,8 +56,8 @@ def parameter_generator(world_options: str,
         'smooth_daily_deficit_coeff': world_settings['smooth_daily_deficit_coeff']
     }
 
-    demand = read_csv(world_settings['demand']).to_dict(orient='list')
-    inflow = read_csv(world_settings['inflow']).to_dict(orient='list')
+    demand = read_csv(world_settings['demand'], index_col='year').T.to_dict(orient='list')
+    inflow = read_csv(world_settings['inflow'], index_col='year').T.to_dict(orient='list')
 
     assert set(demand.keys()) == set(inflow.keys())
 
