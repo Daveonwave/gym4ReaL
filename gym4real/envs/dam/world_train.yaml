@@ -25,6 +25,6 @@ action:
 
 reward:
   daily_deficit_coeff: 1
-  overflow_coeff: 10000
+  overflow_coeff: 1000
   wasted_water_coeff: 1
   clip_action_coeff: 0.01
