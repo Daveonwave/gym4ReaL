@@ -1,7 +1,7 @@
 data_directory: "/Users/giovannidispoto/Desktop/PhD/gym4ReaL_github/gym4ReaL/gym4real/data/trading/forex"
 years: [2020, 2021]
 anomalous_days: []
-persistence: 1
+persistence: 5
 number_of_deltas: 60
 offset_delta : 1
 sequential: False
