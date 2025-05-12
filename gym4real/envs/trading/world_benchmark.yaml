@@ -15,4 +15,3 @@ use_month: False
 use_day_of_week: False
 use_day: False
 sinusoidal_transformation: True
-seed: 1234
