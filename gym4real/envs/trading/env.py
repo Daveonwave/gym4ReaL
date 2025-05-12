@@ -40,7 +40,8 @@ class TradingEnv(Env):
 
     def __init__(self,
                  settings: dict[str, Any],
-                 scaler=None):
+                 scaler=None,
+                 seed=None):
         self._years = settings['years']
         self._persistence = settings['persistence']
         self._data_directory = settings['data_directory']
@@ -71,6 +72,8 @@ class TradingEnv(Env):
         if settings['fillna_features'] is True:
             self._data = self._data.fillna(0)
 
+        np.random.seed(seed)
+
         # State space dimension: Number of deltas + (Timestamp + Month + Day of the Week + Day) + Agent Position, where the temporal features are transformed using sine/cosine if requested
         self._use_month = settings['use_month']
         self._use_day_of_week = settings['use_day_of_week']
@@ -88,7 +91,7 @@ class TradingEnv(Env):
             self._data[self.get_state()[0: self._number_of_deltas]] = self._scaler.transform(
                 self._data[self.get_state()[0: self._number_of_deltas]])
 
-        self.observation_space = Box(-np.inf, np.inf, shape=(self.state_dim,))
+        self.observation_space = Box(-np.inf, np.inf, shape=(self.state_dim,), dtype=np.float64)
         self.action_space = Discrete(3)
 
         self._sequential = settings['sequential']
@@ -154,7 +157,7 @@ class TradingEnv(Env):
         print("Removed days since shorter", shorter_days)
         data = data[~data['date'].isin(shorter_days)]
 
-        data.to_csv(os.path.join(data_directory, f"dataset_{self._persistence}_min_{years}.csv"))
+        data.to_csv(os.path.join(data_directory, f"dataset_1_min_{years}.csv"))
         return data
 
     def get_state(self):
@@ -168,12 +171,11 @@ class TradingEnv(Env):
 
     def reset(
             self,
-            day_to_set=None,
+            day_to_set = None,
             seed: int | None = None,
             options: dict[str, Any] | None = None,
     ) -> tuple[ObsType, dict[str, Any]]:
 
-        np.random.seed(seed)
 
         if day_to_set is not None:
             self._day = day_to_set
@@ -181,6 +183,7 @@ class TradingEnv(Env):
 
             if self._sequential is False:
                 self._day = np.random.choice(self._data['day_number'].unique())
+
             else:
                 if self._day == -1:
                     self._day = self._data['day_number'].unique().min()
@@ -190,8 +193,8 @@ class TradingEnv(Env):
                         self._day = self._data['day_number'].unique()[p + 1]
                     except:  # reset day
                         self._day = self._data['day_number'].unique().min()
-
         self._index = self._data.index.get_loc(self._data[self._data['day_number'] == self._day].index[0])
+        #print(self._data.iloc[self._index]['datetime'])
         obs = np.append(self._state_data[self._index],
                         self.FLAT)  # np.append(self._data.iloc[self.index][self.get_state()[:-1]], [self.FLAT])
         self._state = obs

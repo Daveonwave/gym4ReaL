@@ -61,6 +61,6 @@ def parameter_generator(world_options: str = WORLD,
     params['use_day_of_week'] = use_day_of_week if use_day_of_week is not None else world_settings[
         'use_day_of_week']
     params['sinusoidal_transformation'] = sinusoidal_transformation if sinusoidal_transformation is not None else world_settings['sinusoidal_transformation']
-    params['seed'] = seed if seed is not None else world_settings['seed']
+    #params['seed'] = seed if seed is not None else world_settings['seed']
 
     return params
