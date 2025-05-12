@@ -18,3 +18,4 @@ timestep: 1
 goal_floor: 0
 init_elevator_pos: null
 random_init_state: False
+reward_coeff: 10.

@@ -56,6 +56,15 @@ actions:
   - "P78"
   - "P79"
 
+# The following are the PLCs in the system
+# PLC1: Actuator
+# PLC2: Sensor
+# PLC3: Sensor
+# ----------------------------------------------------
+# NOTE: for the wds-v0 environment, the PLCs are not
+#       used since we do not model the cyber-physical
+#       system. The PLCs are only used for the wds_cps-v0
+#       environment.
 plcs:
   - name: PLC1
     type: actuator

@@ -19,7 +19,7 @@ if __name__ == '__main__':
                                  hydraulic_step=600,
                                  duration=24 * 3600 * 7,
                                  seed=42,
-                                 reward_coeff={'dsr_coeff': 1.0, 'overflow_coeff': 1.0, 'flow_coeff': 1.0, 'pump_usage_coeff': 1.0},
+                                 reward_coeff={'dsr_coeff': 1.0, 'overflow_coeff': 1.0},
                                  use_reward_normalization=True)
     #dqn(params)
         

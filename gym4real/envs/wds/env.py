@@ -37,7 +37,9 @@ class WaterDistributionSystemEnv(Env):
 
         # Physical process of the environment
         self._wn = WaterNetwork(settings['inp_file'])
-        self._wn.set_time_params(duration=settings['duration'], hydraulic_step=settings['hyd_step'], pattern_step=settings['demand']['pattern_step'])
+        self._wn.set_time_params(duration=settings['duration'], 
+                                 hydraulic_step=settings['hyd_step'], 
+                                 pattern_step=settings['demand']['pattern_step'])
         
         # Demand patterns
         self._demand = WaterDemandPattern(**settings['demand'])
@@ -144,6 +146,7 @@ class WaterDistributionSystemEnv(Env):
         :param state:
         :return:
         """
+        print("Resetting the environment...")
         self._wn.reset()
         self._wn.solved = False
         
@@ -167,9 +170,9 @@ class WaterDistributionSystemEnv(Env):
             self._wn.set_demand_pattern('junc_demand', self._demand.pattern, self._wn.junctions)
 
         if 'demand_SMA' in self._obs_keys:
-            self._demand.set_moving_average(window_size=6)
+            self._demand.set_moving_average(window_size=6, total_basedemand=sum([junc.basedemand for junc in self._wn.junctions.values()]))
         if 'demand_EWMA' in self._obs_keys:
-            self._demand.set_exp_moving_average(window_size=6)
+            self._demand.set_exp_moving_average(window_size=6, total_basedemand=sum([junc.basedemand for junc in self._wn.junctions.values()]))
         
         self._wn.init_simulation()
         

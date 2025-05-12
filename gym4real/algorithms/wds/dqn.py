@@ -24,7 +24,7 @@ def train_dqn(envs, args, eval_env_params, model_file=None):
                                  best_model_save_path="./logs/{}/models/eval/".format(args['exp_name']),
                                  log_path="./logs/", 
                                  eval_freq=24*7*3600/300 * args['n_envs'],
-                                 n_eval_episodes=3,
+                                 n_eval_episodes=5,
                                  deterministic=True, 
                                  render=False)
     
@@ -44,7 +44,7 @@ def train_dqn(envs, args, eval_env_params, model_file=None):
                     learning_rate=args['learning_rate']
                     )
         
-    model.learn(total_timesteps=1100 * args['n_envs'] * args['n_episodes'],
+    model.learn(total_timesteps=1200 * args['n_envs'] * args['n_episodes'],
                 progress_bar=True,
                 log_interval=args['log_rate'],
                 tb_log_name="dqn_{}".format(args['exp_name']),
@@ -59,14 +59,14 @@ def train_dqn(envs, args, eval_env_params, model_file=None):
 if __name__ == '__main__':
     # Example parameters
     args = {
-        'exp_name': 'wds',
+        'exp_name': 'wds_total_basedemand',
         'n_episodes': 20,
         'n_envs': 5,
         'verbose': 1,
         'gamma': 0.99,
         'learning_rate': 0.001,
         'log_rate': 10,
-        'save_model_as': 'dqn_wds_10_episodes',
+        'save_model_as': 'dqn',
     }
     
     # Example evaluation environment parameters
@@ -79,8 +79,7 @@ if __name__ == '__main__':
                                  hydraulic_step=600,
                                  duration=24 * 3600 * 7,
                                  seed=42,
-                                 reward_coeff={'dsr_coeff': 1.0, 'overflow_coeff': 1.0, 'flow_coeff': 1.0, 'pump_usage_coeff': 1.0},
-                                 use_reward_normalization=True)
+                                 reward_coeff={'dsr_coeff': 1.0, 'overflow_coeff': 1.0})
     
     envs = make_vec_env("gym4real/wds-v0", n_envs=args['n_envs'], env_kwargs={'settings':params})    
     

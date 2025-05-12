@@ -186,3 +186,4 @@ _site/
 gym4real/data/trading/forex/*
 
 */recordings/*
+/plots/*
