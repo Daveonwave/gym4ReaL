@@ -25,6 +25,7 @@ class ElevatorEnv(Env):
         self.init_elevator_pos = settings['init_elevator_pos']
         self._arrival_distributions = settings['arrival_distributions']
         self._goal_floor = settings['goal_floor']
+        self._reward_coeff = settings['reward_coeff']
         
         self.current_time = 0
         self.duration = settings['duration']
@@ -35,7 +36,7 @@ class ElevatorEnv(Env):
         self.observation_space = spaces.Dict({
             'current_position': spaces.Discrete(int(self._elevator.floor_height * self._elevator.max_floor / self._elevator.movement_speed) + 1),
             'n_passengers': spaces.Discrete(self._elevator.max_capacity + 1),
-            'speed': spaces.Discrete(3),  # 0: down, 1: still, 2: up (multiply by movement speed)
+            #'speed': spaces.Discrete(3),  # 0: down, 1: still, 2: up (multiply by movement speed)
             'floor_queues': spaces.MultiDiscrete(np.array([settings['max_queue_length'] + 1] * (self._elevator.max_floor - self._elevator.min_floor)), start=[0] * (self._elevator.max_floor - self._elevator.min_floor)),
             'arrivals': spaces.MultiDiscrete(np.array([settings['max_arrivals'] + 1] * (self._elevator.max_floor - self._elevator.min_floor)), start=[0] * (self._elevator.max_floor - self._elevator.min_floor))
         })
@@ -48,11 +49,11 @@ class ElevatorEnv(Env):
     
     def _get_obs(self):
         return {
-            'arrivals': [len(queue.futures) for queue in self._elevator.queues if queue.floor != 0],
             'current_position': int(self._elevator.vertical_position // self._elevator.movement_speed),
-            'floor_queues': np.array([len(queue) for queue in self._elevator.queues if queue.floor != 0]).astype(np.int64),  
             'n_passengers': len(self._elevator.passengers),
-            'speed': int(self._elevator.speed // self._elevator.movement_speed) + 1,            
+            #'speed': int(self._elevator.speed // self._elevator.movement_speed) + 1,            
+            'floor_queues': np.array([len(queue) for queue in self._elevator.queues if queue.floor != 0]).astype(np.int64),  
+            'arrivals': [len(queue.futures) for queue in self._elevator.queues if queue.floor != 0],
         }
     
     def _get_info(self):
@@ -125,7 +126,7 @@ class ElevatorEnv(Env):
         # Calculate the reward: we penalize the waiting time of passengers
         reward = 0
         if len(served) > 0:
-            reward += len(served) * 10
+            reward += len(served) * self._reward_coeff
         else:
             reward -= 1 * (len(self._elevator.passengers) + sum([len(queue) for queue in self._elevator.queues]))
         

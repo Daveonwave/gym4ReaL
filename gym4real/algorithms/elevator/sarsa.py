@@ -21,7 +21,7 @@ def obs_to_key(obs):
         return (
             obs['current_position'],
             obs['n_passengers'],
-            obs['speed'],
+            #obs['speed'],
             *obs['floor_queues'],
             *obs['arrivals']
         )
@@ -138,7 +138,7 @@ def evaluate_sarsa(Q, eval_env_params, eval_episodes=10):
 if __name__ == '__main__':
     # Example parameters
     args = {
-        'exp_name': 'elevator/sarsa',
+        'exp_name': 'elevator_no_speed/sarsa',
         'alpha': 0.1,
         'gamma': 1,
         'epsilon': 1.0,

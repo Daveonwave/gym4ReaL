@@ -21,7 +21,7 @@ from gym4real.envs.dam.utils import parameter_generator
 
 from gymnasium.wrappers import NormalizeObservation, NormalizeReward, RescaleAction, TransformReward, TransformObservation
 
-def my_wrap_env(env, normalize_obs=False, normalize_reward=True, rescale_action=True, rescale_reward=False, rescale_obs=False):
+def my_wrap_env(env, normalize_obs=False, normalize_reward=False, rescale_action=True, rescale_reward=False, rescale_obs=False):
     env = RecordEpisodeStatistics(env)
     if normalize_obs:
         env = NormalizeObservation(env)
@@ -172,7 +172,7 @@ def train_ppo(params, args, eval_env_params, device='gpu'):
 if __name__ == '__main__':
     # Example parameters
     args = {
-        'training_timesteps': 100000,
+        'training_timesteps': 50000,
         'n_envs': 5,
         'mini_batches': 32,
         'learning_epochs': 10,
@@ -181,7 +181,7 @@ if __name__ == '__main__':
         'verbose': 1,
         'gamma': 0.995,
         'ent_coef': 0.,
-        'learning_rate': 1e-4,
+        'learning_rate': 1e-5,
         'net_arch': [16, 16],
         'initial_log_std': -0.5,
         'seed': 123,

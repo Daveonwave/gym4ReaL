@@ -24,6 +24,7 @@ def parameter_generator(world_options: str = WORLD,
                         goal_floor: int = None,
                         init_elevator_pos: int = None,
                         random_init_state: bool = None,
+                        reward_coeff: float = None,
                         lambda_min: float = None,
                         lambda_max: float = None,
                         seed: int = None,
@@ -49,6 +50,7 @@ def parameter_generator(world_options: str = WORLD,
     params['goal_floor'] = goal_floor if goal_floor is not None else world_settings['goal_floor']
     params['init_elevator_pos'] = init_elevator_pos if init_elevator_pos is not None else world_settings['init_elevator_pos']
     params['random_init_state'] = random_init_state if random_init_state is not None else world_settings['random_init_state']
+    params['reward_coeff'] = reward_coeff if reward_coeff is not None else world_settings['reward_coeff']
     
     lambda_min = lambda_min if lambda_min is not None else world_settings['floors']['lambda_min']
     lambda_max = lambda_max if lambda_max is not None else world_settings['floors']['lambda_max']

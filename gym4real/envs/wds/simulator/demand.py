@@ -82,19 +82,21 @@ class WaterDemandPattern:
             # Randomly select a pattern from the chosen dataframe
             self._current_pattern = df[np.random.choice(df.columns.values, 1)[0]]
     
-    def set_moving_average(self, window_size: int):
+    def set_moving_average(self, window_size: int, total_basedemand: float):
         """
         Calculate the moving average of the demand pattern
         :param window_size: size of the moving average window
+        :param total_basedemand: total basedemand of the network
         :return: moving average of the demand pattern
         """
         if self._moving_average is None:
             self._moving_average = self._current_pattern.rolling(window=window_size, min_periods=1).mean()
             
-    def set_exp_moving_average(self, window_size: int):
+    def set_exp_moving_average(self, window_size: int, total_basedemand: float):
         """
         Calculate the exponential moving average of the demand pattern
         :param window_size: size of the moving average window
+        :param total_basedemand: total basedemand of the network
         :return: exponential moving average of the demand pattern
         """
         if self._exp_moving_average is None:

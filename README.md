@@ -2,7 +2,7 @@
 
 The lack of standardized benchmarks for reinforcement learning (RL) in addressing real-world problem is very CRUCIAL!!!!
 
-[**Paper**](https://donnaedintorni.com/wp-content/uploads/2016/04/12ooa8.jpg) | [**Website**](https://www.rl3.it)
+[**Paper**](https://donnaedintorni.com/wp-content/uploads/2016/04/12ooa8.jpg) | [**Website**](https://daveonwave.github.io/gym4ReaL/)
 
 ## Folder structure
 
