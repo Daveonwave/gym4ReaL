@@ -16,7 +16,7 @@ import numpy as np
 import seaborn as sns
 
 
-def train_dqn(args, train_env_params, eval_env_params, test_env_params, train=True):
+def train_dqn(args, train_env_params, eval_env_params, test_env_params, train=False):
     if train is True:
         for seed in args['seeds']:
             print("######## DQN is running... ########")
@@ -48,7 +48,7 @@ def train_dqn(args, train_env_params, eval_env_params, test_env_params, train=Tr
                         verbose=args['verbose'],
                         gamma=args['gamma'],
                         policy_kwargs=args['policy_kwargs'],
-                        tensorboard_log="./logs/tensorboard/trading/dqn/{}".format(args['exp_name']),
+                        tensorboard_log="./logs/tensorboard/trading/dqn/{}".format(args['exp_name']+f"_seed_{seed}"),
                         stats_window_size=100,
                         learning_rate=args['learning_rate'],
                         batch_size=args['batch_size'],
@@ -70,6 +70,9 @@ def train_dqn(args, train_env_params, eval_env_params, test_env_params, train=Tr
 
             model.save("./logs/{}/models/{}".format(args['exp_name']+f"_seed_{seed}", args['save_model_as']))
             print("######## TRAINING is Done ########")
+    else:
+        train_env = make_vec_env("gym4real/TradingEnv-v0", n_envs=args['n_envs'],
+                                 env_kwargs={'settings': train_env_params})
 
     train_env_params['sequential'] = True
     print("PLOTTING")
@@ -106,7 +109,7 @@ if __name__ == '__main__':
         'tau': 1.0,
         'train_freq': 4,
         'save_model_as': 'dqn_trading_10eps',
-        'seeds': [1234, 5678, 91011]
+        'seeds': [32517, 84029, 10473, 67288, 91352, 47605]
     }
 
     # Example evaluation environment parameters

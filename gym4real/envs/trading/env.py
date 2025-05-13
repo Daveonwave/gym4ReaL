@@ -99,6 +99,7 @@ class TradingEnv(Env):
         self._state_data = self._data[self.get_state()[0: -1]].to_numpy()
         self._mid_prices = self._data['Mid-Price'].to_numpy()
         self._day_numbers = self._data['day_number'].to_numpy()
+        self._datetimes = self._data['datetime'].to_numpy()
 
         self._capital = settings['capital']
         self._fees = settings['fees']
@@ -215,6 +216,7 @@ class TradingEnv(Env):
         reward = self._capital * (action - 1) * (self._mid_prices[next_index] - self._mid_prices[self._index]) - (
             self._fees) * abs((action - 1) - (obs[self.get_state().index('Position')] - 1))
         self._index = next_index
+        info = {'datetime': self._datetimes[self._index]}
         next_obs = np.append(next_obs, [action])
         self._state = next_obs
 
@@ -230,7 +232,7 @@ class TradingEnv(Env):
 
             done = False
 
-        return next_obs, reward, done, done, {}
+        return next_obs, reward, done, done, info
 
     def _clean_data(self, anomalous_days):
         dates_to_remove = pd.to_datetime(anomalous_days).date

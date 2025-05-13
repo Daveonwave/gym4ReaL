@@ -4,11 +4,13 @@ import matplotlib.pyplot as plt
 import os
 import pandas as pd
 import seaborn as sns
+from matplotlib.ticker import MaxNLocator
 from stable_baselines3.common.callbacks import BaseCallback
 import numpy as np
 import os
 from stable_baselines3.common.evaluation import evaluate_policy
 from collections import OrderedDict
+import datetime
 
 sns.set_theme()
 sns.set_style('whitegrid')
@@ -60,16 +62,18 @@ def evaluate_agent_with_baselines(models, params, plot_folder, scaler, prefix, s
         rewards_agent_seed = []
         action_episodes = []
         rewards_agent = []
+        datetimes = []
         for _ in range(env_agent.unwrapped.get_trading_day_num()):
             done = False
             action_episode = []
             obs, _ = env_agent.reset()
 
             while not done:
-                action, _ = model.predict(observation=np.array(obs, dtype=np.float32))
+                action, _ = model.predict(observation=np.array(obs, dtype=np.float32), deterministic=True)
                 action_episode.append(action)
-                next_obs, reward, terminated, truncated, _ = env_agent.step(action)
+                next_obs, reward, terminated, truncated, info = env_agent.step(action)
                 rewards_agent.append(reward)
+                datetimes.append(info['datetime'])
                 obs = next_obs
                 done = terminated or truncated
 
@@ -86,7 +90,7 @@ def evaluate_agent_with_baselines(models, params, plot_folder, scaler, prefix, s
     for _ in range(env_bnh.unwrapped.get_trading_day_num()):
         done = False
         env_bnh.reset()
-        print(env_bnh.unwrapped._day)
+        #print(env_bnh.unwrapped._day)
         while not done:
             next_obs, reward, terminated, truncated, _ = env_bnh.step(2)
             rewards_bnh.append(reward)
@@ -99,7 +103,7 @@ def evaluate_agent_with_baselines(models, params, plot_folder, scaler, prefix, s
     for _ in range(env_snh.unwrapped.get_trading_day_num()):
         done = False
         env_snh.reset()
-        print(env_snh.unwrapped._day)
+        #print(env_snh.unwrapped._day)
         while not done:
             next_obs, reward, terminated, truncated, _ = env_snh.step(0)
             rewards_snh.append(reward)
@@ -111,19 +115,21 @@ def evaluate_agent_with_baselines(models, params, plot_folder, scaler, prefix, s
 
 
 
-    plt.figure(figsize=(5, 3.5))
-    plt.plot( (rewards_bnh.cumsum() / env_snh.unwrapped._capital) * 100, label="B&H", color=alg_color['b&h'])
-    plt.plot((rewards_snh.cumsum() / env_snh.unwrapped._capital) * 100, label="S&H", color=alg_color['s&h'])
-    #plt.plot(range(len(rewards_bnh)), (rewards_agent.cumsum() / env_agent.unwrapped._capital) * 100, label="Agent")
+    plt.figure()
+    plt.plot(datetimes, (rewards_bnh.cumsum() / env_snh.unwrapped._capital) * 100, label="B&H", color=alg_color['b&h'])
+    plt.plot(datetimes, (rewards_snh.cumsum() / env_snh.unwrapped._capital) * 100, label="S&H", color=alg_color['s&h'])
     mean_cumsum = np.mean((rewards_agents.cumsum(1) / env_agent.unwrapped._capital) * 100, axis=0)
     std_cumsum = np.std((rewards_agents.cumsum(1) / env_agent.unwrapped._capital) * 100, axis=0)
-    x = np.arange(rewards_agents.shape[1])
-    plt.plot(x, mean_cumsum, label=agent_name, color=alg_color[agent_name.lower()])
-    plt.fill_between(x, mean_cumsum - std_cumsum, mean_cumsum + std_cumsum, alpha=0.30,  color=alg_color[agent_name.lower()])
+    plt.plot(datetimes, mean_cumsum, label=agent_name, color=alg_color[agent_name.lower()])
+    plt.fill_between(datetimes, mean_cumsum - std_cumsum, mean_cumsum + std_cumsum, alpha=0.30,  color=alg_color[agent_name.lower()])
     plt.title(f"Performance on {prefix} Set")
     plt.xlabel("Time")
     plt.ylabel("P&L (%)")
+    plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True, prune='both'))
+    plt.grid(True)
+    plt.xticks(rotation=45)
     plt.legend()
+    plt.tight_layout()
     if show is False:
         plt.savefig(os.path.join(plot_folder, prefix+"_pnl"))
     else:
@@ -131,18 +137,116 @@ def evaluate_agent_with_baselines(models, params, plot_folder, scaler, prefix, s
 
     for i in range(len(action_agents)):
         action_agent = pd.DataFrame(action_agents[i]).fillna(0).astype(int)
-        plt.figure(figsize=(5, 3.5))
+        plt.figure()
         cmap = sns.color_palette(['red', 'white', 'green'])
         plt.title(f"Action Heatmap | seed = {seeds[i]}")
         sns.heatmap(action_agent, cmap=cmap)
+        cbar = plt.gca().collections[0].colorbar
         tick_locs = np.arange(0, action_agent.shape[1], params['trading_close'] - params['trading_open'] )
         timestamps = pd.date_range(f'{params['trading_open']}:00', f'{params['trading_close'] - 1}:59', periods=120)
         tick_labels = [timestamps[i].strftime('%H:%M') for i in tick_locs]
+        cbar.set_ticks([0, 1, 2])
+        cbar.set_ticklabels(["Short", "Flat", "Long"])
         plt.xticks(ticks=tick_locs, labels=tick_labels, rotation=45)
+        plt.xlabel("Time of the Day")
+        plt.ylabel("Days")
+        plt.tight_layout()
         if show is False:
             plt.savefig(os.path.join(plot_folder, prefix+f"_action_distribution_seed_{seeds[i]}"))
         else:
             plt.show()
+
+def evaluate_multiple_agents_with_baselines(models, params, scaler, prefix):
+
+    #models is a dictionary with key = name of the algorithm, value the trained algorithms
+
+    rewards_agents = {}
+    action_agents = {}
+    for k in models.keys():
+        rewards_agents[k] = []
+        action_agents[k] = []
+
+    for k in models.keys():
+        for model in models[k]:
+            env_agent = gym.make("gym4real/TradingEnv-v0",
+                                 **{'settings': params, 'scaler': scaler})
+
+            action_episodes = []
+            rewards_agent = []
+            datetimes = []
+            for _ in range(env_agent.unwrapped.get_trading_day_num()):
+                done = False
+                action_episode = []
+                obs, _ = env_agent.reset()
+
+                while not done:
+                    action, _ = model.predict(observation=np.array(obs, dtype=np.float32), deterministic=True )
+                    action_episode.append(action)
+                    next_obs, reward, terminated, truncated, info = env_agent.step(action)
+                    rewards_agent.append(reward)
+                    datetimes.append(info['datetime'])
+                    obs = next_obs
+                    done = terminated or truncated
+
+                action_episodes.append(action_episode)
+
+            rewards_agents[k].append(rewards_agent)
+            action_agents[k].append(action_episodes)
+
+        rewards_agents[k] = np.asarray(rewards_agents[k])
+
+    env_bnh = gym.make("gym4real/TradingEnv-v0",
+                       **{'settings': params, 'scaler': scaler})
+
+    rewards_bnh = []
+    for _ in range(env_bnh.unwrapped.get_trading_day_num()):
+        done = False
+        env_bnh.reset()
+        #print(env_bnh.unwrapped._day)
+        while not done:
+            next_obs, reward, terminated, truncated, _ = env_bnh.step(2)
+            rewards_bnh.append(reward)
+            done = terminated or truncated
+
+    env_snh = gym.make("gym4real/TradingEnv-v0",
+                       **{'settings': params, 'scaler': scaler})
+
+    rewards_snh = []
+    for _ in range(env_snh.unwrapped.get_trading_day_num()):
+        done = False
+        env_snh.reset()
+        #print(env_snh.unwrapped._day)
+        while not done:
+            next_obs, reward, terminated, truncated, _ = env_snh.step(0)
+            rewards_snh.append(reward)
+            done = terminated or truncated
+
+
+    rewards_bnh = np.asarray(rewards_bnh)
+    rewards_snh = np.asarray(rewards_snh)
+
+
+
+    plt.figure()
+
+    plt.plot(datetimes, (rewards_bnh.cumsum() / env_snh.unwrapped._capital) * 100, label="B&H", color=alg_color['b&h'])
+    plt.plot(datetimes, (rewards_snh.cumsum() / env_snh.unwrapped._capital) * 100, label="S&H", color=alg_color['s&h'])
+
+    for k in models.keys():
+        mean_cumsum = np.mean((rewards_agents[k].cumsum(1) / env_agent.unwrapped._capital) * 100, axis=0)
+        std_cumsum = np.std((rewards_agents[k].cumsum(1) / env_agent.unwrapped._capital) * 100, axis=0)
+        plt.plot(datetimes, mean_cumsum, label=k, color=alg_color[k.lower()])
+        plt.fill_between(datetimes, mean_cumsum - std_cumsum, mean_cumsum + std_cumsum, alpha=0.30,  color=alg_color[k.lower()])
+
+    plt.title(f"Performance on {prefix} Set")
+    plt.xlabel("Time")
+    plt.ylabel("P&L (%)")
+    plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True, prune='both'))
+    plt.grid(True)
+    plt.xticks(rotation=45)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
 
 
 class EvalCallbackSharpRatio(BaseCallback):

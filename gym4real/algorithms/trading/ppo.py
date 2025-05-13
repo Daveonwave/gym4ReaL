@@ -80,8 +80,8 @@ def train_dqn(args, train_env_params, eval_env_params, test_env_params, train = 
         models.append(model)
     plot_folder = "./logs/{}/plots/".format(args['exp_name'])
     os.makedirs(plot_folder, exist_ok=True)
-    evaluate_agent_with_baselines(models, train_env_params, plot_folder, None, 'train', args['seeds'], 'PPO')
-    evaluate_agent_with_baselines(models, eval_env_params, plot_folder, train_env.env_method("get_scaler")[0], 'valid', args['seeds'], 'PPO')
+    evaluate_agent_with_baselines(models, train_env_params, plot_folder, None, 'Training', args['seeds'], 'PPO')
+    evaluate_agent_with_baselines(models, eval_env_params, plot_folder, train_env.env_method("get_scaler")[0], 'Validation', args['seeds'], 'PPO')
     evaluate_agent_with_baselines(models, test_env_params, plot_folder, train_env.env_method("get_scaler")[0], 'Test', args['seeds'], 'PPO')
 
 
@@ -103,7 +103,7 @@ if __name__ == '__main__':
         'n_steps':  118*6,
         'ent_coeff': 0.,
         'save_model_as': 'ppo_10_eps',
-        'seeds': [1234, 5678, 91011]
+        'seeds': [32517, 84029, 10473, 67288, 91352, 47605]
     }
     
     # Example evaluation environment parameters
