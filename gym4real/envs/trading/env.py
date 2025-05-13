@@ -15,8 +15,8 @@ def _compute_features(data, offset_delta, number_of_deltas, sinusoidal_transform
     for i in range(1, number_of_deltas):
         data[f'delta_mid_{i}'] = data['delta_mid_0'].shift(i * offset_delta)
     data['DayOfTheWeek'] = data['datetime'].dt.dayofweek
-    data['DayOfTheWeek_sin'] = np.sin(2 * np.pi * data['DayOfTheWeek'] / 7)
-    data['DayOfTheWeek_cos'] = np.cos(2 * np.pi * data['DayOfTheWeek'] / 7)
+    data['DayOfTheWeek_sin'] = np.sin(2 * np.pi * data['DayOfTheWeek'] / 5)
+    data['DayOfTheWeek_cos'] = np.cos(2 * np.pi * data['DayOfTheWeek'] / 5)
     data['Day'] = data['datetime'].dt.day
     if sinusoidal_transformation:
         data['Day_sin'] = np.sin(2 * np.pi * data['Day'] / 31)
