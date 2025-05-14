@@ -9,7 +9,7 @@ from sklearn.preprocessing import MinMaxScaler
 from datetime import datetime
 
 
-def _compute_features(data, offset_delta, number_of_deltas, sinusoidal_transformation):
+def _compute_features(data, offset_delta, number_of_deltas, sinusoidal_transformation, start_trading, end_trading):
     data['Mid-Price-1'] = data['Mid-Price'].shift(offset_delta)
     data['delta_mid_0'] = (data['Mid-Price'] - data['Mid-Price-1']) / data['Mid-Price-1']
     for i in range(1, number_of_deltas):
@@ -23,7 +23,7 @@ def _compute_features(data, offset_delta, number_of_deltas, sinusoidal_transform
         data['Day_cos'] = np.cos(2 * np.pi * data['Day'] / 31)
 
     data['Timestamp'] = data['datetime'].dt.hour * 60 + data['datetime'].dt.minute
-    data['Timestamp'] = (data['Timestamp'] - 540) / (1080 - 540)
+    data['Timestamp'] = (data['Timestamp'] - (start_trading * 60)) / ((60 * end_trading) - (60 * start_trading))
     if sinusoidal_transformation:
         data['Timestamp_sin'] = np.sin(2 * np.pi * data['Timestamp'])
         data['Timestamp_cos'] = np.cos(2 * np.pi * data['Timestamp'])
@@ -68,7 +68,7 @@ class TradingEnv(Env):
         # Compute features
         self._number_of_deltas = settings['number_of_deltas']
         self._data = _compute_features(self._data, self._offset_delta, self._number_of_deltas,
-                                            self._sinusoidal_transformation)
+                                            self._sinusoidal_transformation, self._trading_open, self._trading_close)
         if settings['fillna_features'] is True:
             self._data = self._data.fillna(0)
 

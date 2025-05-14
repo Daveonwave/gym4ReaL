@@ -16,27 +16,28 @@ import numpy as np
 import seaborn as sns
 
 
-def train_dqn(args, train_env_params, eval_env_params, test_env_params, train=False):
+def train_dqn(args, train_env_params, eval_env_params, test_env_params, train=True):
+    base_directory = args['log_dir']
     if train is True:
         for seed in args['seeds']:
-            print("######## DQN is running... ########")
             logdir = "./logs/" + args['exp_name']
             os.makedirs(logdir, exist_ok=True)
             train_env = make_vec_env("gym4real/TradingEnv-v0", n_envs=args['n_envs'],
-                                     env_kwargs={'settings': train_env_params, 'seed':seed})
+                                     env_kwargs={'settings': train_env_params, 'seed': seed})
             eval_env = gym.make("gym4real/TradingEnv-v0",
-                                **{'settings': eval_env_params, 'scaler': train_env.env_method('get_scaler')[0], 'seed': seed})
+                                **{'settings': eval_env_params, 'scaler': train_env.env_method('get_scaler')[0],
+                                   'seed': seed})
             eval_env = Monitor(eval_env)
+            base_logdir = os.path.join(base_directory, args['exp_name'])
+            logdir = os.path.join(base_directory, args['exp_name'] + f"_seed_{seed}")
+            tensordir = os.path.join(base_directory, "tensorboard", args['exp_name'])
+            os.makedirs(logdir, exist_ok=True)
+            os.makedirs(tensordir, exist_ok=True)
+            os.makedirs(base_logdir, exist_ok=True)
 
-            # callback_max_episodes = StopTrainingOnMaxEpisodes(max_episodes=args['n_episodes'], verbose=1)
-            """
-            EvalCallbackTotalReward(eval_env, train_eval_env,  best_model_save_path=f"./logs_ppo2/seed_{seed}",
-                                                         log_path=f"./logs_ppo2/seed_{seed}", eval_freq= 1 * env.get_trading_day_num() * 118 / 2,
-                                                         deterministic=True, render=False, n_eval_episodes=eval_env.env.get_trading_day_num(), n_eval_episodes_train=train_eval_env.get_trading_day_num() )
-            """
             eval_callback = EvalCallback(eval_env,
-                                         best_model_save_path="./logs/{}/models/eval/".format(args['exp_name']+f"_seed_{seed}"),
-                                         log_path="./logs/",
+                                         best_model_save_path=os.path.join(logdir, "models/eval"),
+                                         log_path=None,
                                          eval_freq=(1 * train_env.env_method("get_trading_day_num")[0] * 118) / 2,
                                          n_eval_episodes=eval_env.unwrapped.get_trading_day_num(),
                                          deterministic=True,
@@ -48,7 +49,7 @@ def train_dqn(args, train_env_params, eval_env_params, test_env_params, train=Fa
                         verbose=args['verbose'],
                         gamma=args['gamma'],
                         policy_kwargs=args['policy_kwargs'],
-                        tensorboard_log="./logs/tensorboard/trading/dqn/{}".format(args['exp_name']+f"_seed_{seed}"),
+                        tensorboard_log=tensordir,
                         stats_window_size=100,
                         learning_rate=args['learning_rate'],
                         batch_size=args['batch_size'],
@@ -61,15 +62,16 @@ def train_dqn(args, train_env_params, eval_env_params, test_env_params, train=Fa
                         seed=seed
                         )
 
-            model.learn(total_timesteps=args['n_envs'] * args['n_episodes'] * train_env.env_method("get_trading_day_num")[0] * 598,
-                        progress_bar=True,
-                        log_interval=args['log_rate'],
-                        tb_log_name="dqn_{}".format(args['exp_name']),
-                        callback=callbacks,
-                        reset_num_timesteps=True, )
+            model.learn(
+                total_timesteps=args['n_episodes'] * train_env.env_method("get_trading_day_num")[
+                    0] * 598,
+                progress_bar=True,
+                log_interval=args['log_rate'],
+                tb_log_name="dqn_{}".format(args['exp_name']),
+                callback=callbacks,
+                reset_num_timesteps=True, )
 
-            model.save("./logs/{}/models/{}".format(args['exp_name']+f"_seed_{seed}", args['save_model_as']))
-            print("######## TRAINING is Done ########")
+            model.save(os.path.join(logdir, "models", args['save_model_as']))
     else:
         train_env = make_vec_env("gym4real/TradingEnv-v0", n_envs=args['n_envs'],
                                  env_kwargs={'settings': train_env_params})
@@ -78,8 +80,8 @@ def train_dqn(args, train_env_params, eval_env_params, test_env_params, train=Fa
     print("PLOTTING")
     models = []
     for seed in args['seeds']:
-        model_folder = "./logs/{}/models/".format(args['exp_name'] + f"_seed_{seed}")
-        model = DQN.load(os.path.join(model_folder, "eval", "best_model"))
+        logdir = os.path.join(base_directory, args['exp_name'] + f"_seed_{seed}")
+        model = DQN.load(os.path.join(logdir, "models/eval", "best_model"))
         models.append(model)
     plot_folder = "./logs/{}/plots/".format(args['exp_name'])
     os.makedirs(plot_folder, exist_ok=True)
@@ -92,7 +94,8 @@ if __name__ == '__main__':
     # Example parameters
     args = {
         'exp_name': 'trading/dqn',
-        'n_episodes': 10,
+        'n_episodes': 30,
+        'log_dir': "./logs",
         'n_envs': 6,
         'policy_kwargs': dict(
             net_arch=[512, 512]

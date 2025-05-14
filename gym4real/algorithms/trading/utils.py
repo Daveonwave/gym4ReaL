@@ -27,8 +27,8 @@ alg_color = OrderedDict({
     'dqn': plot_colors[5],
     'ppo': plot_colors[6],
     'fqi': plot_colors[7],
-    'b&h': plot_colors[8],
-    's&h': plot_colors[9]
+    'b&h': plot_colors[2],
+    's&h': plot_colors[3]
 })
 
 alg_markers = OrderedDict({
@@ -131,7 +131,7 @@ def evaluate_agent_with_baselines(models, params, plot_folder, scaler, prefix, s
     plt.legend()
     plt.tight_layout()
     if show is False:
-        plt.savefig(os.path.join(plot_folder, prefix+"_pnl"))
+        plt.savefig(os.path.join(plot_folder, prefix+"_pnl.pdf"))
     else:
         plt.show()
 
@@ -152,11 +152,11 @@ def evaluate_agent_with_baselines(models, params, plot_folder, scaler, prefix, s
         plt.ylabel("Days")
         plt.tight_layout()
         if show is False:
-            plt.savefig(os.path.join(plot_folder, prefix+f"_action_distribution_seed_{seeds[i]}"))
+            plt.savefig(os.path.join(plot_folder, prefix+f"_action_distribution_seed_{seeds[i]}.pdf"))
         else:
             plt.show()
 
-def evaluate_multiple_agents_with_baselines(models, params, scaler, prefix):
+def evaluate_multiple_agents_with_baselines(models, params, scaler, prefix, path):
 
     #models is a dictionary with key = name of the algorithm, value the trained algorithms
 
@@ -238,7 +238,7 @@ def evaluate_multiple_agents_with_baselines(models, params, scaler, prefix):
         plt.plot(datetimes, mean_cumsum, label=k, color=alg_color[k.lower()])
         plt.fill_between(datetimes, mean_cumsum - std_cumsum, mean_cumsum + std_cumsum, alpha=0.30,  color=alg_color[k.lower()])
 
-    plt.title(f"Performance on {prefix} Set")
+    #plt.title(f"Performance on {prefix} Set")
     plt.xlabel("Time")
     plt.ylabel("P&L (%)")
     plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True, prune='both'))
@@ -246,7 +246,10 @@ def evaluate_multiple_agents_with_baselines(models, params, scaler, prefix):
     plt.xticks(rotation=45)
     plt.legend()
     plt.tight_layout()
-    plt.show()
+    if path is None:
+        plt.show()
+    else:
+        plt.savefig(path)
 
 
 class EvalCallbackSharpRatio(BaseCallback):

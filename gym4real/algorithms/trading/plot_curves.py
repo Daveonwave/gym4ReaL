@@ -42,26 +42,26 @@ for dir in os.listdir(base_dir):
 plot_colors = sns.color_palette('colorblind')
 plt.figure(figsize=(10, 5))
 i = 0
-for column in rollout_merge.columns[1:]:
+for column in rollout_merge.columns[1:].sort_values():
     plt.plot(rollout_merge['step'], rollout_merge[column], label=column, color=plot_colors[i])
     i += 1
 plt.xlabel("Steps")
 plt.ylabel("Reward")
-plt.title(f"Training Reward {algo_name}")
+#plt.title(f"Training Reward {algo_name}")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
-plt.savefig(f"./plots/train_curves_trading_{algo_name.lower()}.png")
+plt.savefig(f"./plots/train_curves_trading_{algo_name.lower()}.pdf")
 
 plt.figure(figsize=(10, 5))
 i = 0
-for column in rollout_merge.columns[1:]:
+for column in rollout_merge.columns[1:].sort_values():
     plt.plot(eval_merge['step'], eval_merge[column], label=column, color=plot_colors[i])
     i += 1
 plt.xlabel("Steps")
 plt.ylabel("Reward")
-plt.title(f"Evaluation Reward {algo_name}")
+#plt.title(f"Evaluation Reward {algo_name}")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
-plt.savefig(f"./plots/eval_curves_trading_{algo_name.lower()}.png")
+plt.savefig(f"./plots/eval_curves_trading_{algo_name.lower()}.pdf")
