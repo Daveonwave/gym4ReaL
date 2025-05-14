@@ -184,6 +184,7 @@ _site/
 *.pkl
 *.json
 gym4real/data/trading/forex/*
+*.prof
 
 */recordings/*
-/plots/*
+plots/

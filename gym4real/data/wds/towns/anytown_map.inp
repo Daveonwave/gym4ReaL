@@ -162,11 +162,11 @@ Anytown master file for rl-wds
 
 [TIMES]
  Duration           	0:00:00
- Hydraulic Timestep 	0:10:00
- Quality Timestep   	0:10:00
+ Hydraulic Timestep 	1:00:00
+ Quality Timestep   	0:00:00
  Pattern Timestep   	1:00:00
  Pattern Start      	0:00:00
- Report Timestep    	0:10:00
+ Report Timestep    	0:00:00
  Report Start       	0:00:00
  Start ClockTime    	00:00:00
  Statistic          	NONE

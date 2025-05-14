@@ -29,20 +29,19 @@ class WaterDistributionSystemEnv(Env):
         self.elapsed_time = None
         self.timestep = None
         self._duration = settings['duration']
-        self._seed = settings['seed']
-        np.random.seed(self._seed)
+        self._hydraulic_step = settings['hydraulic_step']
 
         self.demand_moving_average = None
         self._use_attacks = False
-
+        
         # Physical process of the environment
         self._wn = WaterNetwork(settings['inp_file'])
         self._wn.set_time_params(duration=settings['duration'], 
-                                 hydraulic_step=settings['hyd_step'], 
+                                 hydraulic_step=settings['hydraulic_step'], 
                                  pattern_step=settings['demand']['pattern_step'])
         
         # Demand patterns
-        self._demand = WaterDemandPattern(**settings['demand'])
+        self._demand = WaterDemandPattern(**settings['demand'], seed=settings['seed'])
         
         # Reward components
         self._dsr = 0
@@ -136,6 +135,9 @@ class WaterDistributionSystemEnv(Env):
         :return:
         """
         return {'profile': self._demand.pattern,
+                'pumps': {pump_id: self._wn.links[pump_id].status for pump_id in self._wn.pumps.keys()},
+                'tanks': {tank_id: self._wn.nodes[tank_id].pressure.iloc[-1] if self.elapsed_time > 0 else self._wn.nodes[tank_id].pressure 
+                          for tank_id in self._wn.tanks.keys()},
                 'elapsed_time': self.elapsed_time,
                 'pure_rewards': {'dsr': self._dsr, 'overflow': self._overflow},
                 'weighted_rewards': {'dsr': self._dsr * self.dsr_coeff, 'overflow': self._overflow * self.overflow_coeff}}
@@ -146,7 +148,7 @@ class WaterDistributionSystemEnv(Env):
         :param state:
         :return:
         """
-        print("Resetting the environment...")
+        #print("Resetting the environment...")
         self._wn.reset()
         self._wn.solved = False
         
@@ -154,11 +156,6 @@ class WaterDistributionSystemEnv(Env):
         self._overflow = 0
 
         self.elapsed_time = 0
-        self.timestep = 1
-        
-        if seed is not None:
-            random.seed(seed)
-            np.random.seed(seed)
         
         # Reset if testing
         if options is not None and 'is_evaluation' in options and options['is_evaluation']:
@@ -191,22 +188,20 @@ class WaterDistributionSystemEnv(Env):
         for i, key in enumerate(pump_actuation.keys()):
             pump_actuation[key] = int(bin_action[i])
         self._wn.update_pumps(new_status=pump_actuation)
-
+        
         # Simulate the next hydraulic step
-        self.timestep = self._wn.simulate_step(self.elapsed_time)
-        
-        #print(self._wn.links['P79'].settings.iloc[-1], self._wn.links['P79'].status, self._wn.links['P79'].energy.iloc[-1], self._wn.nodes['T41'].pressure.iloc[-1])
-        
-        #self._wn.links['P79'].power = 0
-        #self._wn.links['P78'].power = 0
-                
+        hyd_step, timestep = 0, 1
+        while hyd_step != self._hydraulic_step and timestep != 0:
+            timestep = self._wn.simulate_step(self.elapsed_time)
+            hyd_step += timestep
+
         # Retrieve current state and reward from the chosen action
         reward = self._compute_reward()
 
         terminated = False
-        truncated = self.timestep == 0
-        self._wn.solved = self.timestep == 0
-        self.elapsed_time += self.timestep
+        truncated = timestep == 0
+        self._wn.solved = timestep == 0
+        self.elapsed_time += timestep
         
         state = np.array(list(self._get_obs().values()), dtype=np.float32)
         info = self._get_info()

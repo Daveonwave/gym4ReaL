@@ -37,8 +37,9 @@ def read_yaml(yaml_file: str):
 def parameter_generator(world_options: str = WORLD,
                         hydraulic_step: int = None,
                         duration: int = None,
-                        seed: int = 42,
+                        seed: int = None,
                         reward_coeff: dict[str, float] = None,
+                        overflow_risk: float = None,
                         use_reward_normalization: bool = True,
                         ) -> dict:
     """
@@ -62,10 +63,11 @@ def parameter_generator(world_options: str = WORLD,
         params['attackers'] = {'data_config': read_yaml(world_settings['attackers']['path'])}
     # Time settings
     params['duration'] = duration if duration is not None else world_settings['duration']
-    params['hyd_step'] = hydraulic_step if hydraulic_step is not None else world_settings['hyd_step']
+    params['hydraulic_step'] = hydraulic_step if hydraulic_step is not None else world_settings['hydraulic_step']
     params['seed'] = seed if seed is not None else world_settings['seed']
 
     # Reward settings
+    params['overflow_risk'] = overflow_risk if overflow_risk is not None else world_settings['overflow_risk']
     params['reward'] = reward_coeff if reward_coeff is not None else world_settings['reward']
     params['use_reward_normalization'] = use_reward_normalization if use_reward_normalization is not None else world_settings['use_reward_normalization']
 

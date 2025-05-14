@@ -2,7 +2,7 @@ town: "anytown"
 inp_file: "gym4real/data/wds/towns/anytown_map.inp"
 
 duration: 604800 # 1 week
-hyd_step: 300 # 5 min
+hydraulic_step: 300 # 5 min
 seed: 42
 
 demand:
@@ -16,11 +16,10 @@ demand:
 attackers:
   path: "gym4real/data/wds/attacks/anytown_attackers.yaml"
 
+overflow_risk: 0.9
 reward:
   dsr_coeff: 1
-  overflow_coeff: 0.25
-  flow_coeff: 0.1
-  pump_usage_coeff: 0.05
+  overflow_coeff: 1
 
 observations:
   - "T41"

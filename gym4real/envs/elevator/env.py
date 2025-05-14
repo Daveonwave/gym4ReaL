@@ -68,9 +68,7 @@ class ElevatorEnv(Env):
     
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
-        
-        #print(self._get_obs(), self._get_info())
-        
+                
         self.current_time = 0
         
         # Set the elevator position
@@ -83,10 +81,10 @@ class ElevatorEnv(Env):
             if queue.floor != self._goal_floor:
                 lambd = self._rng.uniform(self._arrival_distributions['lambda_min'], self._arrival_distributions['lambda_max'])
                 queue.set_arrivals(arrivals=generate_arrival_distribution(lambd=lambd,
-                                                                        total_time=self.duration, 
-                                                                        floor=queue.floor,
-                                                                        goal_floor=self._goal_floor,
-                                                                        seed=self._seed))
+                                                                          total_time=self.duration,
+                                                                          floor=queue.floor,
+                                                                          goal_floor=self._goal_floor,
+                                                                          seed=self._seed))
                  
         self._elevator.update_queues(current_time=self.current_time)
         return self._get_obs(), self._get_info()

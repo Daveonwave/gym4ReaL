@@ -20,6 +20,7 @@ class WaterDemandPattern:
                  data_config: dict,
                  pattern_step: int, 
                  event_probs: dict,
+                 seed: int = None,
                  **kwargs):
         self._data_path = data_config['dataset_path']
         self._data_config = data_config
@@ -32,6 +33,8 @@ class WaterDemandPattern:
         
         self._moving_average = None
         self._exp_moving_average = None
+        
+        self._rng = np.random.default_rng(seed)
 
     @property
     def pattern(self):
@@ -70,17 +73,17 @@ class WaterDemandPattern:
         """
         if is_evaluation:   # Draw pattern for testing
             df = pd.read_csv(self._data_path + self._data_config['test'], index_col=None)
-            self._current_pattern = df[np.random.choice(df.columns.values, 1)[0]]
+            self._current_pattern = df[self._rng.choice(df.columns.values, 1)[0]]
             
         else:   # Draw pattern for training
             # Randomly select a pattern type based on the event probabilities
-            self._current_pattern_type = np.random.choice(a=list(self._event_probs.keys()), 
+            self._current_pattern_type = self._rng.choice(a=list(self._event_probs.keys()), 
                                                           p=list(self._event_probs.values()), 
                                                           size=1)[0]
-            csv_file = np.random.choice(a=self._data_config['train'][self._current_pattern_type], size=1)[0]
+            csv_file = self._rng.choice(a=self._data_config['train'][self._current_pattern_type], size=1)[0]
             df = pd.read_csv(self._data_path + str(csv_file), index_col=0)
             # Randomly select a pattern from the chosen dataframe
-            self._current_pattern = df[np.random.choice(df.columns.values, 1)[0]]
+            self._current_pattern = df[self._rng.choice(df.columns.values, 1)[0]]
     
     def set_moving_average(self, window_size: int, total_basedemand: float):
         """

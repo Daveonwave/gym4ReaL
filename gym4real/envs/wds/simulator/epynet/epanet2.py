@@ -270,7 +270,7 @@ class EPANET2(object):
         j= ctypes.c_int()
         ierr= self._lib.EN_getpatternindex(self.ph, ctypes.c_char_p(patternid.encode(self.charset)), ctypes.byref(j))
         if ierr!=0: raise ENtoolkitError(self, ierr)
-        return j.value
+        return j.value  
 
 
     def ENgetpatternlen(self, index):
