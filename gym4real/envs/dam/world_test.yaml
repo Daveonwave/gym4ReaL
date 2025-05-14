@@ -11,8 +11,8 @@ smooth_daily_deficit_coeff: True
 seed: 123
 random_init: False
 
-demand: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/dam/demand/demand_test.csv'
-inflow: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/dam/inflow/inflow_test.csv'
+demand: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/dam/demand/water_demand_test.csv'
+inflow: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/dam/inflow/water_inflow_test.csv'
 
 observations:
   - day_of_year
