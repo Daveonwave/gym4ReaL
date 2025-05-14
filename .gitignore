@@ -180,7 +180,6 @@ logs/
 *.DS_Store
 _site/
 *.rpt
-*.pkl
 gym4real/data/trading/forex/*
 
 */recordings/*
