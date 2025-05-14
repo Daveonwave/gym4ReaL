@@ -3,7 +3,7 @@ evaporation: False
 
 init_level: 0.35
 
-min_env_flow: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/dam/MEF_como.csv'
+min_env_flow: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/dam/MEF.csv'
 
 alpha: -2.5
 beta: 2.015

@@ -41,6 +41,7 @@ class LakeEnv(Env):
                     - 'smooth_daily_deficit_coeff' (bool): Whether to smooth the daily deficit.
                     - 'lake_params' (dict): Parameters for the lake model.
                     - 'flood_level' (float): Flood level threshold.
+                    - 'starving_level' (float): Starving level threshold.
                     - 'demand' (dict): Demand data as an ordered dictionary.
                     - 'inflow' (dict): Inflow data as an ordered dictionary.
                     - 'action' (dict): Action space configuration with keys:
@@ -60,6 +61,7 @@ class LakeEnv(Env):
             smooth_daily_deficit_coeff (float): Whether to smooth the daily deficit.
             lake (Lake): Lake model instance.
             flood_level (float): Flood level threshold.
+            starving_level float: Starving level threshold.
             demand_data (OrderedDict): Demand data.
             inflow_data (OrderedDict): Inflow data.
             action_space (Box): Action space for the environment.
@@ -93,6 +95,7 @@ class LakeEnv(Env):
         self.lake = Lake(settings['lake_params'])
 
         self.flood_level = settings['flood_level']
+        self.starving_level = settings['starving_level']
         self.demand_data = OrderedDict(settings['demand'])
         self.inflow_data = OrderedDict(settings['inflow'])
         self.demand = None
@@ -333,12 +336,14 @@ class LakeEnv(Env):
             tuple:
                 - tot_reward (float): The total weighted reward calculated as the sum of all weighted penalties.
                 - pure_reward (dict): A dictionary containing the unweighted individual penalties:
-                    - 'overflow_reward' (int): Penalty for water level exceeding the flood level.
+                    - 'overflow_reward' (float): Penalty for water level exceeding the flood level.
+                    - 'starving_reward' (float): Penalty for water level dropping below the starving level.
                     - 'daily_deficit_reward' (float): Penalty for daily water deficit.
                     - 'wasted_water_reward' (float): Penalty for water released when not needed.
                     - 'clipping_reward' (float): Penalty for the difference between action and actual release.
                 - weighted_reward (dict): A dictionary containing the weighted individual penalties:
                     - 'overflow_reward' (float): Weighted penalty for water level exceeding the flood level.
+                    - 'starving_reward' (float): Weighted penalty for water level dropping below the starving level.
                     - 'daily_deficit_reward' (float): Weighted penalty for daily water deficit.
                     - 'wasted_water_reward' (float): Weighted penalty for water released when not needed.
                     - 'clipping_reward' (float): Weighted penalty for the difference between action and actual release.
@@ -355,6 +360,9 @@ class LakeEnv(Env):
         # Overflow penalty
         overflow_reward = - int(self.level[t+1] > self.flood_level)
 
+        # Starving penalty
+        starving_reward = - int(self.level[t+1] < self.starving_level)
+
         # Deficit penalty
         daily_deficit_reward = self._daily_deficit(t)
         daily_deficit_reward = - daily_deficit_reward
@@ -368,11 +376,13 @@ class LakeEnv(Env):
         clipping_reward = - (action - release) ** 2
 
         pure_reward = {'overflow_reward': overflow_reward,
+                       'starving_reward': starving_reward,
                        'daily_deficit_reward': daily_deficit_reward,
                        'wasted_water_reward': wasted_water_reward,
                        'clipping_reward': clipping_reward}
 
         weighted_reward = {'overflow_reward': overflow_reward * self.reward_coeff['overflow_coeff'],
+                           'starving_reward': starving_reward * self.reward_coeff['starving_coeff'],
                            'daily_deficit_reward': daily_deficit_reward * self.reward_coeff['daily_deficit_coeff'],
                            'wasted_water_reward': wasted_water_reward * self.reward_coeff['wasted_water_coeff'],
                            'clipping_reward': clipping_reward * self.reward_coeff['clip_action_coeff']}

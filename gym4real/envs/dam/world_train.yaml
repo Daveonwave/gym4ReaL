@@ -3,6 +3,7 @@ integration: 24
 sim_horizon: 365
 doy: 1
 flood_level: 1.24
+starving_level: -0.45
 
 exponential_average_coeff: 0.8
 smooth_daily_deficit_coeff: True
@@ -10,8 +11,8 @@ smooth_daily_deficit_coeff: True
 seed: 123
 random_init: True
 
-demand: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/dam/clean_data/demand_train_years_rows.csv'
-inflow: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/dam/clean_data/inflow_train_years_rows.csv'
+demand: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/dam/demand/demand_train.csv'
+inflow: '/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/data/dam/inflow/inflow_train.csv'
 
 observations:
   - day_of_year
@@ -25,5 +26,6 @@ action:
 reward:
   daily_deficit_coeff: 1
   overflow_coeff: 1000
-  wasted_water_coeff: 0.5
-  clip_action_coeff: 0.001
+  starving_coeff: 250
+  wasted_water_coeff: 0.2
+  clip_action_coeff: 0.0005
