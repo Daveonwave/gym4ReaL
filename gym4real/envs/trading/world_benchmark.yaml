@@ -1,4 +1,4 @@
-data_directory: "/Users/giovannidispoto/Desktop/PhD/gym4ReaL_github/gym4ReaL/gym4real/data/trading/forex"
+data_directory: "./gym4real/data/trading/forex"
 years: [2020, 2021]
 anomalous_days: []
 persistence: 1
