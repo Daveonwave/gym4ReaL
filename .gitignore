@@ -184,4 +184,5 @@ gym4real/data/trading/forex/*
 
 */recordings/*
 plots
-metadata
+metadata/
+metadata.zip
