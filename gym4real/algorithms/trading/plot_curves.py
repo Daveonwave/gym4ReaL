@@ -17,17 +17,17 @@ def extract_scalar(logdir, tag):
 
 
 algo_name = "PPO"
-base_dir = "/Users/giovannidispoto/Desktop/PhD/gym4ReaL_github/gym4ReaL/gym4real/algorithms/trading/logs/tensorboard/trading/ppo/trading/"
+base_dir = "/Users/giovannidispoto/Desktop/PhD/gym4ReaL_github/gym4ReaL/gym4real/algorithms/trading/logs/tensorboard/trading/ppo/ppo_trading"
 rollout_merge = None
 eval_merge = None
 for dir in os.listdir(base_dir):
 
-    logdir = os.path.join(base_dir, dir, "ppo_trading", dir + "_1")
+    logdir = os.path.join(base_dir, dir)
 
     rollout_df = extract_scalar(logdir, "rollout/ep_rew_mean")
-    rollout_df = rollout_df.rename(columns={"rollout/ep_rew_mean": f'{dir.split("seed_")[1]}'})
+    rollout_df = rollout_df.rename(columns={"rollout/ep_rew_mean": f'{dir.split("_")[2]}'})
     eval_df = extract_scalar(logdir, "eval/mean_reward")
-    eval_df = eval_df.rename(columns={"eval/mean_reward": f'{dir.split("seed_")[1]}'})
+    eval_df = eval_df.rename(columns={"eval/mean_reward": f'{dir.split("_")[2]}'})
 
     if rollout_merge is None:
         rollout_merge = rollout_df
