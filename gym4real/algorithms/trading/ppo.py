@@ -108,7 +108,7 @@ if __name__ == '__main__':
         'save_model_as': 'ppo_10_eps',
         'seeds': [32517, 84029, 10473, 67288, 91352, 47605]
     }
-    train = False
+    train = True
     # Example evaluation environment parameters
     train_env_params = parameter_generator(world_options='gym4real/envs/trading/world_train.yaml')
     eval_env_params = parameter_generator(world_options='gym4real/envs/trading/world_validation.yaml')
