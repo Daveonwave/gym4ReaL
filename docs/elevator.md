@@ -14,7 +14,7 @@ pip install -r requirements.txt
 
 ## Reproducibility
 
-A tutorial from training your own RL algorithm refer to `examples/elevator/training-tutorial.ipynb`.
+For a tutorial for training your own RL algorithm refer to `examples/elevator/training-tutorial.ipynb`.
 To obtain the trained models presented in the paper launch this command from the main directory.
 
 ```bash
