@@ -1,4 +1,4 @@
-# MicrogridEnv
+# TradingEnv
 
 ## Create a conda environment
 
