@@ -1,13 +1,10 @@
 import pandas as pd
 import numpy as np
 import random
-import yaml
 from pathlib import Path
 from gymnasium import Env, spaces
-from gym4real.envs.wds.simulator.plc import SensorPLC, ActuatorPLC
 from gym4real.envs.wds.simulator.wn import WaterNetwork
 from gym4real.envs.wds.simulator.demand import WaterDemandPattern
-from gym4real.envs.wds.simulator.attacker import AttackScheduler
 from gym4real.envs.wds.rewards import *
 
 
@@ -194,11 +191,6 @@ class WaterDistributionSystemEnv(Env):
 
         # Simulate the next hydraulic step
         self.timestep = self._wn.simulate_step(self.elapsed_time)
-        
-        #print(self._wn.links['P79'].settings.iloc[-1], self._wn.links['P79'].status, self._wn.links['P79'].energy.iloc[-1], self._wn.nodes['T41'].pressure.iloc[-1])
-        
-        #self._wn.links['P79'].power = 0
-        #self._wn.links['P78'].power = 0
                 
         # Retrieve current state and reward from the chosen action
         reward = self._compute_reward()
