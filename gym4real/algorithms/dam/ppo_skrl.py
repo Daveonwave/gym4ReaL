@@ -125,7 +125,7 @@ def train_ppo(params, args, eval_env_params, device='cuda'):
     # logging to TensorBoard and write checkpoints (in timesteps)
     cfg["experiment"]["write_interval"] = 500
     cfg["experiment"]["checkpoint_interval"] = 500
-    cfg["experiment"]["directory"] = args.get('save_dir', "gym4real/algorithms/dam/runs")
+    cfg["experiment"]["directory"] = args.get('save_dir', "../../algorithms/dam/runs")
 
     agent = PPO(models=models,
                 memory=memory,
@@ -187,11 +187,11 @@ if __name__ == '__main__':
     }
 
     params = parameter_generator(
-        world_options='gym4real/envs/dam/world_train.yaml',
-        lake_params='gym4real/envs/dam/lake.yaml')
+        world_options='../../envs/dam/world_train.yaml',
+        lake_params='../../envs/dam/lake.yaml')
 
     eval_params = parameter_generator(
-        world_options='gym4real/envs/dam/world_test.yaml',
-        lake_params='gym4real/envs/dam/lake.yaml')
+        world_options='../../envs/dam/world_test.yaml',
+        lake_params='../../envs/dam/lake.yaml')
 
     train_ppo(params, args, eval_params)
