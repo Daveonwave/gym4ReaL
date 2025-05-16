@@ -114,11 +114,11 @@ if __name__ == '__main__':
         'save_model_as': 'dqn_trading_10eps',
         'seeds': [32517, 84029, 10473, 67288, 91352, 47605]
     }
-
+    train = True
     # Example evaluation environment parameters
     train_env_params = parameter_generator(world_options='../../envs/trading/world_train.yaml')
     eval_env_params = parameter_generator(world_options='../../envs/trading/world_validation.yaml')
     test_env_params = parameter_generator(world_options='../../envs/trading/world_test.yaml')
 
 
-    train_dqn(train_env_params=train_env_params, eval_env_params=eval_env_params,test_env_params=test_env_params, args=args)
+    train_dqn(train_env_params=train_env_params, eval_env_params=eval_env_params,test_env_params=test_env_params, args=args, train=train)

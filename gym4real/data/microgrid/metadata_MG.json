@@ -1,0 +1,6302 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "rai": "http://mlcommons.org/croissant/RAI/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "examples": {
+      "@id": "cr:examples",
+      "@type": "@json"
+    },
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileProperty": "cr:fileProperty",
+    "fileObject": "cr:fileObject",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "name": "microgrid_data",
+  "description": "Italian energy data of consumption, PV generation, market and ambient temperature.",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://github.com/Daveonwave/gym4ReaL",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "github-repository",
+      "name": "github-repository",
+      "description": "Gym4ReaL repository on GitHub.",
+      "contentUrl": "https://github.com/Daveonwave/gym4ReaL",
+      "encodingFormat": "git+https",
+      "sha256": "main"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "energy_demands_train",
+      "name": "energy_demands_train",
+      "description": "Energy consumptions of different households (train set)",
+      "contentUrl": "https://raw.githubusercontent.com/Daveonwave/gym4ReaL/main/gym4real/data/microgrid/demand/profiles_train.csv",
+      "encodingFormat": "text/csv",
+      "sha256": "86d05e2784e3a22005e37fd8622d1eccc7582b688a5b98b78778192cc40fb312"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "energy_demands_test",
+      "name": "energy_demands_test",
+      "description": "Energy consumptions of different households (test set)",
+      "contentUrl": "https://raw.githubusercontent.com/Daveonwave/gym4ReaL/main/gym4real/data/microgrid/demand/profiles_test.csv",
+      "encodingFormat": "text/csv",
+      "sha256": "410a54ad7c5d7ee05b34d1037b0001c0d59b869d65983e4fe2d2c605b84a80e2"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "energy_generation",
+      "name": "energy_generation",
+      "description": "Train and test of energy PV generation",
+      "containedIn": {
+        "@id": "github-repository"
+      },
+      "encodingFormat": "text/csv",
+      "includes": "gym4real/data/microgrid/generation/*.csv"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "energy_prices",
+      "name": "energy_prices",
+      "description": "Train and test of energy market",
+      "containedIn": {
+        "@id": "github-repository"
+      },
+      "encodingFormat": "text/csv",
+      "includes": "gym4real/data/microgrid/market/*.csv"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "ambient_temperature",
+      "name": "ambient_temperature",
+      "description": "Train and test of ambient temperature",
+      "containedIn": {
+        "@id": "github-repository"
+      },
+      "encodingFormat": "text/csv",
+      "includes": "gym4real/data/microgrid/temp_amb/*.csv"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "energy_consumption_table_train",
+      "name": "energy_consumption_table_train",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "delta_time_demand_train",
+          "name": "delta_time",
+          "description": "Time corresponding to the energy consumption in seconds",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "delta_time"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "0",
+          "name": "0",
+          "description": "The data consumption regarding 0-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "0"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "1",
+          "name": "1",
+          "description": "The data consumption regarding 1-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "1"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "2",
+          "name": "2",
+          "description": "The data consumption regarding 2-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "2"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "3",
+          "name": "3",
+          "description": "The data consumption regarding 3-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "3"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "4",
+          "name": "4",
+          "description": "The data consumption regarding 4-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "4"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "5",
+          "name": "5",
+          "description": "The data consumption regarding 5-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "5"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "6",
+          "name": "6",
+          "description": "The data consumption regarding 6-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "6"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "7",
+          "name": "7",
+          "description": "The data consumption regarding 7-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "7"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "8",
+          "name": "8",
+          "description": "The data consumption regarding 8-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "8"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "9",
+          "name": "9",
+          "description": "The data consumption regarding 9-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "9"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "10",
+          "name": "10",
+          "description": "The data consumption regarding 10-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "10"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "11",
+          "name": "11",
+          "description": "The data consumption regarding 11-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "11"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "12",
+          "name": "12",
+          "description": "The data consumption regarding 12-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "12"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "13",
+          "name": "13",
+          "description": "The data consumption regarding 13-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "13"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "14",
+          "name": "14",
+          "description": "The data consumption regarding 14-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "14"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "15",
+          "name": "15",
+          "description": "The data consumption regarding 15-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "15"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "16",
+          "name": "16",
+          "description": "The data consumption regarding 16-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "16"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "17",
+          "name": "17",
+          "description": "The data consumption regarding 17-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "17"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "18",
+          "name": "18",
+          "description": "The data consumption regarding 18-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "18"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "19",
+          "name": "19",
+          "description": "The data consumption regarding 19-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "19"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "20",
+          "name": "20",
+          "description": "The data consumption regarding 20-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "20"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "21",
+          "name": "21",
+          "description": "The data consumption regarding 21-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "21"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "22",
+          "name": "22",
+          "description": "The data consumption regarding 22-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "22"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "23",
+          "name": "23",
+          "description": "The data consumption regarding 23-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "23"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "24",
+          "name": "24",
+          "description": "The data consumption regarding 24-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "24"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "25",
+          "name": "25",
+          "description": "The data consumption regarding 25-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "25"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "26",
+          "name": "26",
+          "description": "The data consumption regarding 26-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "26"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "27",
+          "name": "27",
+          "description": "The data consumption regarding 27-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "27"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "28",
+          "name": "28",
+          "description": "The data consumption regarding 28-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "28"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "29",
+          "name": "29",
+          "description": "The data consumption regarding 29-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "29"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "30",
+          "name": "30",
+          "description": "The data consumption regarding 30-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "30"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "31",
+          "name": "31",
+          "description": "The data consumption regarding 31-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "31"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "32",
+          "name": "32",
+          "description": "The data consumption regarding 32-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "32"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "33",
+          "name": "33",
+          "description": "The data consumption regarding 33-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "33"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "34",
+          "name": "34",
+          "description": "The data consumption regarding 34-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "34"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "35",
+          "name": "35",
+          "description": "The data consumption regarding 35-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "35"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "36",
+          "name": "36",
+          "description": "The data consumption regarding 36-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "36"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "37",
+          "name": "37",
+          "description": "The data consumption regarding 37-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "37"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "38",
+          "name": "38",
+          "description": "The data consumption regarding 38-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "38"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "39",
+          "name": "39",
+          "description": "The data consumption regarding 39-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "39"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "40",
+          "name": "40",
+          "description": "The data consumption regarding 40-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "40"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "41",
+          "name": "41",
+          "description": "The data consumption regarding 41-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "41"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "42",
+          "name": "42",
+          "description": "The data consumption regarding 42-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "42"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "43",
+          "name": "43",
+          "description": "The data consumption regarding 43-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "43"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "44",
+          "name": "44",
+          "description": "The data consumption regarding 44-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "44"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "45",
+          "name": "45",
+          "description": "The data consumption regarding 45-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "45"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "46",
+          "name": "46",
+          "description": "The data consumption regarding 46-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "46"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "47",
+          "name": "47",
+          "description": "The data consumption regarding 47-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "47"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "48",
+          "name": "48",
+          "description": "The data consumption regarding 48-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "48"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "49",
+          "name": "49",
+          "description": "The data consumption regarding 49-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "49"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "50",
+          "name": "50",
+          "description": "The data consumption regarding 50-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "50"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "51",
+          "name": "51",
+          "description": "The data consumption regarding 51-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "51"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "52",
+          "name": "52",
+          "description": "The data consumption regarding 52-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "52"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "53",
+          "name": "53",
+          "description": "The data consumption regarding 53-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "53"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "54",
+          "name": "54",
+          "description": "The data consumption regarding 54-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "54"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "55",
+          "name": "55",
+          "description": "The data consumption regarding 55-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "55"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "56",
+          "name": "56",
+          "description": "The data consumption regarding 56-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "56"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "57",
+          "name": "57",
+          "description": "The data consumption regarding 57-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "57"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "58",
+          "name": "58",
+          "description": "The data consumption regarding 58-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "58"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "59",
+          "name": "59",
+          "description": "The data consumption regarding 59-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "59"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "60",
+          "name": "60",
+          "description": "The data consumption regarding 60-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "60"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "61",
+          "name": "61",
+          "description": "The data consumption regarding 61-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "61"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "62",
+          "name": "62",
+          "description": "The data consumption regarding 62-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "62"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "63",
+          "name": "63",
+          "description": "The data consumption regarding 63-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "63"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "64",
+          "name": "64",
+          "description": "The data consumption regarding 64-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "64"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "65",
+          "name": "65",
+          "description": "The data consumption regarding 65-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "65"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "66",
+          "name": "66",
+          "description": "The data consumption regarding 66-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "66"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "67",
+          "name": "67",
+          "description": "The data consumption regarding 67-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "67"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "68",
+          "name": "68",
+          "description": "The data consumption regarding 68-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "68"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "69",
+          "name": "69",
+          "description": "The data consumption regarding 69-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "69"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "70",
+          "name": "70",
+          "description": "The data consumption regarding 70-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "70"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "71",
+          "name": "71",
+          "description": "The data consumption regarding 71-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "71"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "72",
+          "name": "72",
+          "description": "The data consumption regarding 72-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "72"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "73",
+          "name": "73",
+          "description": "The data consumption regarding 73-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "73"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "74",
+          "name": "74",
+          "description": "The data consumption regarding 74-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "74"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "75",
+          "name": "75",
+          "description": "The data consumption regarding 75-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "75"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "76",
+          "name": "76",
+          "description": "The data consumption regarding 76-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "76"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "77",
+          "name": "77",
+          "description": "The data consumption regarding 77-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "77"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "78",
+          "name": "78",
+          "description": "The data consumption regarding 78-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "78"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "79",
+          "name": "79",
+          "description": "The data consumption regarding 79-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "79"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "80",
+          "name": "80",
+          "description": "The data consumption regarding 80-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "80"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "81",
+          "name": "81",
+          "description": "The data consumption regarding 81-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "81"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "82",
+          "name": "82",
+          "description": "The data consumption regarding 82-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "82"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "83",
+          "name": "83",
+          "description": "The data consumption regarding 83-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "83"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "84",
+          "name": "84",
+          "description": "The data consumption regarding 84-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "84"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "85",
+          "name": "85",
+          "description": "The data consumption regarding 85-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "85"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "86",
+          "name": "86",
+          "description": "The data consumption regarding 86-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "86"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "87",
+          "name": "87",
+          "description": "The data consumption regarding 87-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "87"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "88",
+          "name": "88",
+          "description": "The data consumption regarding 88-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "88"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "89",
+          "name": "89",
+          "description": "The data consumption regarding 89-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "89"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "90",
+          "name": "90",
+          "description": "The data consumption regarding 90-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "90"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "91",
+          "name": "91",
+          "description": "The data consumption regarding 91-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "91"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "92",
+          "name": "92",
+          "description": "The data consumption regarding 92-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "92"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "93",
+          "name": "93",
+          "description": "The data consumption regarding 93-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "93"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "94",
+          "name": "94",
+          "description": "The data consumption regarding 94-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "94"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "95",
+          "name": "95",
+          "description": "The data consumption regarding 95-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "95"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "96",
+          "name": "96",
+          "description": "The data consumption regarding 96-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "96"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "97",
+          "name": "97",
+          "description": "The data consumption regarding 97-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "97"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "98",
+          "name": "98",
+          "description": "The data consumption regarding 98-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "98"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "99",
+          "name": "99",
+          "description": "The data consumption regarding 99-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "99"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "100",
+          "name": "100",
+          "description": "The data consumption regarding 100-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "100"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "101",
+          "name": "101",
+          "description": "The data consumption regarding 101-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "101"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "102",
+          "name": "102",
+          "description": "The data consumption regarding 102-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "102"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "103",
+          "name": "103",
+          "description": "The data consumption regarding 103-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "103"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "104",
+          "name": "104",
+          "description": "The data consumption regarding 104-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "104"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "105",
+          "name": "105",
+          "description": "The data consumption regarding 105-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "105"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "106",
+          "name": "106",
+          "description": "The data consumption regarding 106-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "106"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "107",
+          "name": "107",
+          "description": "The data consumption regarding 107-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "107"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "108",
+          "name": "108",
+          "description": "The data consumption regarding 108-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "108"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "109",
+          "name": "109",
+          "description": "The data consumption regarding 109-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "109"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "110",
+          "name": "110",
+          "description": "The data consumption regarding 110-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "110"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "111",
+          "name": "111",
+          "description": "The data consumption regarding 111-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "111"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "112",
+          "name": "112",
+          "description": "The data consumption regarding 112-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "112"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "113",
+          "name": "113",
+          "description": "The data consumption regarding 113-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "113"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "114",
+          "name": "114",
+          "description": "The data consumption regarding 114-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "114"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "115",
+          "name": "115",
+          "description": "The data consumption regarding 115-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "115"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "116",
+          "name": "116",
+          "description": "The data consumption regarding 116-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "116"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "117",
+          "name": "117",
+          "description": "The data consumption regarding 117-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "117"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "118",
+          "name": "118",
+          "description": "The data consumption regarding 118-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "118"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "119",
+          "name": "119",
+          "description": "The data consumption regarding 119-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "119"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "120",
+          "name": "120",
+          "description": "The data consumption regarding 120-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "120"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "121",
+          "name": "121",
+          "description": "The data consumption regarding 121-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "121"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "122",
+          "name": "122",
+          "description": "The data consumption regarding 122-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "122"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "123",
+          "name": "123",
+          "description": "The data consumption regarding 123-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "123"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "124",
+          "name": "124",
+          "description": "The data consumption regarding 124-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "124"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "125",
+          "name": "125",
+          "description": "The data consumption regarding 125-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "125"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "126",
+          "name": "126",
+          "description": "The data consumption regarding 126-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "126"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "127",
+          "name": "127",
+          "description": "The data consumption regarding 127-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "127"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "128",
+          "name": "128",
+          "description": "The data consumption regarding 128-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "128"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "129",
+          "name": "129",
+          "description": "The data consumption regarding 129-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "129"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "130",
+          "name": "130",
+          "description": "The data consumption regarding 130-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "130"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "131",
+          "name": "131",
+          "description": "The data consumption regarding 131-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "131"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "132",
+          "name": "132",
+          "description": "The data consumption regarding 132-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "132"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "133",
+          "name": "133",
+          "description": "The data consumption regarding 133-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "133"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "134",
+          "name": "134",
+          "description": "The data consumption regarding 134-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "134"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "135",
+          "name": "135",
+          "description": "The data consumption regarding 135-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "135"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "136",
+          "name": "136",
+          "description": "The data consumption regarding 136-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "136"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "137",
+          "name": "137",
+          "description": "The data consumption regarding 137-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "137"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "138",
+          "name": "138",
+          "description": "The data consumption regarding 138-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "138"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "139",
+          "name": "139",
+          "description": "The data consumption regarding 139-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "139"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "140",
+          "name": "140",
+          "description": "The data consumption regarding 140-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "140"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "141",
+          "name": "141",
+          "description": "The data consumption regarding 141-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "141"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "142",
+          "name": "142",
+          "description": "The data consumption regarding 142-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "142"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "143",
+          "name": "143",
+          "description": "The data consumption regarding 143-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "143"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "144",
+          "name": "144",
+          "description": "The data consumption regarding 144-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "144"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "145",
+          "name": "145",
+          "description": "The data consumption regarding 145-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "145"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "146",
+          "name": "146",
+          "description": "The data consumption regarding 146-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "146"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "147",
+          "name": "147",
+          "description": "The data consumption regarding 147-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "147"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "148",
+          "name": "148",
+          "description": "The data consumption regarding 148-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "148"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "149",
+          "name": "149",
+          "description": "The data consumption regarding 149-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "149"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "150",
+          "name": "150",
+          "description": "The data consumption regarding 150-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "150"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "151",
+          "name": "151",
+          "description": "The data consumption regarding 151-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "151"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "152",
+          "name": "152",
+          "description": "The data consumption regarding 152-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "152"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "153",
+          "name": "153",
+          "description": "The data consumption regarding 153-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "153"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "154",
+          "name": "154",
+          "description": "The data consumption regarding 154-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "154"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "155",
+          "name": "155",
+          "description": "The data consumption regarding 155-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "155"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "156",
+          "name": "156",
+          "description": "The data consumption regarding 156-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "156"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "157",
+          "name": "157",
+          "description": "The data consumption regarding 157-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "157"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "158",
+          "name": "158",
+          "description": "The data consumption regarding 158-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "158"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "159",
+          "name": "159",
+          "description": "The data consumption regarding 159-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "159"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "160",
+          "name": "160",
+          "description": "The data consumption regarding 160-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "160"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "161",
+          "name": "161",
+          "description": "The data consumption regarding 161-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "161"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "162",
+          "name": "162",
+          "description": "The data consumption regarding 162-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "162"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "163",
+          "name": "163",
+          "description": "The data consumption regarding 163-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "163"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "164",
+          "name": "164",
+          "description": "The data consumption regarding 164-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "164"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "165",
+          "name": "165",
+          "description": "The data consumption regarding 165-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "165"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "166",
+          "name": "166",
+          "description": "The data consumption regarding 166-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "166"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "167",
+          "name": "167",
+          "description": "The data consumption regarding 167-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "167"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "168",
+          "name": "168",
+          "description": "The data consumption regarding 168-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "168"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "169",
+          "name": "169",
+          "description": "The data consumption regarding 169-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "169"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "170",
+          "name": "170",
+          "description": "The data consumption regarding 170-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "170"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "171",
+          "name": "171",
+          "description": "The data consumption regarding 171-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "171"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "172",
+          "name": "172",
+          "description": "The data consumption regarding 172-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "172"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "173",
+          "name": "173",
+          "description": "The data consumption regarding 173-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "173"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "174",
+          "name": "174",
+          "description": "The data consumption regarding 174-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "174"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "175",
+          "name": "175",
+          "description": "The data consumption regarding 175-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "175"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "176",
+          "name": "176",
+          "description": "The data consumption regarding 176-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "176"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "177",
+          "name": "177",
+          "description": "The data consumption regarding 177-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "177"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "178",
+          "name": "178",
+          "description": "The data consumption regarding 178-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "178"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "179",
+          "name": "179",
+          "description": "The data consumption regarding 179-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "179"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "180",
+          "name": "180",
+          "description": "The data consumption regarding 180-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "180"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "181",
+          "name": "181",
+          "description": "The data consumption regarding 181-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "181"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "182",
+          "name": "182",
+          "description": "The data consumption regarding 182-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "182"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "183",
+          "name": "183",
+          "description": "The data consumption regarding 183-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "183"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "184",
+          "name": "184",
+          "description": "The data consumption regarding 184-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "184"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "185",
+          "name": "185",
+          "description": "The data consumption regarding 185-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "185"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "186",
+          "name": "186",
+          "description": "The data consumption regarding 186-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "186"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "187",
+          "name": "187",
+          "description": "The data consumption regarding 187-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "187"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "188",
+          "name": "188",
+          "description": "The data consumption regarding 188-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "188"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "189",
+          "name": "189",
+          "description": "The data consumption regarding 189-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "189"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "190",
+          "name": "190",
+          "description": "The data consumption regarding 190-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "190"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "191",
+          "name": "191",
+          "description": "The data consumption regarding 191-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "191"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "192",
+          "name": "192",
+          "description": "The data consumption regarding 192-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "192"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "193",
+          "name": "193",
+          "description": "The data consumption regarding 193-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "193"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "194",
+          "name": "194",
+          "description": "The data consumption regarding 194-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "194"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "195",
+          "name": "195",
+          "description": "The data consumption regarding 195-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "195"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "196",
+          "name": "196",
+          "description": "The data consumption regarding 196-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "196"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "197",
+          "name": "197",
+          "description": "The data consumption regarding 197-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "197"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "198",
+          "name": "198",
+          "description": "The data consumption regarding 198-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "198"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "199",
+          "name": "199",
+          "description": "The data consumption regarding 199-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "199"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "200",
+          "name": "200",
+          "description": "The data consumption regarding 200-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "200"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "201",
+          "name": "201",
+          "description": "The data consumption regarding 201-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "201"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "202",
+          "name": "202",
+          "description": "The data consumption regarding 202-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "202"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "203",
+          "name": "203",
+          "description": "The data consumption regarding 203-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "203"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "204",
+          "name": "204",
+          "description": "The data consumption regarding 204-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "204"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "205",
+          "name": "205",
+          "description": "The data consumption regarding 205-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "205"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "206",
+          "name": "206",
+          "description": "The data consumption regarding 206-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "206"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "207",
+          "name": "207",
+          "description": "The data consumption regarding 207-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "207"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "208",
+          "name": "208",
+          "description": "The data consumption regarding 208-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "208"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "209",
+          "name": "209",
+          "description": "The data consumption regarding 209-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "209"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "210",
+          "name": "210",
+          "description": "The data consumption regarding 210-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "210"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "211",
+          "name": "211",
+          "description": "The data consumption regarding 211-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "211"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "212",
+          "name": "212",
+          "description": "The data consumption regarding 212-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "212"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "213",
+          "name": "213",
+          "description": "The data consumption regarding 213-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "213"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "214",
+          "name": "214",
+          "description": "The data consumption regarding 214-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "214"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "215",
+          "name": "215",
+          "description": "The data consumption regarding 215-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "215"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "216",
+          "name": "216",
+          "description": "The data consumption regarding 216-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "216"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "217",
+          "name": "217",
+          "description": "The data consumption regarding 217-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "217"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "218",
+          "name": "218",
+          "description": "The data consumption regarding 218-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "218"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "219",
+          "name": "219",
+          "description": "The data consumption regarding 219-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "219"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "220",
+          "name": "220",
+          "description": "The data consumption regarding 220-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "220"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "221",
+          "name": "221",
+          "description": "The data consumption regarding 221-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "221"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "222",
+          "name": "222",
+          "description": "The data consumption regarding 222-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "222"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "223",
+          "name": "223",
+          "description": "The data consumption regarding 223-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "223"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "224",
+          "name": "224",
+          "description": "The data consumption regarding 224-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "224"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "225",
+          "name": "225",
+          "description": "The data consumption regarding 225-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "225"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "226",
+          "name": "226",
+          "description": "The data consumption regarding 226-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "226"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "227",
+          "name": "227",
+          "description": "The data consumption regarding 227-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "227"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "228",
+          "name": "228",
+          "description": "The data consumption regarding 228-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "228"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "229",
+          "name": "229",
+          "description": "The data consumption regarding 229-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "229"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "230",
+          "name": "230",
+          "description": "The data consumption regarding 230-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "230"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "231",
+          "name": "231",
+          "description": "The data consumption regarding 231-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "231"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "232",
+          "name": "232",
+          "description": "The data consumption regarding 232-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "232"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "233",
+          "name": "233",
+          "description": "The data consumption regarding 233-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "233"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "234",
+          "name": "234",
+          "description": "The data consumption regarding 234-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "234"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "235",
+          "name": "235",
+          "description": "The data consumption regarding 235-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "235"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "236",
+          "name": "236",
+          "description": "The data consumption regarding 236-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "236"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "237",
+          "name": "237",
+          "description": "The data consumption regarding 237-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "237"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "238",
+          "name": "238",
+          "description": "The data consumption regarding 238-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "238"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "239",
+          "name": "239",
+          "description": "The data consumption regarding 239-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "239"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "240",
+          "name": "240",
+          "description": "The data consumption regarding 240-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "240"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "241",
+          "name": "241",
+          "description": "The data consumption regarding 241-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "241"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "242",
+          "name": "242",
+          "description": "The data consumption regarding 242-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "242"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "243",
+          "name": "243",
+          "description": "The data consumption regarding 243-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "243"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "244",
+          "name": "244",
+          "description": "The data consumption regarding 244-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "244"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "245",
+          "name": "245",
+          "description": "The data consumption regarding 245-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "245"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "246",
+          "name": "246",
+          "description": "The data consumption regarding 246-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "246"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "247",
+          "name": "247",
+          "description": "The data consumption regarding 247-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "247"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "248",
+          "name": "248",
+          "description": "The data consumption regarding 248-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "248"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "249",
+          "name": "249",
+          "description": "The data consumption regarding 249-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "249"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "250",
+          "name": "250",
+          "description": "The data consumption regarding 250-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "250"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "251",
+          "name": "251",
+          "description": "The data consumption regarding 251-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "251"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "252",
+          "name": "252",
+          "description": "The data consumption regarding 252-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "252"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "253",
+          "name": "253",
+          "description": "The data consumption regarding 253-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "253"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "254",
+          "name": "254",
+          "description": "The data consumption regarding 254-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "254"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "255",
+          "name": "255",
+          "description": "The data consumption regarding 255-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "255"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "256",
+          "name": "256",
+          "description": "The data consumption regarding 256-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "256"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "257",
+          "name": "257",
+          "description": "The data consumption regarding 257-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "257"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "258",
+          "name": "258",
+          "description": "The data consumption regarding 258-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "258"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "259",
+          "name": "259",
+          "description": "The data consumption regarding 259-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "259"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "260",
+          "name": "260",
+          "description": "The data consumption regarding 260-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "260"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "261",
+          "name": "261",
+          "description": "The data consumption regarding 261-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "261"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "262",
+          "name": "262",
+          "description": "The data consumption regarding 262-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "262"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "263",
+          "name": "263",
+          "description": "The data consumption regarding 263-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "263"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "264",
+          "name": "264",
+          "description": "The data consumption regarding 264-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "264"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "265",
+          "name": "265",
+          "description": "The data consumption regarding 265-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "265"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "266",
+          "name": "266",
+          "description": "The data consumption regarding 266-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "266"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "267",
+          "name": "267",
+          "description": "The data consumption regarding 267-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "267"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "268",
+          "name": "268",
+          "description": "The data consumption regarding 268-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "268"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "269",
+          "name": "269",
+          "description": "The data consumption regarding 269-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "269"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "270",
+          "name": "270",
+          "description": "The data consumption regarding 270-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "270"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "271",
+          "name": "271",
+          "description": "The data consumption regarding 271-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "271"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "272",
+          "name": "272",
+          "description": "The data consumption regarding 272-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "272"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "273",
+          "name": "273",
+          "description": "The data consumption regarding 273-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "273"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "274",
+          "name": "274",
+          "description": "The data consumption regarding 274-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "274"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "275",
+          "name": "275",
+          "description": "The data consumption regarding 275-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "275"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "276",
+          "name": "276",
+          "description": "The data consumption regarding 276-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "276"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "277",
+          "name": "277",
+          "description": "The data consumption regarding 277-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "277"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "278",
+          "name": "278",
+          "description": "The data consumption regarding 278-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "278"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "279",
+          "name": "279",
+          "description": "The data consumption regarding 279-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "279"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "280",
+          "name": "280",
+          "description": "The data consumption regarding 280-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "280"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "281",
+          "name": "281",
+          "description": "The data consumption regarding 281-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "281"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "282",
+          "name": "282",
+          "description": "The data consumption regarding 282-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "282"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "283",
+          "name": "283",
+          "description": "The data consumption regarding 283-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "283"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "284",
+          "name": "284",
+          "description": "The data consumption regarding 284-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "284"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "285",
+          "name": "285",
+          "description": "The data consumption regarding 285-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "285"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "286",
+          "name": "286",
+          "description": "The data consumption regarding 286-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "286"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "287",
+          "name": "287",
+          "description": "The data consumption regarding 287-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "287"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "288",
+          "name": "288",
+          "description": "The data consumption regarding 288-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "288"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "289",
+          "name": "289",
+          "description": "The data consumption regarding 289-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "289"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "290",
+          "name": "290",
+          "description": "The data consumption regarding 290-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "290"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "291",
+          "name": "291",
+          "description": "The data consumption regarding 291-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "291"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "292",
+          "name": "292",
+          "description": "The data consumption regarding 292-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "292"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "293",
+          "name": "293",
+          "description": "The data consumption regarding 293-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "293"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "294",
+          "name": "294",
+          "description": "The data consumption regarding 294-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "294"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "295",
+          "name": "295",
+          "description": "The data consumption regarding 295-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "295"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "296",
+          "name": "296",
+          "description": "The data consumption regarding 296-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "296"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "297",
+          "name": "297",
+          "description": "The data consumption regarding 297-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "297"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "298",
+          "name": "298",
+          "description": "The data consumption regarding 298-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "298"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "299",
+          "name": "299",
+          "description": "The data consumption regarding 299-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "299"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "300",
+          "name": "300",
+          "description": "The data consumption regarding 300-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "300"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "301",
+          "name": "301",
+          "description": "The data consumption regarding 301-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "301"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "302",
+          "name": "302",
+          "description": "The data consumption regarding 302-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "302"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "303",
+          "name": "303",
+          "description": "The data consumption regarding 303-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "303"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "304",
+          "name": "304",
+          "description": "The data consumption regarding 304-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "304"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "305",
+          "name": "305",
+          "description": "The data consumption regarding 305-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "305"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "306",
+          "name": "306",
+          "description": "The data consumption regarding 306-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "306"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "307",
+          "name": "307",
+          "description": "The data consumption regarding 307-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "307"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "308",
+          "name": "308",
+          "description": "The data consumption regarding 308-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "308"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "309",
+          "name": "309",
+          "description": "The data consumption regarding 309-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "309"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "310",
+          "name": "310",
+          "description": "The data consumption regarding 310-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "310"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "311",
+          "name": "311",
+          "description": "The data consumption regarding 311-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "311"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "312",
+          "name": "312",
+          "description": "The data consumption regarding 312-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "312"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "313",
+          "name": "313",
+          "description": "The data consumption regarding 313-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "313"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "314",
+          "name": "314",
+          "description": "The data consumption regarding 314-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "314"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "315",
+          "name": "315",
+          "description": "The data consumption regarding 315-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "315"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "316",
+          "name": "316",
+          "description": "The data consumption regarding 316-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "316"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "317",
+          "name": "317",
+          "description": "The data consumption regarding 317-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "317"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "318",
+          "name": "318",
+          "description": "The data consumption regarding 318-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "318"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "319",
+          "name": "319",
+          "description": "The data consumption regarding 319-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "319"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "320",
+          "name": "320",
+          "description": "The data consumption regarding 320-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "320"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "321",
+          "name": "321",
+          "description": "The data consumption regarding 321-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "321"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "322",
+          "name": "322",
+          "description": "The data consumption regarding 322-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "322"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "323",
+          "name": "323",
+          "description": "The data consumption regarding 323-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "323"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "324",
+          "name": "324",
+          "description": "The data consumption regarding 324-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "324"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "325",
+          "name": "325",
+          "description": "The data consumption regarding 325-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "325"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "326",
+          "name": "326",
+          "description": "The data consumption regarding 326-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "326"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "327",
+          "name": "327",
+          "description": "The data consumption regarding 327-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "327"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "328",
+          "name": "328",
+          "description": "The data consumption regarding 328-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "328"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "329",
+          "name": "329",
+          "description": "The data consumption regarding 329-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "329"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "330",
+          "name": "330",
+          "description": "The data consumption regarding 330-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "330"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "331",
+          "name": "331",
+          "description": "The data consumption regarding 331-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "331"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "332",
+          "name": "332",
+          "description": "The data consumption regarding 332-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "332"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "333",
+          "name": "333",
+          "description": "The data consumption regarding 333-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "333"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "334",
+          "name": "334",
+          "description": "The data consumption regarding 334-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "334"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "335",
+          "name": "335",
+          "description": "The data consumption regarding 335-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "335"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "336",
+          "name": "336",
+          "description": "The data consumption regarding 336-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "336"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "337",
+          "name": "337",
+          "description": "The data consumption regarding 337-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "337"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "338",
+          "name": "338",
+          "description": "The data consumption regarding 338-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "338"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "339",
+          "name": "339",
+          "description": "The data consumption regarding 339-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "339"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "340",
+          "name": "340",
+          "description": "The data consumption regarding 340-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "340"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "341",
+          "name": "341",
+          "description": "The data consumption regarding 341-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "341"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "342",
+          "name": "342",
+          "description": "The data consumption regarding 342-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "342"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "343",
+          "name": "343",
+          "description": "The data consumption regarding 343-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "343"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "344",
+          "name": "344",
+          "description": "The data consumption regarding 344-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "344"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "345",
+          "name": "345",
+          "description": "The data consumption regarding 345-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "345"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "346",
+          "name": "346",
+          "description": "The data consumption regarding 346-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "346"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "347",
+          "name": "347",
+          "description": "The data consumption regarding 347-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "347"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "348",
+          "name": "348",
+          "description": "The data consumption regarding 348-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "348"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "349",
+          "name": "349",
+          "description": "The data consumption regarding 349-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "349"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "350",
+          "name": "350",
+          "description": "The data consumption regarding 350-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "350"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "351",
+          "name": "351",
+          "description": "The data consumption regarding 351-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "351"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "352",
+          "name": "352",
+          "description": "The data consumption regarding 352-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "352"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "353",
+          "name": "353",
+          "description": "The data consumption regarding 353-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "353"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "354",
+          "name": "354",
+          "description": "The data consumption regarding 354-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "354"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "355",
+          "name": "355",
+          "description": "The data consumption regarding 355-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "355"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "356",
+          "name": "356",
+          "description": "The data consumption regarding 356-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "356"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "357",
+          "name": "357",
+          "description": "The data consumption regarding 357-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "357"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "358",
+          "name": "358",
+          "description": "The data consumption regarding 358-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "358"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "359",
+          "name": "359",
+          "description": "The data consumption regarding 359-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "359"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "360",
+          "name": "360",
+          "description": "The data consumption regarding 360-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "360"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "361",
+          "name": "361",
+          "description": "The data consumption regarding 361-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "361"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "362",
+          "name": "362",
+          "description": "The data consumption regarding 362-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "362"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "363",
+          "name": "363",
+          "description": "The data consumption regarding 363-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "363"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "364",
+          "name": "364",
+          "description": "The data consumption regarding 364-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "364"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "365",
+          "name": "365",
+          "description": "The data consumption regarding 365-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "365"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "366",
+          "name": "366",
+          "description": "The data consumption regarding 366-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "366"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "367",
+          "name": "367",
+          "description": "The data consumption regarding 367-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "367"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "368",
+          "name": "368",
+          "description": "The data consumption regarding 368-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "368"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "369",
+          "name": "369",
+          "description": "The data consumption regarding 369-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_train"
+            },
+            "extract": {
+              "column": "369"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "energy_consumption_table_test",
+      "name": "energy_consumption_table_test",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "delta_time_demand_test",
+          "name": "delta_time",
+          "description": "Time corresponding to the energy consumption in seconds",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "delta_time"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "370",
+          "name": "370",
+          "description": "The data consumption regarding 370-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "370"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "371",
+          "name": "371",
+          "description": "The data consumption regarding 371-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "371"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "372",
+          "name": "372",
+          "description": "The data consumption regarding 372-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "372"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "373",
+          "name": "373",
+          "description": "The data consumption regarding 373-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "373"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "374",
+          "name": "374",
+          "description": "The data consumption regarding 374-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "374"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "375",
+          "name": "375",
+          "description": "The data consumption regarding 375-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "375"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "376",
+          "name": "376",
+          "description": "The data consumption regarding 376-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "376"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "377",
+          "name": "377",
+          "description": "The data consumption regarding 377-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "377"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "378",
+          "name": "378",
+          "description": "The data consumption regarding 378-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "378"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "379",
+          "name": "379",
+          "description": "The data consumption regarding 379-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "379"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "380",
+          "name": "380",
+          "description": "The data consumption regarding 380-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "380"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "381",
+          "name": "381",
+          "description": "The data consumption regarding 381-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "381"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "382",
+          "name": "382",
+          "description": "The data consumption regarding 382-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "382"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "383",
+          "name": "383",
+          "description": "The data consumption regarding 383-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "383"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "384",
+          "name": "384",
+          "description": "The data consumption regarding 384-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "384"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "385",
+          "name": "385",
+          "description": "The data consumption regarding 385-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "385"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "386",
+          "name": "386",
+          "description": "The data consumption regarding 386-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "386"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "387",
+          "name": "387",
+          "description": "The data consumption regarding 387-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "387"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "388",
+          "name": "388",
+          "description": "The data consumption regarding 388-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "388"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "389",
+          "name": "389",
+          "description": "The data consumption regarding 389-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "389"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "390",
+          "name": "390",
+          "description": "The data consumption regarding 390-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "390"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "391",
+          "name": "391",
+          "description": "The data consumption regarding 391-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "391"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "392",
+          "name": "392",
+          "description": "The data consumption regarding 392-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "392"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "393",
+          "name": "393",
+          "description": "The data consumption regarding 393-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "393"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "394",
+          "name": "394",
+          "description": "The data consumption regarding 394-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "394"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "395",
+          "name": "395",
+          "description": "The data consumption regarding 395-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "395"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "396",
+          "name": "396",
+          "description": "The data consumption regarding 396-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "396"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "397",
+          "name": "397",
+          "description": "The data consumption regarding 397-th house",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_demands_test"
+            },
+            "extract": {
+              "column": "397"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "energy_generation_tables",
+      "name": "energy_generation_tables",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "delta_time_generation",
+          "name": "delta_time",
+          "description": "Time corresponding to the hourly energy generation",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_generation"
+            },
+            "extract": {
+              "column": "delta_time"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "pv",
+          "name": "pv",
+          "description": "Energy generation",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_generation"
+            },
+            "extract": {
+              "column": "PV"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "timestamp_generation",
+          "name": "timestamp",
+          "description": "Timestamp",
+          "dataType": "sc:Date",
+          "source": {
+            "fileSet": {
+              "@id": "energy_generation"
+            },
+            "extract": {
+              "column": "timestamp"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "energy_market_tables",
+      "name": "energy_market_tables",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "delta_time_market",
+          "name": "delta_time",
+          "description": "Time corresponding to the hourly energy price",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_prices"
+            },
+            "extract": {
+              "column": "delta_time"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "ask",
+          "name": "ask",
+          "description": "Energy cost price",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_prices"
+            },
+            "extract": {
+              "column": "ask"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "bid",
+          "name": "bid",
+          "description": "Energy sell price",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "energy_prices"
+            },
+            "extract": {
+              "column": "bid"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "timestamp_market",
+          "name": "timestamp",
+          "description": "Timestamp",
+          "dataType": "sc:Date",
+          "source": {
+            "fileSet": {
+              "@id": "energy_prices"
+            },
+            "extract": {
+              "column": "timestamp"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "temp_amb_tables",
+      "name": "temp_amb_tables",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "delta_time",
+          "name": "delta_time",
+          "description": "Time corresponding to the daily ambient temperature",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "ambient_temperature"
+            },
+            "extract": {
+              "column": "delta_time"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "temp",
+          "name": "temp_amb",
+          "description": "Ambient Temperature [K]",
+          "dataType": "sc:Float",
+          "source": {
+            "fileSet": {
+              "@id": "ambient_temperature"
+            },
+            "extract": {
+              "column": "temp_amb"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "timestamp_temp_amb",
+          "name": "timestamp",
+          "description": "Timestamp",
+          "dataType": "sc:Date",
+          "source": {
+            "fileSet": {
+              "@id": "ambient_temperature"
+            },
+            "extract": {
+              "column": "timestamp"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

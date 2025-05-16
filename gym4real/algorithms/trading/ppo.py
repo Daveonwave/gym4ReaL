@@ -17,7 +17,7 @@ import seaborn as sns
 
 
 
-def train_dqn(args, train_env_params, eval_env_params, test_env_params, train = True):
+def train_dqn(args, train_env_params, eval_env_params, test_env_params, train = False):
     base_directory = args['log_dir']
     if train is True:
         for seed in args['seeds']:
@@ -79,7 +79,8 @@ def train_dqn(args, train_env_params, eval_env_params, test_env_params, train = 
         model = PPO.load(os.path.join(logdir, "models/eval", "best_model"))
         models.append(model)
 
-    plot_folder = os.path.join(base_directory, "/{}/plots/".format(args['exp_name']))
+    plot_folder = os.path.join(base_directory, "{}/plots/".format(args['exp_name']))
+    print(base_directory, plot_folder)
     os.makedirs(plot_folder, exist_ok=True)
     evaluate_agent_with_baselines(models, train_env_params, plot_folder, None, 'Training', args['seeds'], 'PPO')
     evaluate_agent_with_baselines(models, eval_env_params, plot_folder, train_env.env_method("get_scaler")[0], 'Validation', args['seeds'], 'PPO')
@@ -91,6 +92,7 @@ def train_dqn(args, train_env_params, eval_env_params, test_env_params, train = 
 
 if __name__ == '__main__':
     # Example parameters
+
     args = {
         'exp_name': 'trading/ppo',
         'log_dir': "./logs",
@@ -107,11 +109,11 @@ if __name__ == '__main__':
         'save_model_as': 'ppo_10_eps',
         'seeds': [32517, 84029, 10473, 67288, 91352, 47605]
     }
-    
+    train = False
     # Example evaluation environment parameters
     train_env_params = parameter_generator(world_options='../../envs/trading/world_train.yaml')
     eval_env_params = parameter_generator(world_options='../../envs/trading/world_validation.yaml')
     test_env_params = parameter_generator(world_options='../../envs/trading/world_test.yaml')
 
 
-    train_dqn(train_env_params=train_env_params, eval_env_params=eval_env_params, test_env_params = test_env_params, args=args)
+    train_dqn(train_env_params=train_env_params, eval_env_params=eval_env_params, test_env_params = test_env_params, args=args, train=train)

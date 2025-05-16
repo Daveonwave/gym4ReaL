@@ -16,18 +16,20 @@ def extract_scalar(logdir, tag):
     return df
 
 
-algo_name = "PPO"
-base_dir = "/Users/giovannidispoto/Desktop/PhD/gym4ReaL_github/gym4ReaL/gym4real/algorithms/trading/logs/tensorboard/trading/ppo/trading/"
+algo_name = "DQN"
+base_dir = "./logs/tensorboard/trading/dqn/dqn_trading/dqn_1"
 rollout_merge = None
 eval_merge = None
+seeds = [32517, 84029, 10473, 67288, 91352, 47605]
+j = 0
 for dir in os.listdir(base_dir):
 
-    logdir = os.path.join(base_dir, dir, "ppo_trading", dir + "_1")
+    logdir = os.path.join(base_dir, dir)
 
     rollout_df = extract_scalar(logdir, "rollout/ep_rew_mean")
-    rollout_df = rollout_df.rename(columns={"rollout/ep_rew_mean": f'{dir.split("seed_")[1]}'})
+    rollout_df = rollout_df.rename(columns={"rollout/ep_rew_mean": f'{seeds[j]}'})
     eval_df = extract_scalar(logdir, "eval/mean_reward")
-    eval_df = eval_df.rename(columns={"eval/mean_reward": f'{dir.split("seed_")[1]}'})
+    eval_df = eval_df.rename(columns={"eval/mean_reward": f'{seeds[j]}'})
 
     if rollout_merge is None:
         rollout_merge = rollout_df
@@ -38,6 +40,7 @@ for dir in os.listdir(base_dir):
         eval_merge = eval_df
     else:
         eval_merge = pd.merge(eval_merge, eval_df, on="step", how="outer").sort_values("step")
+    j += 1
 
 plot_colors = sns.color_palette('colorblind')
 plt.figure(figsize=(10, 5))
