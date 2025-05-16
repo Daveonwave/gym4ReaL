@@ -86,7 +86,7 @@ In order to reproduce the results, open the notebooks in `examples/robofeeder/be
 
 To reproduce the results from scratch, launch this command from the main directory selecting the environment and the training parameters:
 ```bash
-python algorithms/robofeeder/ppo.py --env gym4real/robofeeder-planning --episodes 1000 --batch-size 64 --learning-rate 0.0003
+python gym4real/algorithms/robofeeder/ppo.py --env gym4real/robofeeder-planning --episodes 1000 --batch-size 64 --learning-rate 0.0003
 ```
 You can adjust the arguments (`--env`, `--episodes`, `--batch-size`, `--learning-rate`, etc.) as needed. See `ppo.py --help` for all available options.
 

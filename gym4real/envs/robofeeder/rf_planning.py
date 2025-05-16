@@ -57,7 +57,7 @@ class robotEnv(Env):
         self.curr_num_episode += 1
         self.rew = -1
 
-        if(action == self.IMAGE_NUM): # Reset
+        if(action == 0): # Reset
             self.rew = 0  
             for index in range(self.simulator.configs["NUMBER_OF_OBJECTS"]):
                 if (self.simulator.objPicked[index] == 0):                                      # If the object is not picked
@@ -71,11 +71,11 @@ class robotEnv(Env):
             return self.current_obs, self.rew, done,done, {}
         
         #if not vibration, the action is a pick action
-        result_ppo = self.ort_sess_ppo.run(None, {"input": self.current_obs[action].reshape(1,1,self.CROP_DIM,self.CROP_DIM)})[0][0] #get the vector of the action (x,y,rotation)
+        result_ppo = self.ort_sess_ppo.run(None, {"input": self.current_obs[action-1].reshape(1,1,self.CROP_DIM,self.CROP_DIM)})[0][0] #get the vector of the action (x,y,rotation)
 
         # Map the action: Switch from Pixel to World Coordinates and compute the rotation
         target_pos = (result_ppo[0:2])*self.CROP_DIM/2      #convert the action from [-1,1] to the dimension of the [-self.CROP_DIM/2: self.CROP_DIM/2]
-        target_pos = self.obsCenter[action] + target_pos    #trasform the action from local coordinates to global coordinates (pixel)        
+        target_pos = self.obsCenter[action-1] + target_pos    #trasform the action from local coordinates to global coordinates (pixel)        
         rotation = (result_ppo[2]+1)*np.pi/2                # Convert the rotation from [-1,1] to [0,pi]
         
         # Simulate the action
