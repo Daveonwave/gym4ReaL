@@ -9,9 +9,9 @@ The RoboFeeder environments simulate a robotic arm tasked with picking objects f
 - A Staubli TX2-60 robot with a simple gripper.
 - A box containing multiple objects to pick.
 - A virtual overhead camera for observation.
-- Optional image segmentation and object orientation features.
+- Optional object detection features.
 
-The environments are compatible with ROS2 Humble and leverage GPU acceleration for training.
+The environments are compatible leverage GPU acceleration for training.
 
 ## Conda Usage
 
@@ -34,21 +34,21 @@ The following environments are implemented in `gym4ReaL`:
 
 ### `RoboFeeder-v0`
 
-- **Observation Space:** RGB image from the overhead camera.
+- **Observation Space:** Cropped RGB image from the overhead camera, with the help of a pretrianed object dection neural network.
 - **Action Space:** Cartesian coordinates for the robot end-effector.
 - **Goal:** Pick an object based on visual input.
 
 ### `RoboFeeder-v1`
 
-- **Observation Space:** Segmented image of the target object (using a pre-trained segmentation model).
+- **Observation Space:** Full RGB image from the overhead camera.
 - **Action Space:** Cartesian coordinates for the robot end-effector.
-- **Goal:** Pick the object using segmentation to localize the target.
+- **Goal:** Pick an object based on visual input.
 
 ### `RoboFeeder-v2`
 
 - **Observation Space:** List of segmented images for all objects in the box.
 - **Action Space:** Index of the selected object and pick coordinates.
-- **Goal:** Select and pick the correctly oriented object.
+- **Goal:** Select and pick graspable object from the robot workspace.
 
 ## Usage
 
@@ -78,4 +78,15 @@ Environment parameters (e.g., camera resolution, robot workspace limits, number 
 
 ---
 
-For more details, refer to the official `gym4ReaL` documentation and code examples.
+
+## Reproducibility
+
+In order to reproduce the results, open the notebooks in `examples/robofeeder/benchmarks` folder and run the whole notebook depending on the selected environment.
+
+
+To reproduce the results from scratch, launch this command from the main directory selecting the environment and the training parameters:
+```bash
+python algorithms/robofeeder/ppo.py --env gym4real/robofeeder-planning --episodes 1000 --batch-size 64 --learning-rate 0.0003
+```
+You can adjust the arguments (`--env`, `--episodes`, `--batch-size`, `--learning-rate`, etc.) as needed. See `ppo.py --help` for all available options.
+

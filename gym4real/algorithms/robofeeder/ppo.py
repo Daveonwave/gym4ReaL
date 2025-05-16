@@ -12,6 +12,7 @@ from stable_baselines3.common.policies import BaseFeaturesExtractor
 import torch 
 import torch.nn as nn
 from gymnasium import spaces
+import argparse
 
 
 
@@ -98,7 +99,7 @@ def train_ppo(envs, args, model_file=None):
                     policy_kwargs=policy_kwargs,
                     )
         
-    model.learn(total_timesteps=5000,
+    model.learn(total_timesteps=args['n_episodes'] * args['n_envs'],
                 progress_bar=True,
                 tb_log_name="ppo_{}".format(args['exp_name']),
                 reset_num_timesteps=False,
@@ -108,27 +109,30 @@ def train_ppo(envs, args, model_file=None):
     print("######## TRAINING is Done ########")
 
 if __name__ == '__main__':
-    # Example parameters
-    args = {
-        'exp_name': 'robofeeder_planning_5k',
-        'n_episodes': 100,
-        'n_envs': 8,
-        'n_steps': 10,
-        'n_epochs': 8,
-        'n_batches': 128,
-        'verbose': 1,
-        'gamma': 0.99,
-        'learning_rate': 0.005,
-        'log_rate': 1,
-        'save_model_as': 'ppo_5k',
-    }
-    
-    config_params = "gym4real/envs/robofeeder/configuration.yaml"
+    parser = argparse.ArgumentParser(
+        description="Train PPO on RoboFeeder environment",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument('--exp_name', type=str, default='robofeeder_planning_5k', help='Experiment name for logging and saving models')
+    parser.add_argument('--n_episodes', type=int, default=100, help='Number of episodes to train')
+    parser.add_argument('--n_envs', type=int, default=8, help='Number of parallel environments')
+    parser.add_argument('--n_steps', type=int, default=10, help='Number of steps per environment per update')
+    parser.add_argument('--n_epochs', type=int, default=8, help='Number of epochs per update')
+    parser.add_argument('--n_batches', type=int, default=128, help='Batch size for training')
+    parser.add_argument('--verbose', type=int, default=1, help='Verbosity level')
+    parser.add_argument('--gamma', type=float, default=0.99, help='Discount factor')
+    parser.add_argument('--learning_rate', type=float, default=0.005, help='Learning rate')
+    parser.add_argument('--log_rate', type=int, default=1, help='Logging rate')
+    parser.add_argument('--save_model_as', type=str, default='ppo_5k', help='Filename to save the trained model')
+    parser.add_argument('--config_params', type=str, default="gym4real/envs/robofeeder/configuration.yaml", help='Path to environment configuration file')
+    parser.add_argument('--env_id', type=str, default="gym4real/robofeeder-planning", help='Environment ID')
+    parser.add_argument('--model_file', type=str, default=None, help='Path to a pre-trained model to resume training')
 
-    #envs = make_vec_env("gym4real/robofeeder-picking-v0", n_envs=args['n_envs'], env_kwargs={'config_file':config_params})    
-    envs = make_vec_env("gym4real/robofeeder-planning", n_envs=args['n_envs'], env_kwargs={'config_file':config_params}) 
+    args = vars(parser.parse_args())
 
-    train_ppo(envs=envs, args=args)
+    envs = make_vec_env(args['env_id'], n_envs=args['n_envs'], env_kwargs={'config_file': args['config_params']})
+
+    train_ppo(envs=envs, args=args, model_file=args['model_file'])
 
     envs.close()
     print("######## PPO is Done ########")
