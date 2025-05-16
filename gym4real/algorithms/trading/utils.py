@@ -55,6 +55,7 @@ def evaluate_agent_with_baselines(models, params, plot_folder, scaler, prefix, s
     # model = PPO("MlpPolicy", env, verbose=1, batch_size=115, policy_kwargs=dict(net_arch= dict(pi=[256, 256], vf=[256, 256])), gamma=0.99, n_steps=598*5, seed=seed, tensorboard_log=f"./ppo_trading_tensorboard/seed_{seed}")
     rewards_agents = []
     action_agents = []
+    daily_return_agent = []
     for model in models:
         env_agent = gym.make("gym4real/TradingEnv-v0",
                              **{'settings': params, 'scaler': scaler})
@@ -67,11 +68,11 @@ def evaluate_agent_with_baselines(models, params, plot_folder, scaler, prefix, s
             done = False
             action_episode = []
             obs, _ = env_agent.reset()
-
             while not done:
                 action, _ = model.predict(observation=np.array(obs, dtype=np.float32), deterministic=True)
                 action_episode.append(action)
                 next_obs, reward, terminated, truncated, info = env_agent.step(action)
+
                 rewards_agent.append(reward)
                 datetimes.append(info['datetime'])
                 obs = next_obs
@@ -83,6 +84,7 @@ def evaluate_agent_with_baselines(models, params, plot_folder, scaler, prefix, s
         action_agents.append(action_episodes)
 
     rewards_agents = np.asarray(rewards_agents)
+    daily_return_agent = np.asarray(daily_return_agent)
     env_bnh = gym.make("gym4real/TradingEnv-v0",
                        **{'settings': params, 'scaler': scaler})
 
@@ -162,11 +164,14 @@ def evaluate_multiple_agents_with_baselines(models, params, scaler, prefix, path
 
     rewards_agents = {}
     action_agents = {}
+    daily_return_agents = {}
     for k in models.keys():
         rewards_agents[k] = []
         action_agents[k] = []
+        daily_return_agents[k] = []
 
     for k in models.keys():
+        daily_return_agent_m = []
         for model in models[k]:
             env_agent = gym.make("gym4real/TradingEnv-v0",
                                  **{'settings': params, 'scaler': scaler})
@@ -174,54 +179,68 @@ def evaluate_multiple_agents_with_baselines(models, params, scaler, prefix, path
             action_episodes = []
             rewards_agent = []
             datetimes = []
+            daily_return_agent = []
             for _ in range(env_agent.unwrapped.get_trading_day_num()):
                 done = False
                 action_episode = []
                 obs, _ = env_agent.reset()
-
+                cum_rew_ep = 0
                 while not done:
                     action, _ = model.predict(observation=np.array(obs, dtype=np.float32), deterministic=True )
                     action_episode.append(action)
                     next_obs, reward, terminated, truncated, info = env_agent.step(action)
+                    cum_rew_ep += reward
                     rewards_agent.append(reward)
                     datetimes.append(info['datetime'])
                     obs = next_obs
                     done = terminated or truncated
-
+                daily_return_agent.append((cum_rew_ep / env_agent.unwrapped._capital)*100)
                 action_episodes.append(action_episode)
+
+            daily_return_agent_m.append(daily_return_agent)
 
             rewards_agents[k].append(rewards_agent)
             action_agents[k].append(action_episodes)
 
         rewards_agents[k] = np.asarray(rewards_agents[k])
+        daily_return_agents[k] = np.asarray(daily_return_agent_m).mean(0)
 
     env_bnh = gym.make("gym4real/TradingEnv-v0",
                        **{'settings': params, 'scaler': scaler})
 
     rewards_bnh = []
+    daily_return_long = []
     for _ in range(env_bnh.unwrapped.get_trading_day_num()):
         done = False
         env_bnh.reset()
-        #print(env_bnh.unwrapped._day)
+        cum_rew_ep = 0
         while not done:
             next_obs, reward, terminated, truncated, _ = env_bnh.step(2)
+            cum_rew_ep += reward
             rewards_bnh.append(reward)
             done = terminated or truncated
+        daily_return_long.append((cum_rew_ep/ env_agent.unwrapped._capital)*100)
+
+    daily_return_long = np.asarray(daily_return_long)
 
     env_snh = gym.make("gym4real/TradingEnv-v0",
                        **{'settings': params, 'scaler': scaler})
 
     rewards_snh = []
+    daily_return_short = []
     for _ in range(env_snh.unwrapped.get_trading_day_num()):
         done = False
         env_snh.reset()
-        #print(env_snh.unwrapped._day)
+        cum_rew_ep = 0
         while not done:
             next_obs, reward, terminated, truncated, _ = env_snh.step(0)
+            cum_rew_ep += reward
             rewards_snh.append(reward)
             done = terminated or truncated
 
+        daily_return_short.append((cum_rew_ep/ env_agent.unwrapped._capital)*100)
 
+    daily_return_short = np.asarray(daily_return_short)
     rewards_bnh = np.asarray(rewards_bnh)
     rewards_snh = np.asarray(rewards_snh)
 
@@ -249,7 +268,27 @@ def evaluate_multiple_agents_with_baselines(models, params, scaler, prefix, path
     if path is None:
         plt.show()
     else:
-        plt.savefig(path)
+        plt.savefig(os.path.join(path, f"ppo_dqn_{prefix.lower()}_trading.pdf"))
+
+    daily_return_agents['B&H'] = daily_return_long
+    daily_return_agents['S&H'] = daily_return_short
+    plot_data = pd.DataFrame(daily_return_agents)
+    plot_data = plot_data.melt(var_name='Strategy', value_name='Daily P&L')
+    palette = {}
+    for k in models.keys():
+        palette[k] = alg_color[k.lower()]
+
+    palette["B&H"] = alg_color['b&h']
+    palette["S&H"] = alg_color['s&h']
+    ### Boxplot
+    plt.figure()
+    sns.boxplot(x = "Strategy", y = "Daily P&L", data = plot_data, palette=palette)
+    plt.tight_layout()
+    if path is None:
+        plt.show()
+    else:
+        plt.savefig(os.path.join(path, f"ppo_dqn_{prefix.lower()}_boxplot_trading.pdf"))
+
 
 
 class EvalCallbackSharpRatio(BaseCallback):
