@@ -20,7 +20,7 @@ def train_dqn(args, train_env_params, eval_env_params, test_env_params, train=Tr
     base_directory = args['log_dir']
     if train is True:
         for seed in args['seeds']:
-            logdir = "./logs/" + args['exp_name']
+            logdir = "/logs/" + args['exp_name']
             os.makedirs(logdir, exist_ok=True)
             train_env = make_vec_env("gym4real/TradingEnv-v0", n_envs=args['n_envs'],
                                      env_kwargs={'settings': train_env_params, 'seed': seed})
@@ -83,7 +83,7 @@ def train_dqn(args, train_env_params, eval_env_params, test_env_params, train=Tr
         logdir = os.path.join(base_directory, args['exp_name'] + f"_seed_{seed}")
         model = DQN.load(os.path.join(logdir, "models/eval", "best_model"))
         models.append(model)
-    plot_folder = "./logs/{}/plots/".format(args['exp_name'])
+    plot_folder = "/logs/{}/plots/".format(args['exp_name'])
     os.makedirs(plot_folder, exist_ok=True)
     evaluate_agent_with_baselines(models, train_env_params, plot_folder, None, 'Train', args['seeds'], 'DQN')
     evaluate_agent_with_baselines(models, eval_env_params, plot_folder, train_env.env_method("get_scaler")[0], 'Validation', args['seeds'], 'DQN')
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     args = {
         'exp_name': 'trading/dqn',
         'n_episodes': 30,
-        'log_dir': "./logs",
+        'log_dir': "gym4real/algorithms/trading/logs",
         'n_envs': 6,
         'policy_kwargs': dict(
             net_arch=[512, 512]
@@ -116,9 +116,9 @@ if __name__ == '__main__':
     }
     train = True
     # Example evaluation environment parameters
-    train_env_params = parameter_generator(world_options='../../envs/trading/world_train.yaml')
-    eval_env_params = parameter_generator(world_options='../../envs/trading/world_validation.yaml')
-    test_env_params = parameter_generator(world_options='../../envs/trading/world_test.yaml')
+    train_env_params = parameter_generator(world_options='gym4real/envs/trading/world_train.yaml')
+    eval_env_params = parameter_generator(world_options='gym4real/envs/trading/world_validation.yaml')
+    test_env_params = parameter_generator(world_options='gym4real/envs/trading/world_test.yaml')
 
 
     train_dqn(train_env_params=train_env_params, eval_env_params=eval_env_params,test_env_params=test_env_params, args=args, train=train)

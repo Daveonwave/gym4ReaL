@@ -10,4 +10,4 @@ seaborn==0.13.2
 rich==14.0.0
 matplotlib==3.10.1
 matplotlib-inline==0.1.7
-
+jupyter==1.1.1
