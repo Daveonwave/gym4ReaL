@@ -10,6 +10,15 @@ conda create -n env-name python=3.12
 
 ```bash
 pip install -r requirements.txt
-pip install -r  gym4real/envs/elevator/requirements.txt
-
 ```
+
+## Reproducibility
+
+A tutorial from training your own RL algorithm refer to `examples/elevator/training-tutorial.ipynb`.
+To obtain the trained models presented in the paper launch this command from the main directory.
+
+```bash
+python gym4real/algorithms/elevator/[sarsa|qlearning].py
+```
+
+To reproduce the results, open the notebook in `examples/elevator/benchmarks.ipynb` and run the whole notebook.

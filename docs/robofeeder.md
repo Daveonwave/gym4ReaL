@@ -28,7 +28,6 @@ pip install -r requirements.txt
 pip install -r gym4real/envs/robofeeder/requirements.txt
 ```
 
-
 ## RoboFeeder Environments
 
 The following environments are implemented in `gym4ReaL`:

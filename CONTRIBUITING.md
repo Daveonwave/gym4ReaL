@@ -21,21 +21,8 @@ Click the **Fork** button at the top right of the [gym4ReaL GitHub page](https:/
 ### 2. Clone Your Fork
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/gym4ReaL.git
+git clone https://github.com/Daveonwave/gym4ReaL.git
 cd gym4ReaL
-```
-
-### 3. Create a virtual env (with venv or conda)
-
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows use: venv\Scripts\activate
-```
-
-### 4. Install dependencies
-
-```bash
-pip install -e ".[dev]"
 ```
 
 ## Project Structure
