@@ -16,7 +16,7 @@ from skrl.utils import set_seed
 from gymnasium.wrappers import RecordEpisodeStatistics
 
 
-from gym4real.envs.dam.gym_env_lake import LakeEnv
+from gym4real.envs.dam.env import DamEnv
 from gym4real.envs.dam.utils import parameter_generator
 
 from gymnasium.wrappers import NormalizeObservation, NormalizeReward, RescaleAction, TransformReward, TransformObservation
@@ -83,17 +83,19 @@ class Value(DeterministicMixin, Model):
         return self.net(inputs["states"]), {}
 
 
-def train_ppo(params, args, eval_env_params, device='gpu'):
+def train_ppo(params, args, eval_env_params, device='cuda'):
 
     set_seed(args.get('seed', 123))
 
-    env = gym.make_vec('gym4real/dam-v0', num_envs=args['n_envs'], wrappers=[my_wrap_env], vectorization_mode="sync", settings=params)
+    env = gym.make('gym4real/dam-v0', settings=params)
+    env = my_wrap_env(env, normalize_reward=False, rescale_reward=False)
     env = wrap_env(env)
 
-    eval_env = my_wrap_env(LakeEnv(eval_env_params), normalize_reward=False, rescale_reward=False)
+    eval_env = DamEnv(eval_env_params)
+    eval_env = my_wrap_env(eval_env, normalize_reward=False, rescale_reward=False)
     eval_env = wrap_env(eval_env)
 
-    memory = RandomMemory(memory_size=2048, num_envs=env.num_envs, device=device)
+    memory = RandomMemory(memory_size=args['rollouts'], num_envs=env.num_envs, device=device)
 
     models = {}
     models["policy"] = Policy(env.observation_space, env.action_space, device, net_arch=args['net_arch'], initial_log_std=args['initial_log_std'])#, clip_actions=True)
@@ -124,7 +126,7 @@ def train_ppo(params, args, eval_env_params, device='gpu'):
     # logging to TensorBoard and write checkpoints (in timesteps)
     cfg["experiment"]["write_interval"] = 500
     cfg["experiment"]["checkpoint_interval"] = 500
-    cfg["experiment"]["directory"] = "runs/torch/lake"
+    cfg["experiment"]["directory"] = args.get('save_dir', "dam/runs")
 
     agent = PPO(models=models,
                 memory=memory,
@@ -146,19 +148,17 @@ def train_ppo(params, args, eval_env_params, device='gpu'):
     sep_reward_cumul = {'overflow_reward': 0.,
                         'daily_deficit_reward': 0.,
                         'wasted_water_reward': 0.,
-                        'clipping_reward': 0.}
+                        'clipping_reward': 0.,
+                        'starving_reward': 0.}
 
     agent.set_mode("eval")
 
     with torch.no_grad():
 
-        for i in range(365*5):
+        for i in range(365*13):
             output = agent.act(obs, i, 0)
             act = output[-1]["mean_actions"]
-            obs_old = obs
             obs, tot_reward, terminated, truncated, info = eval_env.step(act)
-
-            print(f"{info['weighted_reward']['overflow_reward']}\t\t{tot_reward}\t\t{obs_old}\t\t{info['action']}\t\t{info['demand']}")
 
             rew_cumul += tot_reward
             for key in sep_reward_cumul.keys():
@@ -172,16 +172,15 @@ def train_ppo(params, args, eval_env_params, device='gpu'):
 if __name__ == '__main__':
     # Example parameters
     args = {
-        'training_timesteps': 50000,
+        'training_timesteps': 200000,
         'n_envs': 5,
         'mini_batches': 32,
         'learning_epochs': 10,
         'rollouts': 2048,
         'discount_factor': 0.995,
-        'verbose': 1,
         'gamma': 0.995,
         'ent_coef': 0.,
-        'learning_rate': 1e-5,
+        'learning_rate': 8e-6,
         'net_arch': [16, 16],
         'initial_log_std': -0.5,
         'seed': 123,
@@ -196,4 +195,4 @@ if __name__ == '__main__':
         world_options='/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/envs/dam/world_test.yaml',
         lake_params='/media/samuele/Disco/PycharmProjectsUbuntu/gym4ReaL/gym4real/envs/dam/lake.yaml')
 
-    train_ppo(params, args, eval_params, 'cuda')
+    train_ppo(params, args, eval_params)

@@ -12,7 +12,7 @@ from gym4real.envs.dam.lake import Lake
 
 from collections import OrderedDict
 
-class LakeEnv(Env):
+class DamEnv(Env):
     """
     An OpenAI Gym environment for simulating the management of a lake's water resources.
 
