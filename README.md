@@ -1,8 +1,8 @@
-# Gym4ReaL: Reinforcement Learning Environments for Real-World Problems
+# Gym4ReaL: A Suite for Benchmarking Real-World Reinforcement Learning
 
-The lack of standardized benchmarks for reinforcement learning (RL) in addressing real-world problem is very CRUCIAL!!!!
+In recent years, _reinforcement learning_ (RL) has made remarkable progress, achieving superhuman performance in a wide range of simulated environments. As research moves toward deploying RL in real-world applications, the field faces a new set of challenges inherent to real-world settings, such as large state-action spaces, non-stationarity, and partial observability. Despite their importance, these challenges are often underexplored in current benchmarks, which tend to focus on idealized, fully observable, and stationary environments, often neglecting to incorporate real-world complexities explicitly. In this paper, we introduce _Gym4ReaL_, a comprehensive suite of realistic environments designed to support the development and evaluation of RL algorithms that can operate in real-world scenarios. The suite includes a diverse set of tasks that expose algorithms to a variety of practical challenges. Our experimental results show that, in these settings, standard RL algorithms confirm their competitiveness against rule-based benchmarks, motivating the development of new methods to fully exploit the potential of RL to tackle the complexities of real-world tasks.
 
-[**Paper**](https://donnaedintorni.com/wp-content/uploads/2016/04/12ooa8.jpg) | [**Website**](https://daveonwave.github.io/gym4ReaL/)
+[**Paper**]() | [**Website**](https://daveonwave.github.io/gym4ReaL/)
 
 ## Folder structure
 

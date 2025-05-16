@@ -20,14 +20,22 @@ team
 :hidden:
 :maxdepth: 1
 :caption: Environments
+
+dam
+elevator
+microgrid
+robofeeder
+trading
+wds
 ```
 
 ```{toctree}
 :hidden:
-:maxdepth: 5
 :caption: API Reference
 
-api/gym4real/envs/index
+api/gym4real/envs/
+api/gym4real/algortithms/
+
 genindex
 modindex
 ```
