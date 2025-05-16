@@ -33,8 +33,8 @@ wds
 :hidden:
 :caption: API Reference
 
-api/gym4real/envs/
-api/gym4real/algortithms/
+api/gym4real/envs
+api/gym4real/algortithms
 
 genindex
 modindex

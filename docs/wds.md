@@ -1,4 +1,6 @@
-# WaterDistributionSytem (WDSEnv)
+# WDSEnv
+
+Water Distribution System environment
 
 ## Create a conda environment
 

@@ -1,11 +1,18 @@
 ---
-hide-toc: true
+hide-toc: false
 ---
 
 # Team
 
-- RL3 Polimi Lab
-
-## Acknowledgments
-
-Acks here
+- Davide Salaorni
+- Vincenzo De Paola
+- Samuele Delpero
+- Giovanni Dispoto
+- Paolo Bonetti
+- Alessio Russo
+- Giuseppe Calcagno
+- Francesco Trovò
+- Matteo Papini
+- Alberto Maria Metelli
+- Marco Mussi
+- Marcello Restelli
