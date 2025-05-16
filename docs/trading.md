@@ -10,5 +10,5 @@ conda create -n env-name python=3.12
 
 ```bash
 pip install -r requirements.txt
-pip install -r  gym4real/envs/microgrid/requirements.txt
+pip install -r  gym4real/envs/trading/requirements.txt
 ```
