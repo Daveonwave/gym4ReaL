@@ -1,8 +1,13 @@
 # Gym4ReaL: A Suite for Benchmarking Real-World Reinforcement Learning
 
-In recent years, _reinforcement learning_ (RL) has made remarkable progress, achieving superhuman performance in a wide range of simulated environments. As research moves toward deploying RL in real-world applications, the field faces a new set of challenges inherent to real-world settings, such as large state-action spaces, non-stationarity, and partial observability. Despite their importance, these challenges are often underexplored in current benchmarks, which tend to focus on idealized, fully observable, and stationary environments, often neglecting to incorporate real-world complexities explicitly. In this paper, we introduce _Gym4ReaL_, a comprehensive suite of realistic environments designed to support the development and evaluation of RL algorithms that can operate in real-world scenarios. The suite includes a diverse set of tasks that expose algorithms to a variety of practical challenges. Our experimental results show that, in these settings, standard RL algorithms confirm their competitiveness against rule-based benchmarks, motivating the development of new methods to fully exploit the potential of RL to tackle the complexities of real-world tasks.
+**Gym4ReaL** is a comprehensive suite of realistic environments designed to support the development and evaluation of RL algorithms that can operate in real-world scenarios. <br>
+The suite includes a diverse set of tasks exposing RL algorithms to a variety of practical challenges.
 
-<h3>Coverage of <em>Characteristics</em> and <em>RL paradigms</em></h3>
+Please refer to our [**Website**](https://daveonwave.github.io/gym4ReaL/) for further information about environments and **reproducibility**.
+
+---
+
+<h2>Coverage of <em>Characteristics</em> and <em>RL paradigms</em></h2>
 
 <table style="border-collapse: collapse; width: 100%; text-align: center; font-family: sans-serif;">
   <thead>
@@ -12,10 +17,10 @@ In recent years, _reinforcement learning_ (RL) has made remarkable progress, ach
       <th colspan="6" style="background-color: #fce4ec; border-left: 3px solid #555;">RL Paradigms</th>
     </tr>
     <tr>
-      <th style="background-color: #e0f7fa;">Continuous States</th>
-      <th style="background-color: #e0f7fa;">Continuous Actions</th>
-      <th style="background-color: #e0f7fa;">Partially Observable</th>
-      <th style="background-color: #e0f7fa;">Partially Controllable</th>
+      <th style="background-color: #e0f7fa;">Cont. States</th>
+      <th style="background-color: #e0f7fa;">Cont. Actions</th>
+      <th style="background-color: #e0f7fa;">Part. Observable</th>
+      <th style="background-color: #e0f7fa;">Part. Controllable</th>
       <th style="background-color: #e0f7fa;">Non-Stationary</th>
       <th style="background-color: #e0f7fa;">Visual Input</th>
       <th style="border-left: 3px solid #555;background-color: #fce4ec;">Frequency Adaptation</th>
@@ -60,7 +65,7 @@ In recent years, _reinforcement learning_ (RL) has made remarkable progress, ach
   </tbody>
 </table>
 
-[**Paper**]() | [**Website**](https://daveonwave.github.io/gym4ReaL/)
+---
 
 ## Folder structure
 

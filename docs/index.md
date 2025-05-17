@@ -4,65 +4,79 @@ hide-toc: true
 
 # Gym4ReaL
 
-In recent years, _reinforcement learning_ (RL) has made remarkable progress, achieving superhuman performance in a wide range of simulated environments. As research moves toward deploying RL in real-world applications, the field faces a new set of challenges inherent to real-world settings, such as large state-action spaces, non-stationarity, and partial observability. Despite their importance, these challenges are often underexplored in current benchmarks, which tend to focus on idealized, fully observable, and stationary environments, often neglecting to incorporate real-world complexities explicitly. In this paper, we introduce _Gym4ReaL_, a comprehensive suite of realistic environments designed to support the development and evaluation of RL algorithms that can operate in real-world scenarios. The suite includes a diverse set of tasks that expose algorithms to a variety of practical challenges. Our experimental results show that, in these settings, standard RL algorithms confirm their competitiveness against rule-based benchmarks, motivating the development of new methods to fully exploit the potential of RL to tackle the complexities of real-world tasks.
+<p class="fs-6 fw-300">
+Gymnasium-based benchmark suite for testing RL algorithms on real-world scenarios
+</p>
 
-<h3>Coverage of <em>Characteristics</em> and <em>RL paradigms</em></h3>
+In recent years, _reinforcement learning_ (RL) has made remarkable progress, achieving superhuman performance in a wide range of simulated environments. As research moves toward deploying RL in real-world applications, the field faces a new set of challenges inherent to real-world settings, such as large state-action spaces, non-stationarity, and partial observability. Despite their importance, these challenges are often underexplored in current benchmarks, which tend to focus on idealized, fully observable, and stationary environments, often neglecting to incorporate real-world complexities explicitly. In this paper, we introduce **Gym4ReaL**, a comprehensive suite of realistic environments designed to support the development and evaluation of RL algorithms that can operate in real-world scenarios. The suite includes a diverse set of tasks that expose algorithms to a variety of practical challenges. Our experimental results show that, in these settings, standard RL algorithms confirm their competitiveness against rule-based benchmarks, motivating the development of new methods to fully exploit the potential of RL to tackle the complexities of real-world tasks.
 
-<table style="border-collapse: collapse; width: 100%; text-align: center; font-family: sans-serif;">
+<p>
+    <a href="https://github.com/Daveonwave/gym4ReaL" class="btn fs-5 mb-4 mb-md-0">View it on GitHub</a>
+</p>
+
+<h3 style="font-weight: 500;">Coverage of <em>Characteristics</em> and <em>RL Paradigms</em></h3>
+
+<div style="overflow-x: auto; max-width: 100%;">
+<table style="border-collapse: collapse; width: 100%; text-align: center; font-size: 0.95rem; table-layout: fixed; border: 1px solid #ccc;">
+  <colgroup>
+    <col style="width: 130px;">
+    <col span="12" style="width: 90px;">
+  </colgroup>
   <thead>
-    <tr style="background-color: #f0f0f0;">
-      <th rowspan="2">Environment</th>
-      <th colspan="6" style="background-color: #e0f7fa;">Characteristics</th>
-      <th colspan="6" style="background-color: #fce4ec; border-left: 3px solid #555;">RL Paradigms</th>
+    <tr style="background-color: var(--color-background-secondary, #f0f0f0);">
+      <th rowspan="2" style="padding: 10px; border: 1px solid #ccc;">Env</th>
+      <th colspan="6" style="background-color: #f0f0f0; color: var(--color-foreground-primary, #333); border: 1px solid #ccc;">Characteristics</th>
+      <th colspan="6" style="background-color: #f0f0f0; color: var(--color-foreground-primary, #333); border: 1px solid #ccc; border-left: 3px solid #999;">RL Paradigms</th>
     </tr>
-    <tr>
-      <th style="background-color: #e0f7fa;">Continuous States</th>
-      <th style="background-color: #e0f7fa;">Continuous Actions</th>
-      <th style="background-color: #e0f7fa;">Partially Observable</th>
-      <th style="background-color: #e0f7fa;">Partially Controllable</th>
-      <th style="background-color: #e0f7fa;">Non-Stationary</th>
-      <th style="background-color: #e0f7fa;">Visual Input</th>
-      <th style="border-left: 3px solid #555;background-color: #fce4ec;">Frequency Adaptation</th>
-      <th style="background-color: #fce4ec;">Hierarchical RL</th>
-      <th style="background-color: #fce4ec;">Risk-Averse</th>
-      <th style="background-color: #fce4ec;">Imitation Learning</th>
-      <th style="background-color: #fce4ec;">Provably Efficient</th>
-      <th style="background-color: #fce4ec;">Multi-Objective RL</th>
+    <tr style="background-color: var(--color-background-secondary, #f0f0f0);">
+      <th style="padding: 8px; border: 1px solid #ccc;">Cont. States</th>
+      <th style="padding: 8px; border: 1px solid #ccc;">Cont. Actions</th>
+      <th style="padding: 8px; border: 1px solid #ccc;">Part. Obs.</th>
+      <th style="padding: 8px; border: 1px solid #ccc;">Part. Ctrl.</th>
+      <th style="padding: 8px; border: 1px solid #ccc;">Non-Stat.</th>
+      <th style="padding: 8px; border: 1px solid #ccc;">Visual In.</th>
+      <th style="padding: 8px; border: 1px solid #ccc; border-left: 3px solid #999;">Freq. Adapt.</th>
+      <th style="padding: 8px; border: 1px solid #ccc;">Hier. RL</th>
+      <th style="padding: 8px; border: 1px solid #ccc;">Risk-Av.</th>
+      <th style="padding: 8px; border: 1px solid #ccc;">Imitation</th>
+      <th style="padding: 8px; border: 1px solid #ccc;">Prov. Eff.</th>
+      <th style="padding: 8px; border: 1px solid #ccc;">Multi-Obj.</th>
     </tr>
   </thead>
   <tbody>
-    <tr style="background-color: #ffffff;">
-      <td style=" font-weight: bold;"><em>DamEnv</em></td>
+    <tr style="background-color: #fff;">
+      <td style="padding: 10px; border: 1px solid #ccc;"><em>DamEnv</em></td>
       <td>✅</td><td>✅</td><td></td><td>✅</td><td></td><td></td>
-      <td style="border-left: 3px solid #555;"></td><td></td><td></td><td>✅</td><td></td><td>✅</td>
+      <td style="border-left: 3px solid #999;"></td><td></td><td></td><td>✅</td><td></td><td>✅</td>
     </tr>
-    <tr style="background-color: #f9f9f9;">
-      <td style=" font-weight: bold;"><em>ElevatorEnv</em></td>
+    <tr style="background-color: #f6f6f6;">
+      <td style="padding: 10px; border: 1px solid #ccc;"><em>ElevatorEnv</em></td>
       <td></td><td></td><td></td><td>✅</td><td></td><td></td>
-      <td style="border-left: 3px solid #555;"></td><td></td><td></td><td></td><td>✅</td><td></td>
+      <td style="border-left: 3px solid #999;"></td><td></td><td></td><td></td><td>✅</td><td></td>
     </tr>
-    <tr style="background-color: #ffffff;">
-      <td style=" font-weight: bold;"><em>MicrogridEnv</em></td>
+    <tr style="background-color: #fff;">
+      <td style="padding: 10px; border: 1px solid #ccc;"><em>MicrogridEnv</em></td>
       <td>✅</td><td>✅</td><td></td><td>✅</td><td></td><td></td>
-      <td style="border-left: 3px solid #555;">✅</td><td></td><td></td><td></td><td></td><td>✅</td>
+      <td style="border-left: 3px solid #999;">✅</td><td></td><td></td><td></td><td></td><td>✅</td>
     </tr>
-    <tr style="background-color: #f9f9f9;">
-      <td style="font-weight: bold;"><em>RoboFeederEnv</em></td>
+    <tr style="background-color: #f6f6f6;">
+      <td style="padding: 10px; border: 1px solid #ccc;"><em>RoboFeederEnv</em></td>
       <td>✅</td><td>✅</td><td></td><td></td><td></td><td>✅</td>
-      <td style="border-left: 3px solid #555;"></td><td>✅</td><td></td><td></td><td></td><td></td>
+      <td style="border-left: 3px solid #999;"></td><td>✅</td><td></td><td></td><td></td><td></td>
     </tr>
-    <tr style="background-color: #ffffff;">
-      <td style="font-weight: bold;"><em>TradingEnv</em></td>
+    <tr style="background-color: #fff;">
+      <td style="padding: 10px; border: 1px solid #ccc;"><em>TradingEnv</em></td>
       <td>✅</td><td></td><td>✅</td><td>✅</td><td>✅</td><td></td>
-      <td style="border-left: 3px solid #555;">✅</td><td></td><td>✅</td><td></td><td></td><td></td>
+      <td style="border-left: 3px solid #999;">✅</td><td></td><td>✅</td><td></td><td></td><td></td>
     </tr>
-    <tr style="background-color: #f9f9f9;">
-      <td style=" font-weight: bold;"><em>WDSEnv</em></td>
+    <tr style="background-color: #f6f6f6;">
+      <td style="padding: 10px; border: 1px solid #ccc;"><em>WDSEnv</em></td>
       <td>✅</td><td></td><td></td><td>✅</td><td></td><td></td>
-      <td style="border-left: 3px solid #555;"></td><td></td><td></td><td>✅</td><td></td><td>✅</td>
+      <td style="border-left: 3px solid #999;"></td><td></td><td></td><td>✅</td><td></td><td>✅</td>
     </tr>
   </tbody>
 </table>
+</div>
 
 Gym4ReaL is released under a [Apache-2.0 license](http://www.apache.org/licenses/LICENSE-2.0).
 
