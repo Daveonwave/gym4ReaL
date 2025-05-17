@@ -4,9 +4,19 @@ hide-toc: true
 
 # Gym4ReaL
 
-In recent years, _reinforcement learning_ (RL) has made remarkable progress, achieving superhuman performance in a wide range of simulated environments. As research moves toward deploying RL in real-world applications, the field faces a new set of challenges inherent to real-world settings, such as large state-action spaces, non-stationarity, and partial observability. Despite their importance, these challenges are often underexplored in current benchmarks, which tend to focus on idealized, fully observable, and stationary environments, often neglecting to incorporate real-world complexities explicitly. In this paper, we introduce _Gym4ReaL_, a comprehensive suite of realistic environments designed to support the development and evaluation of RL algorithms that can operate in real-world scenarios. The suite includes a diverse set of tasks that expose algorithms to a variety of practical challenges. Our experimental results show that, in these settings, standard RL algorithms confirm their competitiveness against rule-based benchmarks, motivating the development of new methods to fully exploit the potential of RL to tackle the complexities of real-world tasks.
+<p class="fs-6 fw-300">
+Gymnasium-based benchmark suite for testing RL algorithms on real-world scenarios
+</p>
 
-<h3 style="font-weight: 500;">Coverage of <em>Characteristics</em> and <em>RL Paradigms</em></h3>
+As research moves toward deploying _Reinforcement Learning_ in real-world applications, this field faces a new set of challenges, which are often underexplored in current benchmarks, which tend to focus on idealized, fully observable, and stationary environments. <br> For this reason, we present **Gym4ReaL**, a comprehensive suite of realistic environments designed to support the development and evaluation of RL algorithms that can operate in real-world scenarios. The suite includes a diverse set of tasks that expose algorithms to a variety of practical challenges to foster the development of RL to fully exploit its potential on real-world scenarios.
+
+<p>
+    <a href="https://github.com/Daveonwave/gym4ReaL" class="btn btn-primary">View it on GitHub</a>
+</p>
+
+---
+
+<h2 style="font-weight: 500;">Coverage of <em>Characteristics</em> and <em>RL Paradigms</em></h2>
 
 <div style="overflow-x: auto; max-width: 100%;">
 <table style="border-collapse: collapse; width: 100%; text-align: center; font-size: 0.95rem; table-layout: fixed; border: 1px solid #ccc;">
@@ -37,32 +47,32 @@ In recent years, _reinforcement learning_ (RL) has made remarkable progress, ach
   </thead>
   <tbody>
     <tr style="background-color: #fff;">
-      <td style="padding: 10px; border: 1px solid #ccc;"><em>DamEnv</em></td>
+      <td style="padding: 10px; border: 1px solid #ccc;"><em>Dam</em></td>
       <td>✅</td><td>✅</td><td></td><td>✅</td><td></td><td></td>
       <td style="border-left: 3px solid #999;"></td><td></td><td></td><td>✅</td><td></td><td>✅</td>
     </tr>
     <tr style="background-color: #f6f6f6;">
-      <td style="padding: 10px; border: 1px solid #ccc;"><em>ElevatorEnv</em></td>
+      <td style="padding: 10px; border: 1px solid #ccc;"><em>Elevator</em></td>
       <td></td><td></td><td></td><td>✅</td><td></td><td></td>
       <td style="border-left: 3px solid #999;"></td><td></td><td></td><td></td><td>✅</td><td></td>
     </tr>
     <tr style="background-color: #fff;">
-      <td style="padding: 10px; border: 1px solid #ccc;"><em>MicrogridEnv</em></td>
+      <td style="padding: 10px; border: 1px solid #ccc;"><em>Microgrid</em></td>
       <td>✅</td><td>✅</td><td></td><td>✅</td><td></td><td></td>
       <td style="border-left: 3px solid #999;">✅</td><td></td><td></td><td></td><td></td><td>✅</td>
     </tr>
     <tr style="background-color: #f6f6f6;">
-      <td style="padding: 10px; border: 1px solid #ccc;"><em>RoboFeederEnv</em></td>
+      <td style="padding: 10px; border: 1px solid #ccc;"><em>RoboFeeder</em></td>
       <td>✅</td><td>✅</td><td></td><td></td><td></td><td>✅</td>
       <td style="border-left: 3px solid #999;"></td><td>✅</td><td></td><td></td><td></td><td></td>
     </tr>
     <tr style="background-color: #fff;">
-      <td style="padding: 10px; border: 1px solid #ccc;"><em>TradingEnv</em></td>
+      <td style="padding: 10px; border: 1px solid #ccc;"><em>Trading</em></td>
       <td>✅</td><td></td><td>✅</td><td>✅</td><td>✅</td><td></td>
       <td style="border-left: 3px solid #999;">✅</td><td></td><td>✅</td><td></td><td></td><td></td>
     </tr>
     <tr style="background-color: #f6f6f6;">
-      <td style="padding: 10px; border: 1px solid #ccc;"><em>WDSEnv</em></td>
+      <td style="padding: 10px; border: 1px solid #ccc;"><em>WDS</em></td>
       <td>✅</td><td></td><td></td><td>✅</td><td></td><td></td>
       <td style="border-left: 3px solid #999;"></td><td></td><td></td><td>✅</td><td></td><td>✅</td>
     </tr>
@@ -70,7 +80,7 @@ In recent years, _reinforcement learning_ (RL) has made remarkable progress, ach
 </table>
 </div>
 
-Gym4ReaL is released under a [Apache-2.0 license](http://www.apache.org/licenses/LICENSE-2.0).
+Gym4ReaL is released under [Apache-2.0 license](http://www.apache.org/licenses/LICENSE-2.0).
 
 ```{toctree}
 :hidden:

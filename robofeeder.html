@@ -226,9 +226,9 @@
 <li><p>A Staubli TX2-60 robot with a simple gripper.</p></li>
 <li><p>A box containing multiple objects to pick.</p></li>
 <li><p>A virtual overhead camera for observation.</p></li>
-<li><p>Optional image segmentation and object orientation features.</p></li>
+<li><p>Optional object detection features.</p></li>
 </ul>
-<p>The environments are compatible with ROS2 Humble and leverage GPU acceleration for training.</p>
+<p>The environments are compatible leverage GPU acceleration for training.</p>
 </section>
 <section id="conda-usage">
 <h2>Conda Usage<a class="headerlink" href="#conda-usage" title="Link to this heading">#</a></h2>
@@ -250,7 +250,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 <section id="robofeeder-v0">
 <h3><code class="docutils literal notranslate"><span class="pre">RoboFeeder-v0</span></code><a class="headerlink" href="#robofeeder-v0" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Observation Space:</strong> RGB image from the overhead camera.</p></li>
+<li><p><strong>Observation Space:</strong> Cropped RGB image from the overhead camera, with the help of a pretrianed object dection neural network.</p></li>
 <li><p><strong>Action Space:</strong> Cartesian coordinates for the robot end-effector.</p></li>
 <li><p><strong>Goal:</strong> Pick an object based on visual input.</p></li>
 </ul>
@@ -258,9 +258,9 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 <section id="robofeeder-v1">
 <h3><code class="docutils literal notranslate"><span class="pre">RoboFeeder-v1</span></code><a class="headerlink" href="#robofeeder-v1" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Observation Space:</strong> Segmented image of the target object (using a pre-trained segmentation model).</p></li>
+<li><p><strong>Observation Space:</strong> Full RGB image from the overhead camera.</p></li>
 <li><p><strong>Action Space:</strong> Cartesian coordinates for the robot end-effector.</p></li>
-<li><p><strong>Goal:</strong> Pick the object using segmentation to localize the target.</p></li>
+<li><p><strong>Goal:</strong> Pick an object based on visual input.</p></li>
 </ul>
 </section>
 <section id="robofeeder-v2">
@@ -268,7 +268,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 <ul class="simple">
 <li><p><strong>Observation Space:</strong> List of segmented images for all objects in the box.</p></li>
 <li><p><strong>Action Space:</strong> Index of the selected object and pick coordinates.</p></li>
-<li><p><strong>Goal:</strong> Select and pick the correctly oriented object.</p></li>
+<li><p><strong>Goal:</strong> Select and pick graspable object from the robot workspace.</p></li>
 </ul>
 </section>
 </section>
@@ -296,8 +296,16 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 <section id="configuration">
 <h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">#</a></h2>
 <p>Environment parameters (e.g., camera resolution, robot workspace limits, number of objects) can be set via the <code class="docutils literal notranslate"><span class="pre">configuration.yaml</span></code> file in the project root.</p>
+</section>
 <hr class="docutils" />
-<p>For more details, refer to the official <code class="docutils literal notranslate"><span class="pre">gym4ReaL</span></code> documentation and code examples.</p>
+<section id="reproducibility">
+<h2>Reproducibility<a class="headerlink" href="#reproducibility" title="Link to this heading">#</a></h2>
+<p>In order to reproduce the results, open the notebooks in <code class="docutils literal notranslate"><span class="pre">examples/robofeeder/benchmarks</span></code> folder and run the whole notebook depending on the selected environment.</p>
+<p>To reproduce the results from scratch, launch this command from the main directory selecting the environment and the training parameters:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>gym4real/algorithms/robofeeder/ppo.py<span class="w"> </span>--env<span class="w"> </span>gym4real/robofeeder-planning<span class="w"> </span>--episodes<span class="w"> </span><span class="m">1000</span><span class="w"> </span>--batch-size<span class="w"> </span><span class="m">64</span><span class="w"> </span>--learning-rate<span class="w"> </span><span class="m">0</span>.0003
+</pre></div>
+</div>
+<p>You can adjust the arguments (<code class="docutils literal notranslate"><span class="pre">--env</span></code>, <code class="docutils literal notranslate"><span class="pre">--episodes</span></code>, <code class="docutils literal notranslate"><span class="pre">--batch-size</span></code>, <code class="docutils literal notranslate"><span class="pre">--learning-rate</span></code>, etc.) as needed. See <code class="docutils literal notranslate"><span class="pre">ppo.py</span> <span class="pre">--help</span></code> for all available options.</p>
 </section>
 </section>
 
@@ -368,6 +376,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 </li>
 <li><a class="reference internal" href="#usage">Usage</a></li>
 <li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#reproducibility">Reproducibility</a></li>
 </ul>
 </li>
 </ul>
