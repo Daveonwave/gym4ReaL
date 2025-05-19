@@ -31,7 +31,7 @@ jobs:
       # build the website, save output to _build folder
       # which is the folder name that actions/upload-pages-artifact@v2 expects by default
       - name: Build HTML docs
-        run: sphinx-build -b html -v docs/ _build
+        run: make -C docs clean html
 
       #- name: Remove unneeded files
       #  run: rm -r _build/.doctrees _build/.buildinfo
