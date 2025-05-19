@@ -83,7 +83,7 @@ gym4real/               # main Python package
 
 ## Contributing
 
-If you would like to add a new environment, propose bug fixes, or otherwise contribute to Gym4ReaL, please see the [Contributing Guide](CONTRIBUTING.md).
+If you would like to add a new environment, propose bug fixes, or otherwise contribute to Gym4ReaL, please see the [Contributing Guide](CONTRIBUITING.md).
 
 ## License
 
@@ -99,14 +99,13 @@ Please cite Gym4ReaL as
 <summary>BibTeX</summary>
 
 ```tex
-@inproceedings{,
-    title = {},
-    author = {},
-    year = ,
-    month = ,
-    booktitle = {T},
-    address = {},
-    url = {}
+@misc{gym4real2024,
+  author       = {Salaorni, Davide and De Paola, Vincenzo and Delpero, Samuele and Dispoto, Giovanni},
+  title        = {{Gym4ReaL}: A Suite for Benchmarking Real-World Reinforcement Learning},
+  year         = {2025},
+  publisher    = {GitHub},
+  journal      = {GitHub repository},
+  howpublished = {\url{https://github.com/Daveonwave/gym4ReaL}},
 }
 ```
 

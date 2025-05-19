@@ -4,6 +4,8 @@ Thank you for considering contributing to **Gym4ReaL**! 🎉
 
 This guide will help you set up your environment, understand the project structure, and submit effective contributions.
 
+Please, refer to the [Gym4ReaL website](https://daveonwave.github.io/gym4ReaL/) for detailed information about the suite structure.
+
 ---
 
 ## 📌 Project Overview
