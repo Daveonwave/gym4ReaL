@@ -177,12 +177,10 @@ if __name__ == '__main__':
     # Example parameters
     args = {
         'training_timesteps': 200000,
-        'n_envs': 5,
         'mini_batches': 32,
         'learning_epochs': 10,
         'rollouts': 2048,
         'discount_factor': 0.995,
-        'gamma': 0.995,
         'ent_coef': 0.,
         'learning_rate': 8e-6,
         'net_arch': [16, 16],
