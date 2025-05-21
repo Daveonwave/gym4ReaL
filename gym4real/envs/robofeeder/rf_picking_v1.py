@@ -26,7 +26,7 @@ class robotEnv(Env):
         self.observation_space = Box(low=0, high=1, shape=(1,self.simulator.configs["OBSERVATION_IMAGE_DIM"],self.simulator.configs["OBSERVATION_IMAGE_DIM"]))  
 
         # Set the Episode length
-        self.max_episode_steps = 4
+        self.max_episode_steps = 2
         self.curr_num_episode = 0
 
         self.reset()
