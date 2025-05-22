@@ -185,4 +185,6 @@ gym4real/data/trading/forex/*
 */recordings/*
 plots
 metadata/
-metadata.zip
+metadata_*
+microgrid-v2
+eval_results/
