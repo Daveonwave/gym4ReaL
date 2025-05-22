@@ -3,10 +3,6 @@ import os
 
 sys.path.append(os.getcwd())
 
-import json
-from copy import deepcopy
-from tqdm import tqdm
-from joblib import delayed, Parallel, parallel_backend
 from stable_baselines3 import PPO
 from stable_baselines3.ppo import MlpPolicy
 from stable_baselines3.common.env_util import make_vec_env
@@ -31,7 +27,7 @@ def train_ppo(envs, args, eval_env_params, model_file=None):
                                  best_model_save_path="./logs/{}/models/eval/".format(args['exp_name']),
                                  log_path="./logs/{}/".format(args['exp_name']), 
                                  eval_freq=35064*2,
-                                 n_eval_episodes=20,
+                                 n_eval_episodes=10,
                                  deterministic=True, 
                                  render=False)
     
@@ -71,7 +67,7 @@ if __name__ == '__main__':
         'n_episodes': 100,
         'n_envs': 4,
         'verbose': 0,
-        'gamma': 0.99,
+        'gamma': 0.9,
         'learning_rate': 0.001,
         'log_rate': 10,
         'save_model_as': 'ppo_100eps',
@@ -82,7 +78,7 @@ if __name__ == '__main__':
                                  min_soh=0.6)
     
     eval_params = parameter_generator(world_options="gym4real/envs/microgrid/world_test.yaml",
-                                      seed=42,
+                                      seed=1234,
                                       min_soh=0.6)
     
     envs = make_vec_env("gym4real/microgrid-v0", n_envs=args['n_envs'], env_kwargs={'settings':params})    
