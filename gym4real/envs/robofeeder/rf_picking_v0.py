@@ -39,7 +39,7 @@ class robotEnv(Env):
         self.observation_space = Box(low=0, high=1, shape=(1,self.CROP_DIM,self.CROP_DIM))  # Set the observation space to [rgb] gray immage array
 
         # Set the Episode length
-        self.max_episode_steps = 1
+        self.max_episode_steps = 2
         self.curr_num_episode = 0
 
         self.is_log_set = False
