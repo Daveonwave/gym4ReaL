@@ -284,7 +284,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gym</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">gym4real</span>
 
-<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;RoboFeeder-v0&#39;</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;gym4real/robofeeder-picking-v0&#39;</span><span class="p">)</span>
 <span class="n">obs</span><span class="p">,</span><span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
@@ -302,7 +302,9 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 <h2>Reproducibility<a class="headerlink" href="#reproducibility" title="Link to this heading">#</a></h2>
 <p>In order to reproduce the results, open the notebooks in <code class="docutils literal notranslate"><span class="pre">examples/robofeeder/benchmarks</span></code> folder and run the whole notebook depending on the selected environment.</p>
 <p>To reproduce the results from scratch, launch this command from the main directory selecting the environment and the training parameters:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>gym4real/algorithms/robofeeder/ppo.py<span class="w"> </span>--env<span class="w"> </span>gym4real/robofeeder-planning<span class="w"> </span>--episodes<span class="w"> </span><span class="m">1000</span><span class="w"> </span>--batch-size<span class="w"> </span><span class="m">64</span><span class="w"> </span>--learning-rate<span class="w"> </span><span class="m">0</span>.0003
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Daveonwave/gym4ReaL.git
+<span class="nb">cd</span><span class="w"> </span>gym4Real
+python<span class="w"> </span>gym4real/algorithms/robofeeder/ppo.py<span class="w"> </span>--env<span class="w"> </span>gym4real/robofeeder-planning<span class="w"> </span>--episodes<span class="w"> </span><span class="m">1000</span><span class="w"> </span>--batch-size<span class="w"> </span><span class="m">64</span><span class="w"> </span>--learning-rate<span class="w"> </span><span class="m">0</span>.0003
 </pre></div>
 </div>
 <p>You can adjust the arguments (<code class="docutils literal notranslate"><span class="pre">--env</span></code>, <code class="docutils literal notranslate"><span class="pre">--episodes</span></code>, <code class="docutils literal notranslate"><span class="pre">--batch-size</span></code>, <code class="docutils literal notranslate"><span class="pre">--learning-rate</span></code>, etc.) as needed. See <code class="docutils literal notranslate"><span class="pre">ppo.py</span> <span class="pre">--help</span></code> for all available options.</p>
