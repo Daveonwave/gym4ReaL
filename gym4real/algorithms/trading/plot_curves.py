@@ -17,7 +17,7 @@ def extract_scalar(logdir, tag):
 
 
 algo_name = "DQN"
-base_dir = "./logs/tensorboard/trading/dqn/dqn_trading/dqn_1"
+base_dir = "/Users/giovannidispoto/Desktop/PhD/gym4ReaL_github/gym4ReaL/gym4real/algorithms/trading/logs/tensorboard/trading/dqn/dqn_trading/dqn_1"
 rollout_merge = None
 eval_merge = None
 seeds = [32517, 84029, 10473, 67288, 91352, 47605]
@@ -43,28 +43,34 @@ for dir in os.listdir(base_dir):
     j += 1
 
 plot_colors = sns.color_palette('colorblind')
+sns.set_style('darkgrid')
 plt.figure(figsize=(10, 5))
 i = 0
 for column in rollout_merge.columns[1:].sort_values():
-    plt.plot(rollout_merge['step'], rollout_merge[column], label=column, color=plot_colors[i])
+    sns.lineplot(data = rollout_merge[['step', column]], x = 'step', y = column, label=column, color=plot_colors[i])
     i += 1
-plt.xlabel("Steps")
-plt.ylabel("Reward")
+plt.xlabel("Training step", fontsize=30)
+plt.ylabel("Reward", fontsize=30)
+plt.gca().xaxis.get_offset_text().set_fontsize(30)
+plt.xticks(fontsize= 30)
+plt.yticks(fontsize= 30)
 #plt.title(f"Training Reward {algo_name}")
-plt.legend()
+plt.legend(loc="lower right", fontsize=20)
 plt.grid(True)
 plt.tight_layout()
 plt.savefig(f"./plots/train_curves_trading_{algo_name.lower()}.pdf")
 
 plt.figure(figsize=(10, 5))
 i = 0
-for column in rollout_merge.columns[1:].sort_values():
-    plt.plot(eval_merge['step'], eval_merge[column], label=column, color=plot_colors[i])
+for column in eval_merge.columns[1:].sort_values():
+    sns.lineplot(eval_merge[column], label=column, color=plot_colors[i])
     i += 1
-plt.xlabel("Steps")
-plt.ylabel("Reward")
+plt.xlabel("Evaluation step", fontsize=30)
+plt.ylabel("Reward", fontsize=30)
+plt.xticks(fontsize= 30)
+plt.yticks(fontsize= 30)
 #plt.title(f"Evaluation Reward {algo_name}")
-plt.legend()
+plt.legend(loc="upper left", fontsize=20)
 plt.grid(True)
 plt.tight_layout()
 plt.savefig(f"./plots/eval_curves_trading_{algo_name.lower()}.pdf")
