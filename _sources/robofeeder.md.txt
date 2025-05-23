@@ -21,11 +21,18 @@ conda create -n env-name python=3.12
 
 ## Installation
 
-To install the general and environment-specific requirements, run:
+To install the general and environment-specific requirements,if gpus are not available run:
 
 ```bash
 pip install -r requirements.txt
 pip install -r gym4real/envs/robofeeder/requirements.txt
+```
+
+Otherwise:
+
+```bash
+pip install -r requirements.txt
+pip install -r gym4real/envs/robofeeder/requirements-gpus.txt
 ```
 
 ## RoboFeeder Environments

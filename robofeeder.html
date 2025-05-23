@@ -238,9 +238,14 @@
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
-<p>To install the general and environment-specific requirements, run:</p>
+<p>To install the general and environment-specific requirements,if gpus are not available run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>gym4real/envs/robofeeder/requirements.txt
+</pre></div>
+</div>
+<p>Otherwise:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>gym4real/envs/robofeeder/requirements-gpus.txt
 </pre></div>
 </div>
 </section>
