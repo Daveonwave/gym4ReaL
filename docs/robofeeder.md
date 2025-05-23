@@ -64,7 +64,7 @@ Example:
 import gym
 import gym4real
 
-env = gym.make('RoboFeeder-v0')
+env = gym.make('gym4real/robofeeder-picking-v0')
 obs,info = env.reset()
 done = False
 while not done:
@@ -86,6 +86,8 @@ In order to reproduce the results, open the notebooks in `examples/robofeeder/be
 
 To reproduce the results from scratch, launch this command from the main directory selecting the environment and the training parameters:
 ```bash
+git clone https://github.com/Daveonwave/gym4ReaL.git
+cd gym4Real
 python gym4real/algorithms/robofeeder/ppo.py --env gym4real/robofeeder-planning --episodes 1000 --batch-size 64 --learning-rate 0.0003
 ```
 You can adjust the arguments (`--env`, `--episodes`, `--batch-size`, `--learning-rate`, etc.) as needed. See `ppo.py --help` for all available options.

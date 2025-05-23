@@ -54,9 +54,13 @@ class CustomCNN(BaseFeaturesExtractor):
         features = self.cnn(observations)
         return self.linear(features)
 
-
+#planning
 pi = [256, 128, 64]
 vf = [256, 128, 64]
+
+#picking
+# pi = [512, 128]
+# vf = [512, 128]
 
 features_dim = 256
 optimizer_kwargs= dict(weight_decay=2e-5,)
@@ -97,6 +101,7 @@ def train_ppo(envs, args, model_file=None):
                     learning_rate=args['learning_rate'],
                     # ent_coef=0.01,
                     policy_kwargs=policy_kwargs,
+                    seed = 123
                     )
         
     model.learn(total_timesteps=args['n_episodes'] * args['n_envs'],
