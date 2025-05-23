@@ -18,7 +18,7 @@ This version includes the following changes:
 """
 class robotEnv(Env):
 
-    def __init__(self,config_file):
+    def __init__(self, config_file, sim_seed=None):
         super(robotEnv, self).__init__()
 
         providers = ['CUDAExecutionProvider','CPUExecutionProvider']
@@ -28,7 +28,8 @@ class robotEnv(Env):
         self.ort_sess = rt.InferenceSession(model_dir + 'objDetection.onnx',providers=providers)
         
         # Init the simulation
-        self.simulator = robot_simulator(config_file,seed=123) # use as numpy random seed the ROS_ID
+        seed = sim_seed if sim_seed is not None else 123
+        self.simulator = robot_simulator(config_file, seed=seed) # use as numpy random seed the ROS_ID
         
         # Get Simulation data
         self.inv_camera_matrix = self.simulator.inv_camera_matrix
@@ -65,9 +66,11 @@ class robotEnv(Env):
         if (self.rew is None): # If the action is not feasible
             self.rew = -1
             done = (self.max_episode_steps == self.curr_num_episode)
-            if(self.is_log_set): self.log_file.write(f"{action},NONVALID\n")
+            if(self.is_log_set): 
+                self.log_file.write(f"{action},NONVALID\n")
+            
+            self.rew /= self.max_episode_steps
             return self.current_obs,self.rew, done,done,{} # If the action is not feasible
-                
         
         # 3.1 reward
         if(self.rew == -1): #From the simulator: 1 if the object is picked, -1 if the object is not picked (now imprrove the reward)
@@ -104,6 +107,7 @@ class robotEnv(Env):
         self.current_obs = self.rgb2gray(resultIMG)
         # 3.3. done
         done = (self.max_episode_steps == self.curr_num_episode) or (sum(self.simulator.objPicked) == self.simulator.configs["NUMBER_OF_OBJECTS"])   
+        self.rew /= self.max_episode_steps
         return self.current_obs, self.rew, done, done,{}
     # END STEP
     

@@ -68,7 +68,8 @@ class robot_simulator:
         self.counter = 0
         
         #Initilize data
-        if(seed is not None): np.random.seed(seed)
+        if(seed is not None): 
+            np.random.seed(seed)
         self.last_pos= [0.0,0.0,0.0,0.0,0.0,0.0]
         self.rewCheck= np.array([-0.19096066,  0.47406576,  0.52]) #np.array([-0.0882, 0.4929, 0.4])
         self.possibleOrietnation = np.arange(-1,1.1,0.2)
