@@ -1,0 +1,17 @@
+gymnasium[mujoco]
+opencv_python
+imageio
+imageio-ffmpeg
+numpy
+torch
+onnx
+onnxruntime-gpu
+Pillow
+PyYAML
+scipy
+stable_baselines3[extra]
+tensorboard
+ipykernel
+matplotlib
+ikpy
+
