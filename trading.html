@@ -218,28 +218,74 @@
         <article role="main">
           <section class="tex2jax_ignore mathjax_ignore" id="tradingenv">
 <h1>TradingEnv<a class="headerlink" href="#tradingenv" title="Link to this heading">#</a></h1>
-<section id="create-a-conda-environment">
-<h2>Create a conda environment<a class="headerlink" href="#create-a-conda-environment" title="Link to this heading">#</a></h2>
+<p>This document describes the <code class="docutils literal notranslate"><span class="pre">TradingEnv</span></code> environment available in the <code class="docutils literal notranslate"><span class="pre">Gym4ReaL</span></code> library to learn a trading strategy using Reinforcement Learning (RL) techniques. This environment is built on the <a class="reference external" href="https://gymnasium.farama.org">Gymnasium</a> interface, enabling efficient training and evaluation of RL agents.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">TradingEnv</span></code> simulates a Forex (Foreign Exchange) market where a Reinforcement Learning (RL) agent can learn how to trade.
+The environment is built using historical market data, specifically for the EUR/USD currency pair.</p>
+</section>
+<section id="conda-usage">
+<h2>Conda Usage<a class="headerlink" href="#conda-usage" title="Link to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>env-name<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.12
 </pre></div>
 </div>
 </section>
-<section id="necessary-requirements">
-<h2>Necessary requirements<a class="headerlink" href="#necessary-requirements" title="Link to this heading">#</a></h2>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<p>To install the general and environment-specific requirements, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>gym4real/envs/trading/requirements.txt
 </pre></div>
 </div>
 </section>
-<section id="reproducibility">
-<h2>Reproducibility<a class="headerlink" href="#reproducibility" title="Link to this heading">#</a></h2>
-<p>In order to reproduce the results, open the notebook in <code class="docutils literal notranslate"><span class="pre">examples/trading/benchmarks.ipynb</span></code> and run the whole notebook.
-To obtain the trained models presented in the paper launch this command from the main directory.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>gym4real/algorithms/trading/ppo.py
+<section id="trading-environment">
+<h2>Trading Environment<a class="headerlink" href="#trading-environment" title="Link to this heading">#</a></h2>
+<p>The setting described in the <code class="docutils literal notranslate"><span class="pre">TradingEnv</span></code> is the following:</p>
+<ul class="simple">
+<li><p><strong>Observation Space:</strong> Composed of 60 delta-mid prices at time <em>t</em>, the angular position of the current time over the trading period and the agent position. The observation space can be customized by changing the configuration files.</p></li>
+<li><p><strong>Action Space:</strong> 3 discrete actions {s, f ,l}, where <em>s</em> is short-sell which corresponds to betting that the price will go down, <em>f</em> is flat - no exposure -, and <em>l</em> long which corresponds to betting that the price will go up. Each action corresponds to a fixed amount of capital of 100k€.</p></li>
+<li><p><strong>Goal:</strong> Maximize profit-and-loss (P&amp;L) at the net of transaction costs.</p></li>
+</ul>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<p>To use this environment:</p>
+<ol class="arabic simple">
+<li><p>Download the <code class="docutils literal notranslate"><span class="pre">Gym4ReaL</span></code> library and install its dependencies.</p></li>
+<li><p>Register and instantiate the <code class="docutils literal notranslate"><span class="pre">TradingEnv</span></code> environment using Gym’s API.</p></li>
+<li><p>Download EUR/USD data from <a class="reference external" href="https://www.histdata.com/download-free-forex-historical-data/?/ascii/tick-data-quotes/EURUSD">HistData</a>, from 2019 to 2022.</p></li>
+<li><p>Move the downloaded <code class="docutils literal notranslate"><span class="pre">.csv</span></code> in the folder <code class="docutils literal notranslate"><span class="pre">gym4real/data/trading/forex</span></code>.</p></li>
+<li><p>Train and evaluate your custom or off-the-shelf RL agent implementation.</p></li>
+</ol>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gym4real.envs.trading.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">parameter_generator</span>
+
+<span class="n">params_train</span> <span class="o">=</span> <span class="n">parameter_generator</span><span class="p">(</span><span class="n">world_options</span><span class="o">=</span><span class="s1">&#39;gym4real/envs/trading/world_train.yaml&#39;</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;gym4real/TradingEnv-v0&quot;</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="s1">&#39;settings&#39;</span><span class="p">:</span> <span class="n">params_train</span><span class="p">,</span> <span class="s1">&#39;seed&#39;</span><span class="p">:</span> <span class="mi">1234</span><span class="p">})</span>
+<span class="n">obs</span><span class="p">,</span><span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+  <span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+  <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+  <span class="n">done</span> <span class="o">=</span> <span class="n">terminated</span> <span class="ow">or</span> <span class="n">truncated</span>
 </pre></div>
 </div>
-<p>It is possible to retrain the algorithm from scratch, enabling the related flags.
-The trained model are saved in the directory <code class="docutils literal notranslate"><span class="pre">examples/trading/trained_models</span></code>.</p>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">#</a></h2>
+<p>Environment parameters (e.g., years, number of delta-mid prices, calendar features) can be set by modifying the <code class="docutils literal notranslate"><span class="pre">gym4real/envs/trading/world_train.yaml</span></code>, <code class="docutils literal notranslate"><span class="pre">gym4real/envs/trading/world_validation.yaml</span></code> and <code class="docutils literal notranslate"><span class="pre">gym4real/envs/trading/world_test.yaml</span></code> files.
+It is important to set the <strong>same configuration across all the three files</strong>, to avoid inconsistencies and potential runtime errors.</p>
+</section>
+<hr class="docutils" />
+<section id="reproducibility">
+<h2>Reproducibility<a class="headerlink" href="#reproducibility" title="Link to this heading">#</a></h2>
+<p>In order to reproduce the results, open the notebook in <code class="docutils literal notranslate"><span class="pre">examples/trading/benchmarks.ipynb</span></code> and run the whole notebook. It is possible to retrain the models inside the notebooks or to use pre-trained ones available in <code class="docutils literal notranslate"><span class="pre">trained_model</span></code> folder.</p>
+<p>To obtain the trained models presented in the paper, launch this command from the main directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>gym4real/algorithms/trading/<span class="o">[</span>ppo<span class="p">|</span>dqn<span class="o">]</span>.py
+</pre></div>
+</div>
 </section>
 </section>
 
@@ -299,8 +345,12 @@ The trained model are saved in the directory <code class="docutils literal notra
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">TradingEnv</a><ul>
-<li><a class="reference internal" href="#create-a-conda-environment">Create a conda environment</a></li>
-<li><a class="reference internal" href="#necessary-requirements">Necessary requirements</a></li>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#conda-usage">Conda Usage</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#trading-environment">Trading Environment</a></li>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
 <li><a class="reference internal" href="#reproducibility">Reproducibility</a></li>
 </ul>
 </li>

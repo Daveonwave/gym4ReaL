@@ -1,6 +1,6 @@
 # ElevatorEnv
 
-This document describes the `ElevatorEnv` environment available in the `Gym4ReaL` library to solve an optimal dispatching problem adopting reinforcement learning (RL) techniques. This environment is built on the OpenAI [Gymnasium](https://gymnasium.farama.org) interface, enabling efficient training and evaluation of RL agents.
+This document describes the `ElevatorEnv` environment available in the `Gym4ReaL` library to solve an optimal dispatching problem adopting reinforcement learning (RL) techniques. This environment is built on the [Gymnasium](https://gymnasium.farama.org) interface, enabling efficient training and evaluation of RL agents.
 
 ## Overview
 
@@ -24,7 +24,7 @@ To install the general and environment-specific requirements, run:
 
 ```bash
 pip install -r requirements.txt
-pip install -r  gym4real/envs/elevator/requirements.txt
+pip install -r gym4real/envs/elevator/requirements.txt
 ```
 
 ## Elevator Environment

@@ -218,7 +218,7 @@
         <article role="main">
           <section class="tex2jax_ignore mathjax_ignore" id="microgridenv">
 <h1>MicrogridEnv<a class="headerlink" href="#microgridenv" title="Link to this heading">#</a></h1>
-<p>This document describes the <code class="docutils literal notranslate"><span class="pre">MicrogridEnv</span></code> environment available in the <code class="docutils literal notranslate"><span class="pre">Gym4ReaL</span></code> library for energy management within a microgrid adopting reinforcement learning (RL) techniques. This environment is built on <a class="reference external" href="https://github.com/Daveonwave/ErNESTO-DT">ErNESTO-DT</a> simulator and the OpenAI <a class="reference external" href="https://gymnasium.farama.org">Gymnasium</a> interface, enabling efficient training and evaluation of RL agents.</p>
+<p>This document describes the <code class="docutils literal notranslate"><span class="pre">MicrogridEnv</span></code> environment available in the <code class="docutils literal notranslate"><span class="pre">Gym4ReaL</span></code> library for energy management within a microgrid adopting reinforcement learning (RL) techniques. This environment is built on <a class="reference external" href="https://github.com/Daveonwave/ErNESTO-DT">ErNESTO-DT</a> simulator and the <a class="reference external" href="https://gymnasium.farama.org">Gymnasium</a> interface, enabling efficient training and evaluation of RL agents.</p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">MicrogridEnv</span></code> simulates a microgrid controller tasked with optimize energy management within a local network. The simulation includes:</p>
@@ -238,12 +238,12 @@
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
 <p>To install the general and environment-specific requirements, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
-pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w">  </span>gym4real/envs/microgrid/requirements.txt
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>gym4real/envs/microgrid/requirements.txt
 </pre></div>
 </div>
 </section>
-<section id="migrogrid-environment">
-<h2>Migrogrid Environment<a class="headerlink" href="#migrogrid-environment" title="Link to this heading">#</a></h2>
+<section id="microgrid-environment">
+<h2>Microgrid Environment<a class="headerlink" href="#microgrid-environment" title="Link to this heading">#</a></h2>
 <p>The setting described in the <code class="docutils literal notranslate"><span class="pre">MicrogridEnv</span></code> is the following:</p>
 <ul class="simple">
 <li><p><strong>Observation Space:</strong> Signals of estimated demand and generations, signals of the energy price, internal battery state (state of charge and temperature), time variables.</p></li>
@@ -349,7 +349,7 @@ Environment parameters (e.g., observation space, environment timestep) can be se
 <li><a class="reference internal" href="#overview">Overview</a></li>
 <li><a class="reference internal" href="#conda-usage">Conda Usage</a></li>
 <li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#migrogrid-environment">Migrogrid Environment</a></li>
+<li><a class="reference internal" href="#microgrid-environment">Microgrid Environment</a></li>
 <li><a class="reference internal" href="#usage">Usage</a></li>
 <li><a class="reference internal" href="#configuration">Configuration</a></li>
 <li><a class="reference internal" href="#reproducibility">Reproducibility</a></li>
