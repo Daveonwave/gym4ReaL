@@ -1,6 +1,6 @@
 # WDSEnv
 
-This document describes the `WDSEnv` environment available in the `Gym4ReaL` library addressing a water management problem within a water distribution system adopting reinforcement learning (RL) techniques. This environment is built on [Epynet](https://github.com/Vitens/epynet), a Python wrapper of the [Epanet](https://www.epa.gov/water-research/epanet) hydraulic simulator, and the OpenAI [Gymnasium](https://gymnasium.farama.org) interface, enabling efficient training and evaluation of RL agents.
+This document describes the `WDSEnv` environment available in the `Gym4ReaL` library addressing a water management problem within a water distribution system adopting reinforcement learning (RL) techniques. This environment is built on [Epynet](https://github.com/Vitens/epynet), a Python wrapper of the [Epanet](https://www.epa.gov/water-research/epanet) hydraulic simulator, and the [Gymnasium](https://gymnasium.farama.org) interface, enabling efficient training and evaluation of RL agents.
 
 ## Overview
 
@@ -28,7 +28,7 @@ To install the general and environment-specific requirements, run:
 
 ```bash
 pip install -r requirements.txt
-pip install -r  gym4real/envs/wds/requirements.txt
+pip install -r gym4real/envs/wds/requirements.txt
 ```
 
 ## Water Network Environment

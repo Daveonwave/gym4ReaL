@@ -1,6 +1,6 @@
 # RoboFeederEnv
 
-This document describes the RoboFeeder environments available in the `Gym4ReaL` library for robotic grasping tasks using reinforcement learning. These environments are designed for use with the MuJoCo simulator and the OpenAI [Gymnasium](https://gymnasium.farama.org) interface, enabling efficient training and evaluation of robotic agents.
+This document describes the RoboFeeder environments available in the `Gym4ReaL` library for robotic grasping tasks using reinforcement learning. These environments are designed for use with the MuJoCo simulator and the [Gymnasium](https://gymnasium.farama.org) interface, enabling efficient training and evaluation of robotic agents.
 
 ## Overview
 

@@ -1,6 +1,6 @@
 # MicrogridEnv
 
-This document describes the `MicrogridEnv` environment available in the `Gym4ReaL` library for energy management within a microgrid adopting reinforcement learning (RL) techniques. This environment is built on [ErNESTO-DT](https://github.com/Daveonwave/ErNESTO-DT) simulator and the OpenAI [Gymnasium](https://gymnasium.farama.org) interface, enabling efficient training and evaluation of RL agents.
+This document describes the `MicrogridEnv` environment available in the `Gym4ReaL` library for energy management within a microgrid adopting reinforcement learning (RL) techniques. This environment is built on [ErNESTO-DT](https://github.com/Daveonwave/ErNESTO-DT) simulator and the [Gymnasium](https://gymnasium.farama.org) interface, enabling efficient training and evaluation of RL agents.
 
 ## Overview
 
@@ -22,10 +22,10 @@ To install the general and environment-specific requirements, run:
 
 ```bash
 pip install -r requirements.txt
-pip install -r  gym4real/envs/microgrid/requirements.txt
+pip install -r gym4real/envs/microgrid/requirements.txt
 ```
 
-## Migrogrid Environment
+## Microgrid Environment
 
 The setting described in the `MicrogridEnv` is the following:
 
