@@ -31,8 +31,8 @@ The suite includes a diverse set of tasks that expose algorithms to a variety of
   <thead>
     <tr style="background-color: var(--color-background-secondary, #f0f0f0);">
       <th rowspan="2" style="padding: 10px; border: 1px solid #ccc;">Env</th>
-      <th colspan="6" style="background-color: #f0f0f0; color: var(--color-foreground-primary, #333); border: 1px solid #ccc;">Characteristics</th>
-      <th colspan="6" style="background-color: #f0f0f0; color: var(--color-foreground-primary, #333); border: 1px solid #ccc; border-left: 3px solid #999;">RL Paradigms</th>
+      <th colspan="6" style="background-color: #f0f0f0; color: var(--color-foreground-secondary, #f0f0f0); border: 1px solid #ccc;">Characteristics</th>
+      <th colspan="6" style="background-color: #f0f0f0; color: var(--color-foreground-secondary, #f0f0f0); border: 1px solid #ccc; border-left: 3px solid #999;">RL Paradigms</th>
     </tr>
     <tr style="background-color: var(--color-background-secondary, #f0f0f0);">
       <th style="padding: 8px; border: 1px solid #ccc;">Cont. States</th>
