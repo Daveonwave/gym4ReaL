@@ -1,6 +1,6 @@
 # RoboFeederEnv
 
-This document describes the RoboFeeder environments available in the `gym4ReaL` library for robotic grasping tasks using reinforcement learning. These environments are designed for use with the MuJoCo simulator and the OpenAI Gym interface, enabling efficient training and evaluation of robotic agents.
+This document describes the RoboFeeder environments available in the `Gym4ReaL` library for robotic grasping tasks using reinforcement learning. These environments are designed for use with the MuJoCo simulator and the OpenAI [Gymnasium](https://gymnasium.farama.org) interface, enabling efficient training and evaluation of robotic agents.
 
 ## Overview
 
@@ -11,7 +11,7 @@ The RoboFeeder environments simulate a robotic arm tasked with picking objects f
 - A virtual overhead camera for observation.
 - Optional object detection features.
 
-The environments are compatible leverage GPU acceleration for training.
+The environments are compatible with GPU acceleration for training.
 
 ## Conda Usage
 
@@ -37,7 +37,7 @@ pip install -r gym4real/envs/robofeeder/requirements-gpus.txt
 
 ## RoboFeeder Environments
 
-The following environments are implemented in `gym4ReaL`:
+The following environments are implemented in `Gym4ReaL`:
 
 ### `RoboFeeder-v0`
 
@@ -61,15 +61,14 @@ The following environments are implemented in `gym4ReaL`:
 
 To use these environments:
 
-1. Install the `gym4ReaL` library and its dependencies.
+1. Download the `Gym4ReaL` library and install its dependencies.
 2. Register and instantiate the desired RoboFeeder environment using Gym's API.
-3. Train or evaluate your reinforcement learning agent as needed.
+3. Train and evaluate your custom or off-the-shelf RL agent implementation.
 
 Example:
 
 ```python
-import gym
-import gym4real
+import gymnasium as gym
 
 env = gym.make('gym4real/robofeeder-picking-v0')
 obs,info = env.reset()
@@ -85,17 +84,16 @@ Environment parameters (e.g., camera resolution, robot workspace limits, number 
 
 ---
 
-
 ## Reproducibility
 
 In order to reproduce the results, open the notebooks in `examples/robofeeder/benchmarks` folder and run the whole notebook depending on the selected environment.
 
-
 To reproduce the results from scratch, launch this command from the main directory selecting the environment and the training parameters:
+
 ```bash
 git clone https://github.com/Daveonwave/gym4ReaL.git
 cd gym4Real
 python gym4real/algorithms/robofeeder/ppo.py --env gym4real/robofeeder-planning --episodes 1000 --batch-size 64 --learning-rate 0.0003
 ```
-You can adjust the arguments (`--env`, `--episodes`, `--batch-size`, `--learning-rate`, etc.) as needed. See `ppo.py --help` for all available options.
 
+You can adjust the arguments (`--env`, `--episodes`, `--batch-size`, `--learning-rate`, etc.) as needed. See `ppo.py --help` for all available options.

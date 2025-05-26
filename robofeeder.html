@@ -218,7 +218,7 @@
         <article role="main">
           <section class="tex2jax_ignore mathjax_ignore" id="robofeederenv">
 <h1>RoboFeederEnv<a class="headerlink" href="#robofeederenv" title="Link to this heading">#</a></h1>
-<p>This document describes the RoboFeeder environments available in the <code class="docutils literal notranslate"><span class="pre">gym4ReaL</span></code> library for robotic grasping tasks using reinforcement learning. These environments are designed for use with the MuJoCo simulator and the OpenAI Gym interface, enabling efficient training and evaluation of robotic agents.</p>
+<p>This document describes the RoboFeeder environments available in the <code class="docutils literal notranslate"><span class="pre">Gym4ReaL</span></code> library for robotic grasping tasks using reinforcement learning. These environments are designed for use with the MuJoCo simulator and the OpenAI <a class="reference external" href="https://gymnasium.farama.org">Gymnasium</a> interface, enabling efficient training and evaluation of robotic agents.</p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
 <p>The RoboFeeder environments simulate a robotic arm tasked with picking objects from a box. The simulation includes:</p>
@@ -228,7 +228,7 @@
 <li><p>A virtual overhead camera for observation.</p></li>
 <li><p>Optional object detection features.</p></li>
 </ul>
-<p>The environments are compatible leverage GPU acceleration for training.</p>
+<p>The environments are compatible with GPU acceleration for training.</p>
 </section>
 <section id="conda-usage">
 <h2>Conda Usage<a class="headerlink" href="#conda-usage" title="Link to this heading">#</a></h2>
@@ -251,7 +251,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 </section>
 <section id="robofeeder-environments">
 <h2>RoboFeeder Environments<a class="headerlink" href="#robofeeder-environments" title="Link to this heading">#</a></h2>
-<p>The following environments are implemented in <code class="docutils literal notranslate"><span class="pre">gym4ReaL</span></code>:</p>
+<p>The following environments are implemented in <code class="docutils literal notranslate"><span class="pre">Gym4ReaL</span></code>:</p>
 <section id="robofeeder-v0">
 <h3><code class="docutils literal notranslate"><span class="pre">RoboFeeder-v0</span></code><a class="headerlink" href="#robofeeder-v0" title="Link to this heading">#</a></h3>
 <ul class="simple">
@@ -281,13 +281,12 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 <h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <p>To use these environments:</p>
 <ol class="arabic simple">
-<li><p>Install the <code class="docutils literal notranslate"><span class="pre">gym4ReaL</span></code> library and its dependencies.</p></li>
+<li><p>Download the <code class="docutils literal notranslate"><span class="pre">Gym4ReaL</span></code> library and install its dependencies.</p></li>
 <li><p>Register and instantiate the desired RoboFeeder environment using Gym’s API.</p></li>
-<li><p>Train or evaluate your reinforcement learning agent as needed.</p></li>
+<li><p>Train and evaluate your custom or off-the-shelf RL agent implementation.</p></li>
 </ol>
 <p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gym</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">gym4real</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
 
 <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;gym4real/robofeeder-picking-v0&#39;</span><span class="p">)</span>
 <span class="n">obs</span><span class="p">,</span><span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>

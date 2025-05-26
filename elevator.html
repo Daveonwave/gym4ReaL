@@ -218,26 +218,75 @@
         <article role="main">
           <section class="tex2jax_ignore mathjax_ignore" id="elevatorenv">
 <h1>ElevatorEnv<a class="headerlink" href="#elevatorenv" title="Link to this heading">#</a></h1>
-<section id="create-a-conda-environment">
-<h2>Create a conda environment<a class="headerlink" href="#create-a-conda-environment" title="Link to this heading">#</a></h2>
+<p>This document describes the <code class="docutils literal notranslate"><span class="pre">ElevatorEnv</span></code> environment available in the <code class="docutils literal notranslate"><span class="pre">Gym4ReaL</span></code> library to solve an optimal dispatching problem adopting reinforcement learning (RL) techniques. This environment is built on the OpenAI <a class="reference external" href="https://gymnasium.farama.org">Gymnasium</a> interface, enabling efficient training and evaluation of RL agents.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ElevatorEnv</span></code> simulates an elevator controller tasked with optimal passengers dispatching during a <em>peak-down traffic</em> period. The simulation includes:</p>
+<ul class="simple">
+<li><p>A lightweight elevator simulator.</p></li>
+<li><p>A arrival distribution generator based on a Poisson process.</p></li>
+<li><p>Configurable yaml files to customize the environment parameters.</p></li>
+</ul>
+<p>Notably, <code class="docutils literal notranslate"><span class="pre">ElevatorEnv</span></code> is the “less” realistic environment of <code class="docutils literal notranslate"><span class="pre">Gym4ReaL</span></code> library, designed for enabling tabular and provably efficient RL algorithms, difficult to find within real-world problems.</p>
+</section>
+<section id="conda-usage">
+<h2>Conda Usage<a class="headerlink" href="#conda-usage" title="Link to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>env-name<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.12
 </pre></div>
 </div>
 </section>
-<section id="necessary-requirements">
-<h2>Necessary requirements<a class="headerlink" href="#necessary-requirements" title="Link to this heading">#</a></h2>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<p>To install the general and environment-specific requirements, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w">  </span>gym4real/envs/elevator/requirements.txt
 </pre></div>
 </div>
 </section>
-<section id="reproducibility">
-<h2>Reproducibility<a class="headerlink" href="#reproducibility" title="Link to this heading">#</a></h2>
-<p>For a tutorial for training your own RL algorithm refer to <code class="docutils literal notranslate"><span class="pre">examples/elevator/training-tutorial.ipynb</span></code>.
-To obtain the trained models presented in the paper launch this command from the main directory.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>gym4real/algorithms/elevator/<span class="o">[</span>sarsa<span class="p">|</span>qlearning<span class="o">]</span>.py
+<section id="elevator-environment">
+<h2>Elevator Environment<a class="headerlink" href="#elevator-environment" title="Link to this heading">#</a></h2>
+<p>The setting described in the <code class="docutils literal notranslate"><span class="pre">ElevatorEnv</span></code> is the following:</p>
+<ul class="simple">
+<li><p><strong>Observation Space:</strong> Elevator position and occupancy, queues status for each floor, arrivals at each floor.</p></li>
+<li><p><strong>Action Space:</strong> 3 discrete actions to move the elevator up, down, and open the doors.</p></li>
+<li><p><strong>Goal:</strong> Minimize the global waiting time of passengers.</p></li>
+</ul>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<p>To use this environment:</p>
+<ol class="arabic simple">
+<li><p>Download the <code class="docutils literal notranslate"><span class="pre">Gym4ReaL</span></code> library and install its dependencies.</p></li>
+<li><p>Register and instantiate the <code class="docutils literal notranslate"><span class="pre">ElevatorEnv</span></code> environment using Gym’s API.</p></li>
+<li><p>Train and evaluate your custom or off-the-shelf RL agent implementation.</p></li>
+</ol>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;gym4real/elevator-v0&#39;</span><span class="p">)</span>
+<span class="n">obs</span><span class="p">,</span><span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+  <span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+  <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+  <span class="n">done</span> <span class="o">=</span> <span class="n">terminated</span> <span class="ow">or</span> <span class="n">truncated</span>
 </pre></div>
 </div>
-<p>To reproduce the results, open the notebook in <code class="docutils literal notranslate"><span class="pre">examples/elevator/benchmarks.ipynb</span></code> and run the whole notebook.</p>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">#</a></h2>
+<p>Simulator parameters (e.g., number and height of floors, arrival rates, elevator’s movement speed) can be set via <code class="docutils literal notranslate"><span class="pre">gym4real/envs/elevator/world.yaml</span></code> file.</p>
+</section>
+<hr class="docutils" />
+<section id="reproducibility">
+<h2>Reproducibility<a class="headerlink" href="#reproducibility" title="Link to this heading">#</a></h2>
+<p>In order to reproduce the results, open the notebooks in <code class="docutils literal notranslate"><span class="pre">examples/elevator</span></code> folder and run the <code class="docutils literal notranslate"><span class="pre">benchmarks.ipynb</span></code> notebook which employs the already trained model contained within the <code class="docutils literal notranslate"><span class="pre">trained_models/</span></code> folder.</p>
+<p>To train an RL agent from scratch, launch the following command from the main directory selecting the environment and the training parameters:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>gym4real/algorithms/elevator/<span class="o">[</span>qlearning<span class="p">|</span>sarsa<span class="o">]</span>.py
+</pre></div>
+</div>
+<p>For a tutorial for training your own RL algorithm refer to <code class="docutils literal notranslate"><span class="pre">examples/elevator/training-tutorial.ipynb</span></code>.</p>
 </section>
 </section>
 
@@ -297,8 +346,12 @@ To obtain the trained models presented in the paper launch this command from the
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">ElevatorEnv</a><ul>
-<li><a class="reference internal" href="#create-a-conda-environment">Create a conda environment</a></li>
-<li><a class="reference internal" href="#necessary-requirements">Necessary requirements</a></li>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#conda-usage">Conda Usage</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#elevator-environment">Elevator Environment</a></li>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
 <li><a class="reference internal" href="#reproducibility">Reproducibility</a></li>
 </ul>
 </li>
