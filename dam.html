@@ -218,19 +218,68 @@
         <article role="main">
           <section class="tex2jax_ignore mathjax_ignore" id="damenv">
 <h1>DamEnv<a class="headerlink" href="#damenv" title="Link to this heading">#</a></h1>
-<section id="create-a-conda-environment">
-<h2>Create a conda environment<a class="headerlink" href="#create-a-conda-environment" title="Link to this heading">#</a></h2>
+<p>This document describes the <code class="docutils literal notranslate"><span class="pre">DamEnv</span></code> environment available in the <code class="docutils literal notranslate"><span class="pre">Gym4Real</span></code> library for water management in a reservoir connected to a dam, using RL techniques. This environment is built on the OpenAI <a class="reference external" href="https://gymnasium.farama.org">Gymnasium</a> interface, enabling efficient training and evaluation of RL agents.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">DamEnv</span></code> environment simulates a controller of a dam with the aim of meeting the downstream water demand, while avoiding overflows or water starvation. The simulation includes:</p>
+<ul class="simple">
+<li><p>A lake simulator that computes the updates of the water level at each step.</p></li>
+<li><p>Time-series of water demand and inflow.</p></li>
+<li><p>Time-series of the water level that can be used for imitation learning.</p></li>
+<li><p>Configurable yaml files to customize the environment and reservoir parameters.</p></li>
+</ul>
+</section>
+<section id="conda-usage">
+<h2>Conda usage<a class="headerlink" href="#conda-usage" title="Link to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>env-name<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.12
 </pre></div>
 </div>
 </section>
-<section id="necessary-requirements">
-<h2>Necessary requirements<a class="headerlink" href="#necessary-requirements" title="Link to this heading">#</a></h2>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<p>To install the general and environment-specific requirements, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
-pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w">  </span>gym4real/envs/dam/requirements.txt
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>gym4real/envs/dam/requirements.txt
 </pre></div>
 </div>
 </section>
+<section id="dam-environment">
+<h2>Dam Environment<a class="headerlink" href="#dam-environment" title="Link to this heading">#</a></h2>
+<p>The setting described in the <code class="docutils literal notranslate"><span class="pre">DamEnv</span></code> is the following:</p>
+<ul class="simple">
+<li><p><strong>Observation Space:</strong> Signal of estimated demand, signal of the water level, time variables.</p></li>
+<li><p><strong>Action Space:</strong> Amount of water to release per unit of time .</p></li>
+<li><p><strong>Goal:</strong> Minimize the demand that is not met, while avoiding floods or water starvation</p></li>
+</ul>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<p>To use this environment:</p>
+<ol class="arabic simple">
+<li><p>Download the <code class="docutils literal notranslate"><span class="pre">Gym4ReaL</span></code> library and install its dependencies.</p></li>
+<li><p>Register and instantiate the <code class="docutils literal notranslate"><span class="pre">DamEnv</span></code> environment using Gym’s API.</p></li>
+<li><p>Train and evaluate your custom or off-the-shelf RL agent implementation.</p></li>
+</ol>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gymnasium</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gym</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;gym4real/dam-v0&#39;</span><span class="p">)</span>
+<span class="n">obs</span><span class="p">,</span><span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+  <span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+  <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminated</span><span class="p">,</span> <span class="n">truncated</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+  <span class="n">done</span> <span class="o">=</span> <span class="n">terminated</span> <span class="ow">or</span> <span class="n">truncated</span>
+</pre></div>
+</div>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">#</a></h2>
+<p>Lake simulator parameters (e.g. surface area, minimum and maximum water level) can be set by modifying the <code class="docutils literal notranslate"><span class="pre">gym4real/envs/dam/lake.yaml</span></code> file.
+Environment parameters (e.g., observation space, rewards weights) can be set by modifying the <code class="docutils literal notranslate"><span class="pre">gym4real/envs/dam/world_train.yaml</span></code> file.</p>
+</section>
+<hr class="docutils" />
 <section id="reproducibility">
 <h2>Reproducibility<a class="headerlink" href="#reproducibility" title="Link to this heading">#</a></h2>
 <p>For a tutorial for training your own RL algorithm refer to <code class="docutils literal notranslate"><span class="pre">examples/dam/training-tutorial.ipynb</span></code>.
@@ -298,8 +347,12 @@ To obtain the trained models presented in the paper launch this command from the
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">DamEnv</a><ul>
-<li><a class="reference internal" href="#create-a-conda-environment">Create a conda environment</a></li>
-<li><a class="reference internal" href="#necessary-requirements">Necessary requirements</a></li>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#conda-usage">Conda usage</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#dam-environment">Dam Environment</a></li>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
 <li><a class="reference internal" href="#reproducibility">Reproducibility</a></li>
 </ul>
 </li>
