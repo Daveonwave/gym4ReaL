@@ -7,7 +7,7 @@ def generate_arrival_distribution(lambd: float,
                                   max_floor: int = None,
                                   seed: int = None,
                                   ) -> list:
-    """
+    """ 
     Generate a list of random arrival times based on a Poisson distribution.
 
     :param lambd: The lambda term for the Poisson distribution.
