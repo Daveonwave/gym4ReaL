@@ -45,6 +45,7 @@ jobs:
           github_token: ${{ secrets.GH_PAT }}
           publish_dir: ./docs/_build/html
           publish_branch: gh-pages
+          allow_empty_commit: true
   # Deployment job
   #deploy:
   #   environment:
