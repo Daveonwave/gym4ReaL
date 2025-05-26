@@ -1,6 +1,6 @@
 # DamEnv
 
-This document describes the `DamEnv` environment available in the `Gym4Real` library for water management in a reservoir connected to a dam, using RL techniques. This environment is built on the OpenAI [Gymnasium](https://gymnasium.farama.org) interface, enabling efficient training and evaluation of RL agents.
+This document describes the `DamEnv` environment available in the `Gym4Real` library for water management in a reservoir connected to a dam, using RL techniques. This environment is built on the [Gymnasium](https://gymnasium.farama.org) interface, enabling efficient training and evaluation of RL agents.
 
 ## Overview
 

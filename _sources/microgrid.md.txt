@@ -59,7 +59,7 @@ while not done:
 ## Configuration
 
 Simulator parameters (e.g., battery model parameters, state of charge range, end-of-life state of health, battery sizing) can be set via files contained in `gym4real/envs/microgrid/simulator/configuration/` folder.
-Environment parameters (e.g., observation space, environment timestep) can be set modifing the `gym4real/envs/microgrid/world_train.yaml` file.
+Environment parameters (e.g., observation space, environment timestep) can be set by modifying the `gym4real/envs/microgrid/world_train.yaml` file.
 
 ---
 
