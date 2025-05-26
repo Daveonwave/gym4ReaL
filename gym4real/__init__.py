@@ -15,10 +15,10 @@ register(
     entry_point='gym4real.envs.wds.env:WaterDistributionSystemEnv',
 )
 
-register(
-    id='gym4real/wds_cps-v0',
-    entry_point='gym4real.envs.wds.env_cps:WaterDistributionSystemEnv',
-)
+#register(
+#    id='gym4real/wds_cps-v0',
+#    entry_point='gym4real.envs.wds.env_cps:WaterDistributionSystemEnv',
+#)
 
 register(
     id='gym4real/robofeeder-picking-v0',
