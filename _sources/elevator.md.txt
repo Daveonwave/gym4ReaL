@@ -47,8 +47,10 @@ Example:
 
 ```python
 import gymnasium as gym
+from gym4real.envs.elevator.utils import parameter_generator
 
-env = gym.make('gym4real/elevator-v0')
+params = parameter_generator()
+env = gym.make('gym4real/elevator-v0', **{'settings': params})
 obs,info = env.reset()
 done = False
 
