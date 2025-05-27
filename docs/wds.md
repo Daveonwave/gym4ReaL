@@ -51,8 +51,10 @@ Example:
 
 ```python
 import gymnasium as gym
+from gym4real.envs.wds.utils import parameter_generator
 
-env = gym.make('gym4real/wds-v0')
+params = parameter_generator()
+env = gym.make('gym4real/wds-v0', **{'settings': params})
 obs,info = env.reset()
 done = False
 

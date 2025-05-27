@@ -20,6 +20,7 @@ conda create -n env-name python=3.12
 ## Installation
 
 To install the general and environment-specific requirements, run:
+
 ```bash
 pip install -r requirements.txt
 pip install -r gym4real/envs/dam/requirements.txt
@@ -46,8 +47,10 @@ Example:
 
 ```python
 import gymnasium as gym
+from gym4real.envs.dam.utils import parameter_generator
 
-env = gym.make('gym4real/dam-v0')
+params = parameter_generator()
+env = gym.make('gym4real/dam-v0', settings=params)
 obs,info = env.reset()
 done = False
 
@@ -56,13 +59,13 @@ while not done:
   obs, reward, terminated, truncated, info = env.step(action)
   done = terminated or truncated
 ```
+
 ## Configuration
 
 Lake simulator parameters (e.g. surface area, minimum and maximum water level) can be set by modifying the `gym4real/envs/dam/lake.yaml` file.
 Environment parameters (e.g., observation space, rewards weights) can be set by modifying the `gym4real/envs/dam/world_train.yaml` file.
 
 ---
-
 
 ## Reproducibility
 
