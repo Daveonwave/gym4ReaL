@@ -99,7 +99,7 @@ Please cite Gym4ReaL as
 <summary>BibTeX</summary>
 
 ```tex
-@misc{gym4real2024,
+@misc{gym4real2025,
   author       = {Salaorni, Davide and De Paola, Vincenzo and Delpero, Samuele and Dispoto, Giovanni},
   title        = {{Gym4ReaL}: A Suite for Benchmarking Real-World Reinforcement Learning},
   year         = {2025},
