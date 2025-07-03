@@ -99,13 +99,14 @@ Please cite Gym4ReaL as
 <summary>BibTeX</summary>
 
 ```tex
-@misc{gym4real2025,
-  author       = {Salaorni, Davide and De Paola, Vincenzo and Delpero, Samuele and Dispoto, Giovanni},
-  title        = {{Gym4ReaL}: A Suite for Benchmarking Real-World Reinforcement Learning},
-  year         = {2025},
-  publisher    = {GitHub},
-  journal      = {GitHub repository},
-  howpublished = {\url{https://github.com/Daveonwave/gym4ReaL}},
+@misc{salaorni2025gym4realsuitebenchmarkingrealworld,
+      title={Gym4ReaL: A Suite for Benchmarking Real-World Reinforcement Learning}, 
+      author={Davide Salaorni and Vincenzo De Paola and Samuele Delpero and Giovanni Dispoto and Paolo Bonetti and Alessio Russo and Giuseppe Calcagno and Francesco Trovò and Matteo Papini and Alberto Maria Metelli and Marco Mussi and Marcello Restelli},
+      year={2025},
+      eprint={2507.00257},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2507.00257}, 
 }
 ```
 
